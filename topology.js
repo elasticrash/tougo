@@ -1,6 +1,7 @@
+//needs primitives.js
 //create nodes at line intersections
 function breaklinear(data, tolerance){
-	var points = new Array();
+	var points = [];
 	var p= 0;
     for (var i = 0; i < data.length; i++) {
 		for (var j = 0; j < data[i].geometry.length - 1; j++) {
@@ -17,7 +18,7 @@ function breaklinear(data, tolerance){
 				e = data[k].geometry[l].x;
 				f = data[k].geometry[l].y;
 				g = data[k].geometry[l + 1].x;
-				h = data[k].geometry[l + 1].y
+				h = data[k].geometry[l + 1].y;
 					
 					var PointAt = CreatePoint(a, b);
 					var PointBt = CreatePoint(c, d);
@@ -36,7 +37,7 @@ function breaklinear(data, tolerance){
 					}
 					else {
 						var PointIN = intersection(PointA, PointB, PointC, PointD);
-						if (IsIntersectionWithinLineLimits(PointA, PointB, PointC, PointD, PointIN) == true) {
+						if (IsIntersectionWithinLineLimits(PointA, PointB, PointC, PointD, PointIN) === true) {
 							points[p] = {
 								type: "point",
 								geometry: PointIN
@@ -55,7 +56,7 @@ function breaklinear(data, tolerance){
 //delete duplicate points
 function deleteduplicatePoints(Geometries)
 {
-	var points = new Array();
+	var points = [];
 	var p= 0;
 			for (var i = 0; i < Geometries.length; i++) {
 		if (Geometries[i].type == "point") {
@@ -80,11 +81,11 @@ function deleteduplicatePoints(Geometries)
 //get the lines from a collection
 function getlines(Geometries){
 	var p = 0;
-	var lines = new Array();
+	var lines = [];
 	for (var i = 0; i < Geometries.length; i++) {
 		if (Geometries[i].type != "point") 
 			for (var j = 0; j < Geometries[i].geometry.length - 1; j++) {
-				var Polygon = new Array();
+				var Polygon = [];
 				Polygon[0] = CreatePoint(Geometries[i].geometry[j].x,Geometries[i].geometry[j].y);
 				Polygon[1] = CreatePoint(Geometries[i].geometry[j + 1].x,Geometries[i].geometry[j + 1].y);
 				lines[p] = {
@@ -104,13 +105,13 @@ function removeDangles(Lines, tolerance){
 	while (dangles > 0) {
 		var nodes = deleteduplicatePoints(getAllNodes(Lines));
 		var intersections = deleteduplicatePoints(breaklinear(Lines, tolerance));
-		var alone = new Array();
+		var alone = [];
 		var p = 0;
 
 		for (var i = 0; i < nodes.length; i++) {
 			var danglePoint = 0;
 			for (var j = 0; j < intersections.length; j++) {
-				var stream = new Array();
+				var stream = [];
 				stream[0] = intersections[j].geometry.x - tolerance;
 				stream[1] = parseFloat(intersections[j].geometry.y) + tolerance;
 				stream[2] = parseFloat(intersections[j].geometry.x) + tolerance;
@@ -156,12 +157,12 @@ function removeDangles(Lines, tolerance){
 
 //Convert a geometry to points
 function convertToPoints(Geometries){
-	var points = new Array();
+	var points = [];
 	
 	for (var i = 0; i < Geometries.length; i++) {
 		if (Geometries[i].type != "point") {
 			for (var j = 0; j < Geometries[i].geometry.length - 1; j++) {
-				var p = CreatePoint(Geometries[i].geometry[j].x, Geometries[i].geometry[j].y)
+				var p = CreatePoint(Geometries[i].geometry[j].x, Geometries[i].geometry[j].y);
 			points.push({
                                 type: "point",
                                 geometry: p
@@ -173,10 +174,11 @@ function convertToPoints(Geometries){
 }
 //get anchor points
 function getAnchorPoints(Geometries){
-	var anchor = new Array();
+	var anchor = [];
+    var anchorCount;
 	for (var i = 0; i < Geometries.length; i++) {
 		if (Geometries[i].type == "point") {
-			var anchorCount = 0;
+            anchorCount = 0;
 			for (var j = 0; j < Geometries.length; j++) {
 				if (Geometries[i].geometry.x == Geometries[j].geometry.x && Geometries[i].geometry.y == Geometries[j].geometry.y) {
 					if (i != j && Geometries[i].geometry.x != 0 && Geometries[i].geometry.y != 0) {
@@ -186,7 +188,7 @@ function getAnchorPoints(Geometries){
 			}
 		}
 		if (anchorCount > 2) {
-			var p = CreatePoint(Geometries[i].geometry.x, Geometries[i].geometry.y)
+			var p = CreatePoint(Geometries[i].geometry.x, Geometries[i].geometry.y);
 			anchor.push({
 				type: "point",
 				geometry: p

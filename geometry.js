@@ -1,10 +1,11 @@
+//needs primitives.js
 //returns true if a point is inside a particular polygon
 function PointInPolygon(poly, x, y){
     for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i) 
         ((poly[i].y <= y && y < poly[j].y) || (poly[j].y <= y && y < poly[i].y)) &&
         (x < (poly[j].x - poly[i].x) * (y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x) &&
         (c = !c);
-    if (c == true) 
+    if (c === true) 
         return true;
     else 
         return false;
@@ -12,7 +13,7 @@ function PointInPolygon(poly, x, y){
 
 //a polygon simplification algorithm I wrote 2 years ago based on a tolerance value 
 function Simplify(polygon, tolerance){
-    var simplefiedPolygon = new Array();
+    var simplefiedPolygon = [];
     
     simplefiedPolygon[0] = polygon[0];
     
@@ -20,20 +21,20 @@ function Simplify(polygon, tolerance){
     var ipoint = 0;
     
     for (var c = 0; c < polygon.length - 2; c++) {
-        var point1 = new Array();
+        var point1 = [];
         
         point1 = {
             x: polygon[ivertex].x,
             y: polygon[ivertex].y
         };
         
-        var point2 = new Array();
+        var point2 = [];
         point2 = {
             x: polygon[c + 2].x,
             y: polygon[c + 2].y
         };
         
-        var MidPoints = new Array();
+        var MidPoints = [];
         
         for (var j = 0; j < (c + 1 - ivertex); j++) {
             MidPoints[j] = polygon[ivertex + j + 1];
@@ -108,13 +109,12 @@ function IsIntersectionWithinLineLimits(PointA, PointB, PointC, PointD, cross){
 }
 //simple 2D distance function
 function distance(PointA, PointB){
-    var dist;
-    return dist = Math.sqrt(Math.pow(PointB.x - PointA.x, 2) + Math.pow(PointB.y - PointA.y, 2));
+    return Math.sqrt(Math.pow(PointB.x - PointA.x, 2) + Math.pow(PointB.y - PointA.y, 2));
 }
 
 //scale and offset
 function transform(oldGeometries, Boxobj, width, height){
-    var TransformedGeometries = new Array();
+    var TransformedGeometries = [];
     
     var lw = Boxobj.Xmax - Boxobj.Xmin;
 	var ly = Boxobj.Ymax - Boxobj.Ymin;
@@ -126,15 +126,15 @@ function transform(oldGeometries, Boxobj, width, height){
         lw = ly;
     }
 	
-	    if (width < height) {
-			width = width;
-		}
-		else {
-			width = height;
-		}
+    if (width < height) {
+		width = width;
+    }
+    else {
+        width = height;
+    }
     
     for (var i = 0; i < oldGeometries.length; i++) {
-        var Geometries = new Array();
+        var Geometries = [];
 
 		if (oldGeometries[i].type == "point") {
 			Geometries = {
@@ -158,42 +158,11 @@ function transform(oldGeometries, Boxobj, width, height){
     return TransformedGeometries;
 }
 
-//create a point
-//has to go into a different js file with all primitive creation function
-function CreatePoint(x, y){
-	
-	x = x*1000;
-	y = y*1000;
-	
-	x = Math.round(x);
-	y = Math.round(y);
-	
-    var Point = {
-        x: x/1000,
-        y: y/1000
-    };
-    return Point;
-}
-//create a polygon
-//has to go into a different js file with all primitive creation function
-function CreatePolygon(xyArray){
-    var Polygon = new Array();
-	var t=0;
-    for (var i = 0; i < xyArray.length; i = i + 2) {
-        Polygon[t] = {
-            x: xyArray[i],
-            y: xyArray[i + 1]
-        };
-		t++;
-    }
-    return Polygon;
-}
-
 //get the bounding box of a geometry
 function getBoundingBox(Geometries)
 {
-	var alllinesx = new Array();
-	var alllinesy = new Array();
+	var alllinesx = [];
+	var alllinesy = [];
 	var p = 0;
 	for (var i = 1; i < Geometries.length; i++) {
 	
@@ -204,7 +173,7 @@ function getBoundingBox(Geometries)
 		}
 	}
 	
-	BBox = {
+	var BBox = {
 		Xmin: Math.min.apply(null, alllinesx),
 		Xmax: Math.max.apply(null, alllinesx),
 		Ymin: Math.min.apply(null, alllinesy),
@@ -228,7 +197,7 @@ function GetArea(Polygon)
 //gets the centroid of a polygon
 function GetCentroid(Polygon)
 {
-	var Centroid = new Array();
+	var Centroid = [];
 	var cx = 0;
 	var cy =0;
 	for (var i=0; i < Polygon.length-1; i++)
@@ -245,12 +214,12 @@ function GetCentroid(Polygon)
 //extends a line segments equally from both sides
 function extendLineBothSides(PointA, PointB, dist)
 {
-	var slope = (PointB.y-PointA.y)/ (PointB.x-PointA.x)
+	var slope = (PointB.y-PointA.y)/ (PointB.x-PointA.x);
 	var intercept = PointA.y-PointA.x*slope;
 	
 	var a,b,c,d;
 	
-	var result = new Array();
+	var result = [];
 	if (PointA.x > PointB.x) {
 		a = parseFloat(PointA.x)+dist;
 		b = slope * (a)+intercept;
@@ -273,11 +242,11 @@ function extendLineBothSides(PointA, PointB, dist)
 //gets a list of nodes from a polygon geometry
 function getPolygonNodes(Polygon)
 {
-	var nodes = new Array();
+	var nodes = [];
 		for (var i=0; i < Polygon.length; i++)
 	{
 		var point = CreatePoint(Polygon[i].x, Polygon[i].y);
-		nodes[i] = {type: "point", geometry: point}
+		nodes[i] = {type: "point", geometry: point};
 	}
 	
 	return nodes;
@@ -285,7 +254,7 @@ function getPolygonNodes(Polygon)
 //gets a list of nodes from a geometry collection
 function getAllNodes(Geometries)
 {
-	var nodes = new Array();
+	var nodes = [];
 	
 	var p = 0;
 		for (var i = 0; i < Geometries.length; i++) {
@@ -298,25 +267,4 @@ function getAllNodes(Geometries)
 		}
 	}
 	return nodes;
-}
-//create a circle
-//has to go into a different js file with all primitive creation function
-function CreateCircle(point, radius, segments)
-{
-	var seg = Math.PI * 2 / segments;
-    var PTS = new Array();
-    
-    var y = 0;
-    for (var i = 0; i < segments; i++)
-    {
-        var theta = seg * i;
-        PTS[y] = point.x + Math.cos( theta ) * radius;
-        PTS[y+1] = point.y + Math.sin( theta ) * radius;
-        
-        y=y+2;
-     }
-    PTS[segments*2] = point.x + Math.cos( 0 ) * radius;
-    PTS[segments*2+1] = point.y + Math.sin( 0 ) * radius;
-	
-	return CreatePolygon(PTS);
 }
