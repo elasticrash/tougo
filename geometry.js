@@ -1,3 +1,4 @@
+//returns true if a point is inside a particular polygon
 function PointInPolygon(poly, x, y){
     for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i) 
         ((poly[i].y <= y && y < poly[j].y) || (poly[j].y <= y && y < poly[i].y)) &&
@@ -9,6 +10,7 @@ function PointInPolygon(poly, x, y){
         return false;
 }
 
+//a polygon simplification algorithm I wrote 2 years ago based on a tolerance value 
 function Simplify(polygon, tolerance){
     var simplefiedPolygon = new Array();
     
@@ -62,7 +64,7 @@ function Simplify(polygon, tolerance){
     
     return simplefiedPolygon;
 }
-
+// get the intersection of 2 lines
 function intersection(PointA, PointB, PointC, PointD){
     var cross;
     
@@ -90,6 +92,7 @@ function intersection(PointA, PointB, PointC, PointD){
     
     return cross;
 }
+// checks if the intersection point from the previous function is within certain line segments
 function IsIntersectionWithinLineLimits(PointA, PointB, PointC, PointD, cross){
     if (cross.x >= PointC.x && cross.x <= PointD.x && cross.x >= PointA.x && cross.x <= PointB.x) {
         if (cross.y >= PointC.y && cross.y <= PointD.y || cross.y <= PointC.y && cross.y >= PointD.y) {
@@ -103,12 +106,13 @@ function IsIntersectionWithinLineLimits(PointA, PointB, PointC, PointD, cross){
     }
     return false;
 }
-
+//simple 2D distance function
 function distance(PointA, PointB){
     var dist;
     return dist = Math.sqrt(Math.pow(PointB.x - PointA.x, 2) + Math.pow(PointB.y - PointA.y, 2));
 }
 
+//scale and offset
 function transform(oldGeometries, Boxobj, width, height){
     var TransformedGeometries = new Array();
     
@@ -154,6 +158,8 @@ function transform(oldGeometries, Boxobj, width, height){
     return TransformedGeometries;
 }
 
+//create a point
+//has to go into a different js file with all primitive creation function
 function CreatePoint(x, y){
 	
 	x = x*1000;
@@ -168,7 +174,8 @@ function CreatePoint(x, y){
     };
     return Point;
 }
-
+//create a polygon
+//has to go into a different js file with all primitive creation function
 function CreatePolygon(xyArray){
     var Polygon = new Array();
 	var t=0;
@@ -181,6 +188,8 @@ function CreatePolygon(xyArray){
     }
     return Polygon;
 }
+
+//get the bounding box of a geometry
 function getBoundingBox(Geometries)
 {
 	var alllinesx = new Array();
@@ -203,6 +212,8 @@ function getBoundingBox(Geometries)
 	};
 	return BBox;
 }
+
+//get the area of a polygon
 function GetArea(Polygon)
 {
 	var area = 0;
@@ -213,6 +224,8 @@ function GetArea(Polygon)
 	}
 	return area*0.5;
 }
+
+//gets the centroid of a polygon
 function GetCentroid(Polygon)
 {
 	var Centroid = new Array();
@@ -228,6 +241,8 @@ function GetCentroid(Polygon)
 	Centroid = {x:cx,y:cy};
 	return Centroid;
 }
+
+//extends a line segments equally from both sides
 function extendLineBothSides(PointA, PointB, dist)
 {
 	var slope = (PointB.y-PointA.y)/ (PointB.x-PointA.x)
@@ -254,6 +269,8 @@ function extendLineBothSides(PointA, PointB, dist)
 	
 	return result;
 }
+
+//gets a list of nodes from a polygon geometry
 function getPolygonNodes(Polygon)
 {
 	var nodes = new Array();
@@ -265,6 +282,7 @@ function getPolygonNodes(Polygon)
 	
 	return nodes;
 }
+//gets a list of nodes from a geometry collection
 function getAllNodes(Geometries)
 {
 	var nodes = new Array();
@@ -281,6 +299,8 @@ function getAllNodes(Geometries)
 	}
 	return nodes;
 }
+//create a circle
+//has to go into a different js file with all primitive creation function
 function CreateCircle(point, radius, segments)
 {
 	var seg = Math.PI * 2 / segments;
