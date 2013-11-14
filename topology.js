@@ -1,3 +1,4 @@
+//create nodes at line intersections
 function breaklinear(data, tolerance){
 	var points = new Array();
 	var p= 0;
@@ -50,6 +51,8 @@ function breaklinear(data, tolerance){
 	
 	return points;
 }
+
+//delete duplicate points
 function deleteduplicatePoints(Geometries)
 {
 	var points = new Array();
@@ -74,6 +77,7 @@ function deleteduplicatePoints(Geometries)
 	}
 	return points;
 }
+//get the lines from a collection
 function getlines(Geometries){
 	var p = 0;
 	var lines = new Array();
@@ -92,6 +96,8 @@ function getlines(Geometries){
 	}
 	return lines;
 }
+
+//trim any geometry that does not participate in the creation of a polygon
 function removeDangles(Lines, tolerance){
 	var dangles = 1;
 
@@ -148,6 +154,7 @@ function removeDangles(Lines, tolerance){
 	return Lines;
 }
 
+//Convert a geometry to points
 function convertToPoints(Geometries){
 	var points = new Array();
 	
@@ -164,6 +171,7 @@ function convertToPoints(Geometries){
 	}
 	return points;
 }
+//get anchor points
 function getAnchorPoints(Geometries){
 	var anchor = new Array();
 	for (var i = 0; i < Geometries.length; i++) {
