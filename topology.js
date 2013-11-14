@@ -1,4 +1,4 @@
-//needs primitives.js
+//needs primitives.js and geometry.js
 //create nodes at line intersections
 function breaklinear(data, tolerance){
 	var points = [];
