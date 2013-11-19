@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-7">
+		<title></title>
+		<link type="text/css" href="../css/bootstrap.css" rel="stylesheet" />
+		<link type="text/css" href="../css/slider.css" rel="stylesheet" />
+		<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+		<script language="JavaScript" type="text/javascript" src="../js/bootstrap.js"></script>
+		<script language="JavaScript" type="text/javascript" src="../js/bootstrap-slider.js"></script>
+		<script language="JavaScript" type="text/javascript" src="../js/geometry.js"></script>
+		<script language="JavaScript" type="text/javascript" src="../js/topology.js"></script>
+		<script language="JavaScript" type="text/javascript" src="../js/drawing.js"></script>
+		<script language="JavaScript" type="text/javascript" src="../js/export.js"></script>
+		<script language="JavaScript" type="text/javascript">
+			var past = new Array();
+			$(document).ready(function() {
+				var defaults = {
+					width :          $('#rw').width() - 50,
+					height :          $(window).height() - 600
+				};
+
+				CzBox.Xmin = 0;
+				CzBox.Ymin = -defaults.height;
+				CzBox.Xmax = defaults.width;
+				CzBox.Ymax = 0;
+
+				jqcomp();
+				
+				var obja = $('#icq');
+				obja.append('<div class="row"><div class="span9"><canvas id="canvas" style="z-index:99; float:left;padding:10px;margin-top:10px;padding-bottom:10px;margin-left:10px; border:1px solid;" width="' + defaults.width + '" height="' + defaults.height + '"></canvas></div></div>');
+
+			});
+	
+			function drawc(e) {
+				var Point = getviewpoint(e);
+				var seg = 125;
+
+				var Circle = CreateCircle(Point, $( "#slider-range-min" ).val(), seg);
+				var rCircle = new Array();
+				rCircle[0] = {
+					type : "polygon",
+					geometry : Circle
+				}
+				var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+
+				past.push(rCircle);
+				drawing(rCircle, false, color, canvas);
+
+				$('#items').val(past.length);
+			}
+
+			function draws(e) {
+				var Point = getviewpoint(e);
+				var seg = 4;
+
+				var Circle = CreateCircle(Point, $( "#slider-range-min" ).val(), seg);
+				var rCircle = new Array();
+				rCircle[0] = {
+					type : "polygon",
+					geometry : Circle
+				}
+				var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+				past.push(rCircle);
+
+				drawing(rCircle, false, color, canvas);
+				$('#items').val(past.length);
+			}
+
+			function drawt(e) {
+				var Point = getviewpoint(e);
+				var seg = 3;
+
+				var Circle = CreateCircle(Point, $( "#slider-range-min" ).val(), seg);
+				var rCircle = new Array();
+				rCircle[0] = {
+					type : "polygon",
+					geometry : Circle
+				}
+				var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+
+				past.push(rCircle);
+
+				drawing(rCircle, false, color, canvas);
+				$('#items').val(past.length);
+			}
+
+			var xyarray = new Array();
+			function drawl(e) {
+				var Point = getviewpoint(e);
+
+				xyarray.push(Point.x);
+				xyarray.push(Point.y);
+
+				var pol = CreatePolygon(xyarray);
+				var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+
+				var rpol = new Array();
+				rpol[0] = {
+					type : "line",
+					geometry : pol
+				}
+				drawing(rpol, false, color, canvas);
+				$('#items').val(past.length);
+			}
+
+			function getviewpoint(e) {
+				var canvas = document.getElementById("canvas");
+				Ccanvas = canvas;
+				var Point = currentLocation(e, canvas);
+				Point.y = Math.abs(Point.y);
+
+				Point.x = Point.x-9;
+				Point.y = Point.y-9;
+				return Point;
+			}
+
+
+			function jqcomp() {
+				$( "#slider-range-min" ).slider({
+					value : 12,
+					min : 1,
+					max : 123,		
+				});
+				$( "#slider-range-min" ).val(12);
+			}
+
+			function cirl(type) {
+
+				$('#canvas').unbind();
+				
+				if(type.id == "circle"){
+				$('#canvas').mousedown(function(event) {drawc(event);});
+				}
+				if(type.id == "square"){
+				$('#canvas').mousedown(function(event) {draws(event);});
+				}
+				if(type.id == "triangle"){
+				$('#canvas').mousedown(function(event) {drawt(event);});
+				}
+				if(type.id == "lines"){
+				$('#canvas').mousedown(function(event) {drawl(event);});
+				} else {
+					var pol = CreatePolygon(xyarray);
+					var rpol = new Array();
+					rpol[0] = {
+						type : "line",
+						geometry : pol
+					}
+					past.push(rpol);
+					xyarray = new Array();
+					$('#items').val(past.length);
+				}
+				
+			}
+
+			function exp() {
+				var a = exportdxf(past);
+				var b = a.join("\n");
+				var rstr = randomString(6);
+				$.ajax({
+					async : false,
+					url : "sfile.php",
+					type : "POST",
+					data : "datae=" + b + "&fname=" + rstr + ".dxf",
+					success : function() {alert('file created');
+					},
+					error : function() {alert('file failed');
+					}
+				});
+				$('#exp').html("<a href='dxf/" + rstr + ".dxf" + "'>download file (right click and save as)</a>");
+			}
+
+			function randomString(length) {
+				var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'.split('');
+
+				if(!length) {
+					length = Math.floor(Math.random() * chars.length);
+				}
+
+				var str = '';
+				for(var i = 0; i < length; i++) {
+					str += chars[Math.floor(Math.random() * chars.length)];
+				}
+				return str;
+			}
+
+			function showcentroid() {
+				var cen = new Array();
+				for(var i = 0; i < past.length; i++) {
+					if(past[i][0].type != "line") {
+						cen.push({
+							type : "point",
+							geometry : GetCentroid(past[i][0].geometry)
+						});
+					} else {
+						for(var j = 0; j < past[i][0].length; j++) {
+							cen.push({
+								type : "point",
+								geometry : past[i][0].geometry[j]
+							});
+						}
+					}
+				}
+				var color = "FF0000"//Math.round(0xffffff * Math.random()).toString(16);
+
+				drawing(cen, false, color, canvas);
+			}
+		</script>
+	</head>
+	<body>
+	    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Simple Cad App</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="http://www.codentonic.net">Blog</a></li>
+              <li><a href="http://codentonic.net/sample-page/">About</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+     <div class="hero-unit">
+        <h1>tougo topology library example in action</h1>
+        <p>This is an example on how this javascript library works. 1. Choose in the toolbar the type of shape you wish to draw 2. Select the size of the shape (in pixels) by moving the slider and 3. Click to draw. Have fun</p>
+        <p><a href="http://codentonic.net/2013/04/09/javascript-based-geometric-and-topological-operations/" class="btn btn-primary btn-large">learn more</a></p>
+      </div>
+
+		<div id="icq" style="width: 100%; float: left;">
+		            <div id="rw" class="row">
+		            <div class="span7">
+		<div class="btn-toolbar">
+  <div class="btn-group">
+    <a class="btn" href="#" onclick="clearcanvas(Ccanvas);past=new Array();"><i class="icon-minus-sign"></i> clear</a>
+    <a class="btn" href="#" id="circle" onclick="cirl(this)"><i class="icon-plus-sign"></i> circle</a>
+    <a class="btn" href="#" id="square" onclick="cirl(this)"><i class="icon-th-large"></i> square</a>
+    <a class="btn" href="#" id="triangle" onclick="cirl(this)"><i class="icon-eject"></i> triangle</a>
+    <a class="btn" href="#" id="lines" onclick="cirl(this)"><i class="icon-pencil"></i> line</a>
+    
+    <a class="btn" href="#" id="centroid" onclick="showcentroid()"><i class="icon-plus"></i> show centroids</a>
+  </div>
+</div></div>
+<div class="span1">
+<div id="slider-range-min"></div>
+</div>
+		</div>
+				 </div>
+		<div id="bot" style="width: 100%; float: left;">
+		<label>items drawned</label><input id="items" type="text"></input>
+		</div>
+		<div id="exp" style="width: 100%; float: left;"></div>
+
+    </div> <!-- /container -->
+	</body>
+</html>
