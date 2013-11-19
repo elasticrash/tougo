@@ -11,7 +11,7 @@ Personally I am especially proud of the removeDangles function in the topology.j
 with the term, it trims any line, in a line collection that does not participate in any potential line to polygon
 conversion.
 
-Unfortunately I havent yet written the function to transform the lines to polygons, but I intend to do so
+Unfortunately I havent yet written the function to transform the lines to polygons, but I intend to do so.
 
 jquery.tougo is a semi-failed attempt for a standard interface not really necessary
 drawing.js has basic html5 canvas drawing functions
