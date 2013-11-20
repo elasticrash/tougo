@@ -1,4 +1,5 @@
 //needs primitives.js
+/*global CreatePoint:false */
 //returns true if a point is inside a particular polygon
 function PointInPolygon(poly, x, y){
     for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i) 
@@ -268,3 +269,23 @@ function getAllNodes(Geometries)
 	}
 	return nodes;
 }
+
+//trying stuff
+function PointToLine(PointA, PointB, PointPt)
+{
+var x = PointB.x - PointA.x;
+var y = PointB.y - PointA.y;
+var len = Math.pow(x, 2) + Math.pow(y, 2);
+var dx = x * (PointPt.x - PointA.x) + y * (PointPt.y - PointA.y);
+
+var pp2p = CreatePoint(PointA.x + dx * x / len, PointA.y + dx * y / len);
+
+return pp2p;
+}
+// three points on same line
+function betweenPoints(PointA, PointB, PointC)
+{
+    var btwPoint = (PointC.x <= Math.max(PointA.x, PointB.x)) && (PointC.x >= Math.min(PointA.x, PointB.x)) && (PointC.y <= Math.max(PointA.y, PointB.y)) && (PointC.y >= Math.min(PointA.y, PointB.y));
+
+     return btwPoint;
+ }
