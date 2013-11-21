@@ -277,6 +277,24 @@ function PolarAngle(PointA, PointB)
    return angle;
 }
 
+//scale and rotate Geometries (not working have to write a bunch of transformation functions) I want to replace scale and offset function above
+/*function scaleAndRotateGeometries(Geometries, PointAnchor,  scalex,  scaley,  angle)
+{
+    var TGeometries = [];
+    
+    for (var i=0; i < Polygon.length-1; i++)
+	{
+    }
+    
+    translate(PointAnchor.x, PointAnchor.y);
+    scale(1.0D / scalex, 1.0D / scaley);
+    rotate(angle);
+    translate(-1.0D * PointAnchor.x, -1.0D * PointAnchor.y);
+    transform(Geometries, 0, TGeometries, 0, getAllNodes(Geometries).length);
+    
+    return TGeometries;
+  }*/
+
 //trying stuff
 function PointToLine(PointA, PointB, PointPt)
 {
