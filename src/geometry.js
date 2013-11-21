@@ -270,6 +270,13 @@ function getAllNodes(Geometries)
 	return nodes;
 }
 
+//Gets the Polar Angle From 2 Points
+function PolarAngle(PointA, PointB)
+{
+ var angle = Math.atan2(PointB.y - PointA.y, PointB.x - PointA.x);
+   return angle;
+}
+
 //trying stuff
 function PointToLine(PointA, PointB, PointPt)
 {

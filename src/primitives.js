@@ -48,3 +48,25 @@ function CreatePoint(x, y){
     };
     return Point;
 }
+
+//create line using point, angle, distance
+function CreateLineFromPointAngleDist(PointA, angle, dist)
+{
+    var newPt = CreatePoint(PointA.x, PointA.y);
+    PointA.x += Math.cos(angle) * dist;
+    PointA.y += Math.sin(angle) * dist;
+    
+    var Line = [];
+    
+    Line[0] = {
+            x: PointA.x,
+            y: PointA.y
+        };
+    
+        Line[1] = {
+            x: newPt.x,
+            y: newPt.y
+        };
+    
+    return Line;
+}
