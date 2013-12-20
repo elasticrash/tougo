@@ -15,6 +15,22 @@
 
     <link rel="stylesheet" href="stylesheets/foundation.css" />
     <script src="javascripts/modernizr.js"></script>
+      <script src="src/geometry.js"></script>
+      <script src="src/drawing.js"></script>
+    <script>$( document ).ready(function() {
+    
+    $.ajax({
+		  type: 'POST',
+		  url: geom.txt,
+		  success:function(data){
+		  	splitdata(data);
+		  	mbr(polygons);
+		  	redraw();
+		  },
+		  error:function(){}
+		  });
+
+});</script>
   </head>
   <body>
     
@@ -28,7 +44,7 @@
         <!-- Title Area -->
 
         <li class="name">
-          <h1><a href="#">Top Bar Title</a></h1>
+          <h1><a href="http://elasticrash.github.io/tougo/">Tougo Homepage</a></h1>
         </li>
 
         <li class="toggle-topbar menu-icon">
@@ -39,25 +55,11 @@
       <section class="top-bar-section">
         <ul class="left">
           <li>
-            <a href="#">Link 1</a>
+            <a href="http://codentonic.net/">Code n Tonic</a>
           </li>
 
-          <li>
-            <a href="#">Link 2</a>
-          </li>
         </ul>
-
-        <ul class="right">
-          <li class="search">
-            <form>
-              <input type="search">
-            </form>
-          </li>
-
-          <li class="has-button">
-            <a class="small button" href="#">Search</a>
-          </li>
-        </ul>
+          
       </section>
     </nav><!-- End Navigation -->
   </div>
@@ -65,13 +67,7 @@
 
 <div class="row">
   <div class="large-12 columns">
-    <!-- Desktop Slider -->
-
-    <div class="hide-for-small">
-      <div id="featured"><img alt="slide image" src="http://placehold.it/1000x400&amp;text=Slide%20Image"></div>
-    </div><!-- End Desktop Slider -->
-    <!-- Mobile Header -->
-
+    <canvas></canvas>
     <div class="row">
       <div class="small-12 show-for-small"><br>
       <img src="http://placehold.it/1000x600&amp;text=For%20Small%20Screens"></div>
@@ -162,7 +158,7 @@
 
     <div class="row">
       <div class="large-6 columns">
-        <p>© Copyright no one at all. Go to town.</p>
+        <p>ï¿½ Copyright no one at all. Go to town.</p>
       </div>
 
       <div class="large-6 columns">
