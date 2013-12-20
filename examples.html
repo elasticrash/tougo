@@ -46,8 +46,10 @@ function read(data)
 for (var i = 1; i < polygons.length; i++)
 	{	
 	var xyArray = polygons[i].split(",");
-    datastream[i].type = 'polygon';
-    datastream[i] ={geometry: CreatePolygon(xyArray)};
+
+    datastream[i] ={ type : "polygon",
+                     geometry : CreatePolygon(xyArray)
+                   };
 	}
 }
       </script>
