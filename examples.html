@@ -20,20 +20,37 @@
     <script src="src/primitives.js"></script>
     <script src="src/geometry.js"></script>
     <script src="src/drawing.js"></script>
-    <script>$( document ).ready(function() {
-    
+    <script>
+        var datastream =new Array();
+
+        $( document ).ready(function() {
     $.ajax({
 		  type: 'GET',
 		  url: 'geom.txt',
 		  success:function(data){
-		  	splitdata(data);
-		  	mbr(polygons);
-		  	redraw();
+		  	read(data);
+              drawing(datastream, 'DFGFFF', 'E056F1', $('#canvas01'));
 		  },
 		  error:function(){}
 		  });
 
-});</script>
+});
+        
+    
+        
+function read(data)
+{
+    var polygons  = data.split('/n');
+for (var i = 0; i < polygons.length; i++)
+	{	
+    var pol = polygons[i].split("POLYGON:");
+	var xyArray = pol[1].split(",");
+    datastream[i] =CreatePolygon(xyArray);
+	}
+    
+    var BBox =  getBoundingBox(datastream);
+}
+      </script>
   </head>
   <body>
     
@@ -69,7 +86,7 @@
 </div>
 
 <div class="row">
-  <canvas id="canvas" style="z-index:99;" class="large-12 columns">
+  <canvas id="canvas01" style="z-index:99;" class="large-12 columns">
   </canvas>
 </div><br>
 
