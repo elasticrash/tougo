@@ -24,6 +24,9 @@
         var datastream =new Array();
 
         $( document ).ready(function() {
+            
+            var canvas01 = Document.getElementById("canvas01");
+            
     $.ajax({
 		  type: 'GET',
 		  url: 'geom.txt',
@@ -31,7 +34,7 @@
 		  	read(data);
               var BBox = getBoundingBox(datastream);
               var tr = transform(datastream, BBox, $('#canvas01').width(), $('#canvas01').height());
-              drawing(tr, 'DF6FFF', 'B5F155', $('#canvas01')[0]);
+              drawing(tr, false, 'B5F155', canvas01);
 		  },
 		  error:function(){}
 		  });
