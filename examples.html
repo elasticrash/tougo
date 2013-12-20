@@ -47,7 +47,7 @@ for (var i = 1; i < polygons.length; i++)
 	{	
 	var xyArray = polygons[i].split(",");
 
-    datastream[i] ={ type : "polygon",
+    datastream[i-1] ={ type : "polygon",
                      geometry : CreatePolygon(xyArray)
                    };
 	}
