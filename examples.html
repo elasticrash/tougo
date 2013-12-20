@@ -30,7 +30,7 @@
 		  success:function(data){
 		  	read(data);
               var BBox = getBoundingBox(datastream);
-              var tr = transform(datastream, BBox, $('#canvas01').width, $('#canvas01').height);
+              var tr = transform(datastream, BBox, $('#canvas01').width(), $('#canvas01').height());
               drawing(tr, 'DFGFFF', 'E056F1', $('#canvas01'));
 		  },
 		  error:function(){}
