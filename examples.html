@@ -29,7 +29,9 @@
 		  url: 'geom.txt',
 		  success:function(data){
 		  	read(data);
-              drawing(datastream, 'DFGFFF', 'E056F1', $('#canvas01'));
+              var BBox = getBoundingBox(datastream);
+              var tr = transform(datastream, BBox, $('#canvas01').width, $('#canvas01').height);
+              drawing(tr, 'DFGFFF', 'E056F1', $('#canvas01'));
 		  },
 		  error:function(){}
 		  });
@@ -41,13 +43,12 @@
 function read(data)
 {
     var polygons  = data.split("POLYGON:");
-for (var i = 0; i < polygons.length; i++)
+for (var i = 1; i < polygons.length; i++)
 	{	
 	var xyArray = polygons[i].split(",");
-    datastream[i] =CreatePolygon(xyArray);
+    datastream[i].type = 'polygon';
+    datastream[i] ={geometry: CreatePolygon(xyArray)};
 	}
-    
-    var BBox =  getBoundingBox(datastream);
 }
       </script>
   </head>
