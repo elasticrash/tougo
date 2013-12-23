@@ -130,12 +130,17 @@ function pan(){
     });
 }
 
+//unfortunately for mozilla it requires jquery
 function currentLocation(ev,canvas){
     var pixel = getpixelsize(canvas.width);
     
-    if ($.browser.mozilla) {
-        var xt = CzBox.Xmin + (ev.layerX) * pixel;
-        var yt = CzBox.Ymin + (canvas.height - ev.layerY) * pixel;
+    if (typeof ev.offsetX === 'undefined') {
+	
+		var eoffsetX = ev.clientX - $(ev.target).offset().left + window.pageXOffset;
+        var eoffsetY = ev.clientY - $(ev.target).offset().top + window.pageYOffset;
+		
+        var xt = CzBox.Xmin + (eoffsetX) * pixel;
+        var yt = eoffsetY * pixel;
     }
     else {
         var xt = CzBox.Xmin + (ev.offsetX) * pixel;
@@ -148,6 +153,7 @@ function currentLocation(ev,canvas){
 	var currentPoints = CreatePoint(x,y);
 	return currentPoints;
 }
+
 function select(){
 	
 	$('#canvas').mousedown(function(ev){
