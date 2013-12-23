@@ -25,6 +25,14 @@
 
         $( document ).ready(function() {
             
+			var defaults = {
+                                        width :          $('#rw').width()-32,
+                                        height :          $(window).height() - 200
+                                };
+								
+		var obja = $('#icq');
+        obja.append('<canvas id="canvas01" style="z-index:99; float:left;margin-left:15px; border:1px solid;" width="' + defaults.width + '" height="' + defaults.height + '"></canvas>')
+								
             var canvas01 = document.getElementById("canvas01");
             
     $.ajax({
@@ -34,7 +42,7 @@
 		  	read(data);
               var BBox = getBoundingBox(datastream);
               var tr = transform(datastream, BBox, $('#canvas01').width(), $('#canvas01').height());
-              drawing(tr, false, 'B5F155', canvas01);
+              drawing(tr, false, '243011', canvas01);
 		  },
 		  error:function(){}
 		  });
@@ -90,13 +98,13 @@ for (var i = 1; i < polygons.length; i++)
   </div>
 </div>
 
-<div class="row">
-  <canvas id="canvas01" style="z-index:99; float:left; border:1px solid; width: 100%; height: 100%;" class="large-12 columns">
-  </canvas>
+<div id="rw" class="row">
+  <div id="icq">
+  </div>
 </div><br>
 
 <div class="row">
-  <div class="large-12 columns">
+  <div  class="large-12 columns">
     <div class="row">
       <!-- Thumbnails -->
 <div class="large-3 small-6 columns">
@@ -176,7 +184,7 @@ for (var i = 1; i < polygons.length; i++)
 
     <div class="row">
       <div class="large-6 columns">
-        <p>� Copyright no one at all. Go to town.</p>
+        <p>? Copyright no one at all. Go to town.</p>
       </div>
 
       <div class="large-6 columns">
