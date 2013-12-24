@@ -35,6 +35,12 @@
 								
             var canvas01 = document.getElementById("canvas01");
             
+            CzBox = [];
+            CzBox.Xmax =  $('#canvas02').width();
+            CzBox.Xmin =  0;
+            CzBox.Ymax =  0;
+            CzBox.Ymin =  -$('#canvas02').height();
+            
     $.ajax({
 		  type: 'GET',
 		  url: 'geom.txt',
@@ -64,10 +70,10 @@ for (var i = 1; i < polygons.length; i++)
 }
         
 function drawc(e) {
-                                var Point = getviewpoint(e);
+                                var Point = getviewpoint(e,$('#canvas02')[0]);
                                 var seg = 125;
 
-                                var Circle = CreateCircle(Point, $( "#slider-range-min" ).val(), seg);
+                                var Circle = CreateCircle(Point, 12, seg);
                                 var rCircle = new Array();
                                 rCircle[0] = {
                                         type : "polygon",
@@ -75,32 +81,29 @@ function drawc(e) {
                                 }
                                 var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 
-                                past.push(rCircle);
-                                drawing(rCircle, false, color, canvas);
+                                drawing(rCircle, false, color, $('#canvas02')[0]);
 }
 
 function draws(e) {
-                                var Point = getviewpoint(e);
+                                var Point = getviewpoint(e,$('#canvas03')[0]);
                                 var seg = 4;
 
-                                var Circle = CreateCircle(Point, $( "#slider-range-min" ).val(), seg);
+                                var Circle = CreateCircle(Point, 12, seg);
                                 var rCircle = new Array();
                                 rCircle[0] = {
                                         type : "polygon",
                                         geometry : Circle
                                 }
                                 var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
-                                past.push(rCircle);
 
-                                drawing(rCircle, false, color, canvas);
-                                $('#items').val(past.length);
+                                drawing(rCircle, false, color, $('#canvas03')[0]);
 }
 
 function drawt(e) {
-                                var Point = getviewpoint(e);
+                                var Point = getviewpoint(e,$('#canvas04')[0]);
                                 var seg = 3;
 
-                                var Circle = CreateCircle(Point, $( "#slider-range-min" ).val(), seg);
+                                var Circle = CreateCircle(Point, 12, seg);
                                 var rCircle = new Array();
                                 rCircle[0] = {
                                         type : "polygon",
@@ -108,10 +111,7 @@ function drawt(e) {
                                 }
                                 var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 
-                                past.push(rCircle);
-
-                                drawing(rCircle, false, color, canvas);
-                                $('#items').val(past.length);
+                                drawing(rCircle, false, color, $('#canvas04')[0]);
 }
         
 function cirl() {
@@ -126,6 +126,17 @@ $('#canvas04').unbind();
 
 
                                 
+}
+        
+function getviewpoint(e, canvas) {
+
+                                Ccanvas = canvas;
+                                var Point = currentLocation(e, canvas);
+                                Point.y = Math.abs(Point.y);
+
+                                Point.x = Point.x+50;
+                                Point.y = Point.y+50;
+                                return Point;
 }
       </script>
   </head>
