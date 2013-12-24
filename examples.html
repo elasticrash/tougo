@@ -49,7 +49,6 @@
 
 });
         
-    
         
 function read(data)
 {
@@ -63,6 +62,57 @@ for (var i = 1; i < polygons.length; i++)
                    };
 	}
 }
+        
+function drawc(e) {
+                                var Point = getviewpoint(e);
+                                var seg = 125;
+
+                                var Circle = CreateCircle(Point, $( "#slider-range-min" ).val(), seg);
+                                var rCircle = new Array();
+                                rCircle[0] = {
+                                        type : "polygon",
+                                        geometry : Circle
+                                }
+                                var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+
+                                past.push(rCircle);
+                                drawing(rCircle, false, color, canvas);
+                        }
+
+function draws(e) {
+                                var Point = getviewpoint(e);
+                                var seg = 4;
+
+                                var Circle = CreateCircle(Point, $( "#slider-range-min" ).val(), seg);
+                                var rCircle = new Array();
+                                rCircle[0] = {
+                                        type : "polygon",
+                                        geometry : Circle
+                                }
+                                var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+                                past.push(rCircle);
+
+                                drawing(rCircle, false, color, canvas);
+                                $('#items').val(past.length);
+                        }
+
+function drawt(e) {
+                                var Point = getviewpoint(e);
+                                var seg = 3;
+
+                                var Circle = CreateCircle(Point, $( "#slider-range-min" ).val(), seg);
+                                var rCircle = new Array();
+                                rCircle[0] = {
+                                        type : "polygon",
+                                        geometry : Circle
+                                }
+                                var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+
+                                past.push(rCircle);
+
+                                drawing(rCircle, false, color, canvas);
+                                $('#items').val(past.length);
+                        }
       </script>
   </head>
   <body>

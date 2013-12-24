@@ -44,10 +44,16 @@ $ git checkout gh-pages
 <p>Personally I am especially proud of the removeDangles function in the topology.js file, that, for those that are not familiar with the term, it trims any line, in a line collection that does not participate in any potential line to polygon conversion.</p>
 
 <h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Usage Examples</h3>
 
-<p>This page is apparently under development</p>
+-display polygons
 
+<ol>
+  <li>Read Polygon Coordinates as a xy Array <pre><code>Geometries[i] ={ type : "polygon", geometry : CreatePolygon(xyArray)};</code></pre></li>
+<li>Calculate the Bounding Box <pre><code>var BBox = getBoundingBox(Geometries);</code></pre></li>
+<li>Transform Polygon Coordinate to the Local Canvas System <pre><code>var tr = transform(Geometries, BBox, Canvas_width, Canvas_height);</code></pre></li>
+<li>Draw the Polygons on the Canvas Element <pre><code>drawing(tr (transformed geometries), fill (true/false), '243011'(hex color without #), canvas (the canvas object));</code></pre> <pre><code>drawing(tr, false, '243011', canvas);</code></pre></li>
+</ol>
 <h3>
 <a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Example Page</h3>
 
