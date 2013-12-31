@@ -68,7 +68,7 @@ function deleteduplicatePoints(Geometries)
 						}
 					}
 				}
-				if(Geometries[i].geometry.x != 0)
+				if(Geometries[i].geometry.x !== 0)
 				{
 					var point = CreatePoint(Geometries[i].geometry.x, Geometries[i].geometry.y);
 					points[p] = {type: "point", geometry: point};
@@ -126,7 +126,7 @@ function removeDangles(Lines, tolerance){
 					break;
 				}
 			}
-			if (danglePoint == 0) {
+			if (danglePoint === 0) {
 				alone[p] = nodes[i];
 				p++;
 			}

@@ -1,3 +1,5 @@
+//needs primitives.js
+/*global CreatePoint:false */
 var Ccanvas;
 var Cgeometry;
 var CzBox;
@@ -11,7 +13,7 @@ function drawing(Geometries, fill, fillcolor, canvas){
             
                 for (var j = 0; j < Geometries[i].geometry.length; j++) {
                 
-                    if (j == 0) {
+                    if (j === 0) {
                         lines.moveTo(Geometries[i].geometry[j].x, Geometries[i].geometry[j].y);
                     }
                     else {
@@ -24,7 +26,7 @@ function drawing(Geometries, fill, fillcolor, canvas){
                 lines.arc(Geometries[i].geometry.x, Geometries[i].geometry.y, 4, Math.PI * 2, 0, true);
             }
         }
-        if (fill == true) {
+        if (fill === true) {
             lines.fillStyle = '#' + fillcolor;
             lines.fill();
         }
@@ -66,14 +68,14 @@ function createPanBox(Static_CzBox){
     return ZBox;
 }
 
-function zoomin(){
-    $('#canvas').unbind('click', zout);
-    $('#canvas').bind('click', zin);
+function zoomin(canvas){
+    canvas.unbind('click', zout);
+    canvas.bind('click', zin);
 }
 
-function zoomout(){
-    $('#canvas').unbind('click', zin);
-    $('#canvas').bind('click', zout)
+function zoomout(canvas){
+    canvas.unbind('click', zin);
+    canvas.bind('click', zout);
 }
 
 function zin(){
@@ -104,7 +106,8 @@ function getZoomValue(){
     }
 }
 
-var mousedownC = new Array();
+var mousedownC = [];
+
 function pan(){
     $('#canvas').unbind('click', zin);
     $('#canvas').unbind('click', zout);
@@ -134,17 +137,18 @@ function pan(){
 function currentLocation(ev,canvas){
     var pixel = getpixelsize(canvas.width);
     
+    var xt,yt;
     if (typeof ev.offsetX === 'undefined') {
 	
 		var eoffsetX = ev.clientX - $(ev.target).offset().left + window.pageXOffset;
         var eoffsetY = ev.clientY - $(ev.target).offset().top + window.pageYOffset;
 		
-        var xt = CzBox.Xmin + (eoffsetX) * pixel;
-        var yt = eoffsetY * pixel;
+        xt = CzBox.Xmin + (eoffsetX) * pixel;
+        yt = eoffsetY * pixel;
     }
     else {
-        var xt = CzBox.Xmin + (ev.offsetX) * pixel;
-        var yt = CzBox.Ymin + (canvas.height - ev.offsetY) * pixel;
+        xt = CzBox.Xmin + (ev.offsetX) * pixel;
+        yt = CzBox.Ymin + (canvas.height - ev.offsetY) * pixel;
     }
     
     x = Math.round(xt * 100) / 100;
@@ -158,17 +162,17 @@ function select(){
 	
 	$('#canvas').mousedown(function(ev){
 			var cur = currentLocation(ev,this);
-			 loop: for (var i = 0; i < Cgeometry.length; i++) {
-			 	if (Cgeometry[i].type != "point") {
-			 		if (PointInPolygon(Cgeometry[i].geometry, cur.x, cur.y)) {
-						var g = new Array();
+                loop: for (var i = 0; i < Cgeometry.length; i++) {
+                if (Cgeometry[i].type != "point") {
+                if (PointInPolygon(Cgeometry[i].geometry, cur.x, cur.y)) {
+						var g = [];
 						g[0] = Cgeometry[i];
 						var lg = transform(g,CzBox,canvas.width,canvas.height);
 						drawing(lg, true, "8D638B", this);
 						break loop;
-			 		}
-			 	}
-			 }	
+                    }
+                }
+            }	
 		});
 }
 function clearcanvas(){
