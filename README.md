@@ -29,3 +29,5 @@ usage example (display polygons)
 4. Draw the Polygons on the Canvas Element
 ```drawing(tr (transformed geometries), fill (true/false), '243011'(hex color without #), canvas (the canvas object));```
 ```drawing(tr, false, '243011', canvas);```
+
+visit http://elasticrash.github.io/tougo/ for more info and examples
