@@ -131,7 +131,7 @@ function pan(){
 }
 
 function currentLocation(ev,canvas){
-    var pixel = getpixelsize(canvas.width);
+    var pixel = getpixelsize(canvas.clientWidth);
     
 		
     if (typeof ev.offsetX === 'undefined') {
@@ -144,7 +144,7 @@ function currentLocation(ev,canvas){
     }
     else {
         var xt = CzBox.Xmin + (ev.offsetX) * pixel;
-        var yt = CzBox.Ymin + (canvas.height - ev.offsetY) * pixel;
+        var yt = CzBox.Ymin + (canvas.clientHeight - ev.offsetY) * pixel;
     }
     
     x = Math.round(xt * 100) / 100;

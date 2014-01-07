@@ -129,13 +129,14 @@ $('#canvas04').unbind();
 }
         
 function getviewpoint(e, canvas) {
-
                                 Ccanvas = canvas;
                                 var Point = currentLocation(e, canvas);
                                 Point.y = Math.abs(Point.y);
-
-                                Point.x = Point.x+50;
-                                Point.y = Point.y+50;
+    
+                                var a = canvas.width/canvas.clientWidth;
+                                var b = canvas.height/canvas.clientHeight;
+                                Point.x = Point.x*a;
+                                Point.y = Point.y*b;
                                 return Point;
 }
       </script>
