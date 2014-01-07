@@ -135,7 +135,7 @@ function pan(){
 
 //unfortunately for mozilla it requires jquery
 function currentLocation(ev,canvas){
-    var pixel = getpixelsize(canvas.width);
+    var pixel = getpixelsize(canvas.clientWidth);
     
     var xt,yt;
     if (typeof ev.offsetX === 'undefined') {
@@ -148,7 +148,7 @@ function currentLocation(ev,canvas){
     }
     else {
         xt = CzBox.Xmin + (ev.offsetX) * pixel;
-        yt = CzBox.Ymin + (canvas.height - ev.offsetY) * pixel;
+        yt = CzBox.Ymin + (canvas.clientHeight - ev.offsetY) * pixel;
     }
     
     x = Math.round(xt * 100) / 100;
