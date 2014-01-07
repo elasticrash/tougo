@@ -114,15 +114,32 @@ function drawt(e) {
                                 drawing(rCircle, false, color, $('#canvas04')[0]);
 }
         
+        function drawst(e) {
+                                var Point = getviewpoint(e,$('#canvas05')[0]);
+                                var seg = 22;
+
+                                var Circle = CreateStar(Point, 12, seg);
+                                var rCircle = new Array();
+                                rCircle[0] = {
+                                        type : "polygon",
+                                        geometry : Circle
+                                }
+                                var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+
+                                drawing(rCircle, false, color, $('#canvas05')[0]);
+}
+        
 function cirl() {
 
 $('#canvas02').unbind();
 $('#canvas03').unbind();
 $('#canvas04').unbind();
+$('#canvas05').unbind();
 
                                 $('#canvas02').mousedown(function(event) {drawc(event);});
                                 $('#canvas03').mousedown(function(event) {draws(event);});
                                 $('#canvas04').mousedown(function(event) {drawt(event);});
+                                $('#canvas05').mousedown(function(event) {drawst(event);});
 
 
                                 
@@ -139,6 +156,7 @@ function getviewpoint(e, canvas) {
                                 Point.y = Point.y*b;
                                 return Point;
 }
+
       </script>
   </head>
   <body>

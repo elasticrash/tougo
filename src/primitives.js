@@ -48,7 +48,34 @@ function CreatePoint(x, y){
     };
     return Point;
 }
-
+//create a star
+function CreateStar(point, radius, segments)
+{
+	var seg = Math.PI * 2 / segments;
+    var PTS = [];
+    
+    var y = 0;
+    for (var i = 0; i < segments; i++)
+    {
+        var theta = seg * i;
+        if(isOdd(i))
+        {
+        PTS[y] = point.x + Math.cos( theta ) * (radius*2);
+        PTS[y+1] = point.y + Math.sin( theta ) * (radius*2);
+        }
+        else
+        {
+        PTS[y] = point.x + Math.cos( theta ) * radius;
+        PTS[y+1] = point.y + Math.sin( theta ) * radius;
+        }
+        
+        y=y+2;
+     }
+    PTS[segments*2] = point.x + Math.cos( 0 ) * radius;
+    PTS[segments*2+1] = point.y + Math.sin( 0 ) * radius;
+	
+	return CreatePolygon(PTS);
+}
 //create line using point, angle, distance
 function CreateLineFromPointAngleDist(PointA, angle, dist)
 {
@@ -70,3 +97,5 @@ function CreateLineFromPointAngleDist(PointA, angle, dist)
     
     return Line;
 }
+
+function isOdd(num) { return num % 2;}
