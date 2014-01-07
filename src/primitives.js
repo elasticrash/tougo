@@ -98,3 +98,5 @@ function CreateLineFromPointAngleDist(PointA, angle, dist)
     
     return Line;
 }
+
+function isOdd(num) { return num % 2;}
