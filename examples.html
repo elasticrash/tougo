@@ -21,9 +21,12 @@
     <script src="src/geometry.js"></script>
     <script src="src/drawing.js"></script>
     <script>
-        var datastream =new Array();
+        var datastream =[];
+        var tr;
 
         $( document ).ready(function() {
+            
+            cirl();
             
 			var defaults = {
                                         width :          $('#rw').width()-32,
@@ -31,15 +34,11 @@
                                 };
 								
 		var obja = $('#icq');
-        obja.append('<canvas id="canvas01" style="z-index:99; float:left;margin-left:15px; border:1px solid;" width="' + defaults.width + '" height="' + defaults.height + '"></canvas>')
+        obja.append('<canvas onclick="cirl()" id="canvas01" style="z-index:99; float:left; border:1px solid;" width="' + defaults.width + '" height="' + defaults.height + '"></canvas>')
 								
             var canvas01 = document.getElementById("canvas01");
             
-            CzBox = [];
-            CzBox.Xmax =  $('#canvas02').width();
-            CzBox.Xmin =  0;
-            CzBox.Ymax =  0;
-            CzBox.Ymin =  -$('#canvas02').height();
+            createCzBoxSmall();
             
     $.ajax({
 		  type: 'GET',
@@ -47,14 +46,30 @@
 		  success:function(data){
 		  	read(data);
               var BBox = getBoundingBox(datastream);
-              var tr = transform(datastream, BBox, $('#canvas01').width(), $('#canvas01').height());
+              tr = transform(datastream, BBox, $('#canvas01').width(), $('#canvas01').height());
               drawing(tr, false, '243011', canvas01);
 		  },
 		  error:function(){}
 		  });
 
 });
+        function createCzBoxSmall()
+        {
+                        CzBox = [];
+            CzBox.Xmax =  $('#canvas02').width();
+            CzBox.Xmin =  0;
+            CzBox.Ymax =  0;
+            CzBox.Ymin =  -$('#canvas02').height();
+        }
         
+         function createCzBoxLarge()
+        {
+                        CzBox = [];
+            CzBox.Xmax =  $('#canvas01').width();
+            CzBox.Xmin =  0;
+            CzBox.Ymax =  0;
+            CzBox.Ymin =  -$('#canvas01').height();
+        }
         
 function read(data)
 {
@@ -70,11 +85,12 @@ for (var i = 1; i < polygons.length; i++)
 }
         
 function drawc(e) {
+                                createCzBoxSmall();
                                 var Point = getviewpoint(e,$('#canvas02')[0]);
                                 var seg = 125;
 
                                 var Circle = CreateCircle(Point, 12, seg);
-                                var rCircle = new Array();
+                                var rCircle = [];
                                 rCircle[0] = {
                                         type : "polygon",
                                         geometry : Circle
@@ -85,11 +101,12 @@ function drawc(e) {
 }
 
 function draws(e) {
+                                createCzBoxSmall();
                                 var Point = getviewpoint(e,$('#canvas03')[0]);
                                 var seg = 4;
 
                                 var Circle = CreateCircle(Point, 12, seg);
-                                var rCircle = new Array();
+                                var rCircle = [];
                                 rCircle[0] = {
                                         type : "polygon",
                                         geometry : Circle
@@ -100,11 +117,12 @@ function draws(e) {
 }
 
 function drawt(e) {
+                                createCzBoxSmall();
                                 var Point = getviewpoint(e,$('#canvas04')[0]);
                                 var seg = 3;
 
                                 var Circle = CreateCircle(Point, 12, seg);
-                                var rCircle = new Array();
+                                var rCircle = [];
                                 rCircle[0] = {
                                         type : "polygon",
                                         geometry : Circle
@@ -113,13 +131,14 @@ function drawt(e) {
 
                                 drawing(rCircle, false, color, $('#canvas04')[0]);
 }
-        
-        function drawst(e) {
+   
+function drawst(e) {
+                                createCzBoxSmall();
                                 var Point = getviewpoint(e,$('#canvas05')[0]);
                                 var seg = 22;
 
                                 var Circle = CreateStar(Point, 12, seg);
-                                var rCircle = new Array();
+                                var rCircle = [];
                                 rCircle[0] = {
                                         type : "polygon",
                                         geometry : Circle
@@ -129,20 +148,42 @@ function drawt(e) {
                                 drawing(rCircle, false, color, $('#canvas05')[0]);
 }
         
+function pick(e)
+{
+    createCzBoxLarge();
+    
+            var Point = getviewpoint(e,$('#canvas01')[0]);
+            var color = Math.round(0xffffff * Math.random()).toString(16);
+            var rgeo = [];
+            
+        for (var i = 0; i < tr.length; i++)
+        {
+            if (tr[i].type != "point")
+            {
+                if( PointInPolygon(tr[i].geometry, Point.x, Point.y))
+                   {
+                       rgeo[0] = {
+                                        type : "polygon",
+                                        geometry : tr[i].geometry
+                                }
+                   drawing(rgeo, true, color, $('#canvas01')[0]);
+                   }
+            }
+        }
+ }
+        
 function cirl() {
-
+$('#canvas01').unbind();
 $('#canvas02').unbind();
 $('#canvas03').unbind();
 $('#canvas04').unbind();
 $('#canvas05').unbind();
 
+                                $('#canvas01').mousedown(function(event) {pick(event);});
                                 $('#canvas02').mousedown(function(event) {drawc(event);});
                                 $('#canvas03').mousedown(function(event) {draws(event);});
                                 $('#canvas04').mousedown(function(event) {drawt(event);});
-                                $('#canvas05').mousedown(function(event) {drawst(event);});
-
-
-                                
+                                $('#canvas05').mousedown(function(event) {drawst(event);});                                
 }
         
 function getviewpoint(e, canvas) {
@@ -193,8 +234,10 @@ function getviewpoint(e, canvas) {
 </div>
 
 <div id="rw" class="row">
-  <div id="icq">
+  <div class="large-12 columns">
+      <div id="icq"></div>
   </div>
+    <h6>Click a Polygon to fill it with a random color. Its a type of Polygon select tool</h6>
 </div><br>
 
 <div class="row">
@@ -237,7 +280,7 @@ function getviewpoint(e, canvas) {
         <div class="panel radius">
           <div class="row">
             <div class="large-6 small-6 columns">
-              <h4>Description</h4>
+              <h4>Header</h4>
               <hr>
 
               <h5 class="subheader">Have Fun Enjoy Thy Self</h5>
@@ -249,7 +292,9 @@ function getviewpoint(e, canvas) {
             </div>
 
             <div class="large-6 small-6 columns">
-              <p>This page has some small basic examples on how to display geographical data on a Canvas element using my library, as well as 4 small examples on how to draw some primitive geometrical objects on various canvases.</p>
+              <p>Suspendisse ultrices ornare tempor. Aenean eget ultricies libero. Phasellus non ipsum eros. Vivamus
+              at dignissim massa. Aenean dolor libero, blandit quis interdum et, malesuada nec ligula. Nullam erat
+              erat, eleifend sed pulvinar ac. Suspendisse ultrices ornare tempor. Aenean eget ultricies libero.</p>
             </div>
           </div>
         </div>
@@ -260,10 +305,10 @@ function getviewpoint(e, canvas) {
         <hr>
         <a href="#">
         <div class="panel radius callout" style="text-align: center">
-          <strong>this button does absolutely nothing!</strong>
+          <strong>Call To Action!</strong>
         </div></a> <a href="#">
         <div class="panel radius callout" style="text-align: center">
-          <strong>this button does absolutely nothing!</strong>
+          <strong>Call To Action!</strong>
         </div></a>
       </div><!-- End Content -->
     </div>
@@ -276,25 +321,25 @@ function getviewpoint(e, canvas) {
 
     <div class="row">
       <div class="large-6 columns">
-        <p>Copyright no one at all. Go to town.</p>
+        <p>? Copyright no one at all. Go to town.</p>
       </div>
 
       <div class="large-6 columns">
         <ul class="inline-list right">
           <li>
-            <a href="#">space for link</a>
+            <a href="#">Link 1</a>
           </li>
 
           <li>
-            <a href="#">space for link</a>
+            <a href="#">Link 2</a>
           </li>
 
           <li>
-            <a href="#">space for link</a>
+            <a href="#">Link 3</a>
           </li>
 
           <li>
-            <a href="#">space for link</a>
+            <a href="#">Link 4</a>
           </li>
         </ul>
       </div>
