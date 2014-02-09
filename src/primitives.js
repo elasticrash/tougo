@@ -102,8 +102,6 @@ function CreateLineFromPointAngleDist(PointA, angle, dist)
     return Line;
 }
 
-<<<<<<< HEAD
 function isOdd(num) { return num % 2;}
-=======
 function isOdd(num) { return num % 2;}
->>>>>>> gh-pages
+
