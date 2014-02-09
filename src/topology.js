@@ -68,11 +68,8 @@ function deleteduplicatePoints(Geometries)
 						}
 					}
 				}
-<<<<<<< HEAD
+				
 				if(Geometries[i].geometry.x !== 0)
-=======
-				if(Geometries[i].geometry.x != 0)
->>>>>>> gh-pages
 				{
 					var point = CreatePoint(Geometries[i].geometry.x, Geometries[i].geometry.y);
 					points[p] = {type: "point", geometry: point};
@@ -130,11 +127,8 @@ function removeDangles(Lines, tolerance){
 					break;
 				}
 			}
-<<<<<<< HEAD
+			
 			if (danglePoint === 0) {
-=======
-			if (danglePoint == 0) {
->>>>>>> gh-pages
 				alone[p] = nodes[i];
 				p++;
 			}
