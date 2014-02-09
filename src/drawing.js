@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 //needs primitives.js
 /*global CreatePoint:false */
-=======
->>>>>>> gh-pages
 var Ccanvas;
 var Cgeometry;
 var CzBox;
@@ -16,11 +13,8 @@ function drawing(Geometries, fill, fillcolor, canvas){
             
                 for (var j = 0; j < Geometries[i].geometry.length; j++) {
                 
-<<<<<<< HEAD
                     if (j === 0) {
-=======
-                    if (j == 0) {
->>>>>>> gh-pages
+
                         lines.moveTo(Geometries[i].geometry[j].x, Geometries[i].geometry[j].y);
                     }
                     else {
@@ -79,7 +73,6 @@ function createPanBox(Static_CzBox){
     return ZBox;
 }
 
-<<<<<<< HEAD
 function zoomin(canvas){
     canvas.unbind('click', zout);
     canvas.bind('click', zin);
@@ -88,16 +81,6 @@ function zoomin(canvas){
 function zoomout(canvas){
     canvas.unbind('click', zin);
     canvas.bind('click', zout);
-=======
-function zoomin(){
-    $('#canvas').unbind('click', zout);
-    $('#canvas').bind('click', zin);
-}
-
-function zoomout(){
-    $('#canvas').unbind('click', zin);
-    $('#canvas').bind('click', zout)
->>>>>>> gh-pages
 }
 
 function zin(){
@@ -128,30 +111,26 @@ function getZoomValue(){
     }
 }
 
-<<<<<<< HEAD
 var mousedownC = [];
 
-=======
-var mousedownC = new Array();
->>>>>>> gh-pages
-function pan(){
-    $('#canvas').unbind('click', zin);
-    $('#canvas').unbind('click', zout);
-	$('#canvas').unbind('mousedown', select);
+function pan(canvas){
+    canvas.unbind('click', zin);
+    canvas.unbind('click', zout);
+	canvas.unbind('mousedown', select);
     
-    $('#canvas').mousedown(function(){
+    canvas.mousedown(function(){
         mousedownC = center;
         Static_CzBox = CzBox;
-        $('#canvas').mousemove(function(event){
+        canvas.mousemove(function(event){
             clearcanvas();
             
             var Zbox = createPanBox(Static_CzBox);
             var gitem = transform(Cgeometry, Zbox, canvas.width, canvas.height);
             drawing(gitem, false, "00f", canvas);
             
-            $('#canvas').mouseup(function(event){
-                $('#canvas').unbind('mousedown');
-                $('#canvas').unbind('mousemove');
+            canvas.mouseup(function(event){
+                canvas.unbind('mousedown');
+                canvas.unbind('mousemove');
                 CzBox = Zbox;
             });
             
@@ -159,38 +138,24 @@ function pan(){
     });
 }
 
-<<<<<<< HEAD
+
 //unfortunately for mozilla it requires jquery
 function currentLocation(ev,canvas){
     var pixel = getpixelsize(canvas.clientWidth);
     
     var xt,yt;
-=======
-function currentLocation(ev,canvas){
-    var pixel = getpixelsize(canvas.clientWidth);
-    
+
 		
->>>>>>> gh-pages
     if (typeof ev.offsetX === 'undefined') {
-	
-		var eoffsetX = ev.clientX - $(ev.target).offset().left + window.pageXOffset;
+	var eoffsetX = ev.clientX - $(ev.target).offset().left + window.pageXOffset;
         var eoffsetY = ev.clientY - $(ev.target).offset().top + window.pageYOffset;
 		
-<<<<<<< HEAD
         xt = CzBox.Xmin + (eoffsetX) * pixel;
         yt = eoffsetY * pixel;
     }
     else {
         xt = CzBox.Xmin + (ev.offsetX) * pixel;
         yt = CzBox.Ymin + (canvas.clientHeight - ev.offsetY) * pixel;
-=======
-        var xt = CzBox.Xmin + (eoffsetX) * pixel;
-        var yt = eoffsetY * pixel;
-    }
-    else {
-        var xt = CzBox.Xmin + (ev.offsetX) * pixel;
-        var yt = CzBox.Ymin + (canvas.clientHeight - ev.offsetY) * pixel;
->>>>>>> gh-pages
     }
     
     x = Math.round(xt * 100) / 100;
@@ -199,38 +164,23 @@ function currentLocation(ev,canvas){
 	var currentPoints = CreatePoint(x,y);
 	return currentPoints;
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> gh-pages
-function select(){
-	
-	$('#canvas').mousedown(function(ev){
+
+function select(canvas){
+
+	canvas.mousedown(function(ev){
 			var cur = currentLocation(ev,this);
-<<<<<<< HEAD
-                loop: for (var i = 0; i < Cgeometry.length; i++) {
-                if (Cgeometry[i].type != "point") {
-                if (PointInPolygon(Cgeometry[i].geometry, cur.x, cur.y)) {
-						var g = [];
-=======
 			 loop: for (var i = 0; i < Cgeometry.length; i++) {
 			 	if (Cgeometry[i].type != "point") {
 			 		if (PointInPolygon(Cgeometry[i].geometry, cur.x, cur.y)) {
 						var g = new Array();
->>>>>>> gh-pages
 						g[0] = Cgeometry[i];
 						var lg = transform(g,CzBox,canvas.width,canvas.height);
 						drawing(lg, true, "8D638B", this);
 						break loop;
-<<<<<<< HEAD
-                    }
-                }
-            }	
-=======
 			 		}
 			 	}
 			 }	
->>>>>>> gh-pages
 		});
 }
 function clearcanvas(){
