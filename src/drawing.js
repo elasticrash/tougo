@@ -27,11 +27,8 @@ function drawing(Geometries, fill, fillcolor, canvas){
                 lines.arc(Geometries[i].geometry.x, Geometries[i].geometry.y, 4, Math.PI * 2, 0, true);
             }
         }
-<<<<<<< HEAD
+
         if (fill === true) {
-=======
-        if (fill == true) {
->>>>>>> gh-pages
             lines.fillStyle = '#' + fillcolor;
             lines.fill();
         }
