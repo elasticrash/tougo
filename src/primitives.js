@@ -76,7 +76,10 @@ function CreateStar(point, radius, segments)
 	
 	return CreatePolygon(PTS);
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> gh-pages
 //create line using point, angle, distance
 function CreateLineFromPointAngleDist(PointA, angle, dist)
 {
@@ -99,4 +102,8 @@ function CreateLineFromPointAngleDist(PointA, angle, dist)
     return Line;
 }
 
+<<<<<<< HEAD
 function isOdd(num) { return num % 2;}
+=======
+function isOdd(num) { return num % 2;}
+>>>>>>> gh-pages
