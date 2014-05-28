@@ -270,10 +270,12 @@ function getAllNodes(Geometries)
 	return nodes;
 }
 
-//Gets the Polar Angle From 2 Points
-function PolarAngle(PointA, PointB)
+//Gets the Azimuth Angle From 2 Points
+function AzimuthAngle(PointA, PointB)
 {
- var angle = Math.atan2(PointB.y - PointA.y, PointB.x - PointA.x);
+	var dy = PointB.y - PointA.y;
+	var dx = PointB.x - PointA.x;
+ 	var angle = (Math.PI*0.5)-Math.atan2(dy, dx);
    return angle;
 }
 
