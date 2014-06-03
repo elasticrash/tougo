@@ -119,7 +119,7 @@ function transform(oldGeometries, Boxobj, width, height){
     
     var lw = Boxobj.Xmax - Boxobj.Xmin;
 	var ly = Boxobj.Ymax - Boxobj.Ymin;
-    
+
     lw = lw < ly ? lw : ly;
 
     width = width < height ? width : height;
@@ -261,11 +261,14 @@ function getAllNodes(Geometries)
 }
 
 //Gets the Azimuth Angle From 2 Points
+/**
+ * @return {number}
+ */
 function AzimuthAngle(PointA, PointB)
 {
 	var dy = PointB.y - PointA.y;
 	var dx = PointB.x - PointA.x;
- 	var angle = (Math.PI*0.5)-Math.atan2(dy, dx);
+    var angle = (Math.PI*0.5)-Math.atan2(dy, dx);
    return angle;
 }
 
@@ -295,14 +298,10 @@ var y = PointB.y - PointA.y;
 var len = Math.pow(x, 2) + Math.pow(y, 2);
 var dx = x * (PointPt.x - PointA.x) + y * (PointPt.y - PointA.y);
 
-var pp2p = CreatePoint(PointA.x + dx * x / len, PointA.y + dx * y / len);
-
-return pp2p;
+return CreatePoint(PointA.x + dx * x / len, PointA.y + dx * y / len);
 }
 // three points on same line
 function betweenPoints(PointA, PointB, PointC)
 {
-    var btwPoint = (PointC.x <= Math.max(PointA.x, PointB.x)) && (PointC.x >= Math.min(PointA.x, PointB.x)) && (PointC.y <= Math.max(PointA.y, PointB.y)) && (PointC.y >= Math.min(PointA.y, PointB.y));
-
-     return btwPoint;
+    return (PointC.x <= Math.max(PointA.x, PointB.x)) && (PointC.x >= Math.min(PointA.x, PointB.x)) && (PointC.y <= Math.max(PointA.y, PointB.y)) && (PointC.y >= Math.min(PointA.y, PointB.y));
  }
