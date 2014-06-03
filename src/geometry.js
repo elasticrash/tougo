@@ -120,19 +120,9 @@ function transform(oldGeometries, Boxobj, width, height){
     var lw = Boxobj.Xmax - Boxobj.Xmin;
 	var ly = Boxobj.Ymax - Boxobj.Ymin;
     
-    if (lw < ly) {
-        lw = lw;
-    }
-    else {
-        lw = ly;
-    }
-	
-    if (width < height) {
-		width = width;
-    }
-    else {
-        width = height;
-    }
+    lw = lw < ly ? lw : ly;
+
+    width = width < height ? width : height;
     
     for (var i = 0; i < oldGeometries.length; i++) {
         var Geometries = [];
