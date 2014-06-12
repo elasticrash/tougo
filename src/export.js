@@ -52,3 +52,29 @@ function exportdxf(past) {
 	}
 	return Writer;
 }
+//functions for converting geometries to WKT
+//Point to WKT
+function Point2WKT(point)
+{
+	return "POINT ( " + point.x + " " + point.y  + " )";
+}
+//Polygon to WKT
+function Polygon2WKT(polygon)
+{
+	var wktstring = "LINESTRING (";
+	
+	for (var i=0; i < Polygon.length; i++)
+	{
+		if (i > 0)
+		{
+			wktstring +=", ";
+		}
+		else
+		{
+			wktstring += Polygon[i].x +" " + Polygon[i].y;
+		}
+	}
+	wktstring +=")";
+	
+	return wktstring;
+}
