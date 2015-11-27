@@ -2,59 +2,59 @@
 /*global CreatePoint:false */
 //returns true if a point is inside a particular polygon
 function PointInPolygon(poly, x, y){
-    for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i) 
+    for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
         ((poly[i].y <= y && y < poly[j].y) || (poly[j].y <= y && y < poly[i].y)) &&
         (x < (poly[j].x - poly[i].x) * (y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x) &&
         (c = !c);
-    if (c === true) 
+    if (c === true)
         return true;
-    else 
+    else
         return false;
 }
 
-//a polygon simplification algorithm I wrote 2 years ago based on a tolerance value 
+//a polygon simplification algorithm I wrote 2 years ago based on a tolerance value
 function Simplify(polygon, tolerance){
     var simplefiedPolygon = [];
-    
+
     simplefiedPolygon[0] = polygon[0];
-    
+
     var ivertex = 0;
     var ipoint = 0;
-    
+
     for (var c = 0; c < polygon.length - 2; c++) {
         var point1 = [];
-        
+
         point1 = {
             x: polygon[ivertex].x,
             y: polygon[ivertex].y
         };
-        
+
         var point2 = [];
         point2 = {
             x: polygon[c + 2].x,
             y: polygon[c + 2].y
         };
-        
+
         var MidPoints = [];
-        
+
         for (var j = 0; j < (c + 1 - ivertex); j++) {
             MidPoints[j] = polygon[ivertex + j + 1];
         }
-        
+
         var D = Math.sqrt(Math.pow((point1.x - point2.x), 2) + Math.pow((point1.y - point2.y), 2));
         var y1my2 = (point1.y - point2.y);
         var x2mx1 = (point2.x - point1.x);
         var C = (point2.y * point1.x) - (point1.y * point2.x);
-        
+
         var run = 1;
-        
+
         for (var i = 0; i < MidPoints.length; i++) {
             var dist = Math.abs(MidPoints[i].x * y1my2 + MidPoints[i].y * x2mx1 + C) / D;
             if (dist > tolerance) {
                 run = -1;
             }
         }
-        
+
         if (run == -1) {
             ipoint++;
             ivertex = c + 1;
@@ -63,35 +63,35 @@ function Simplify(polygon, tolerance){
     }
     simplefiedPolygon[ipoint + 1] = polygon[polygon.length - 2];
     simplefiedPolygon[ipoint + 2] = polygon[polygon.length - 1];
-    
+
     return simplefiedPolygon;
 }
 // get the intersection of 2 lines
 function intersection(PointA, PointB, PointC, PointD){
     var cross;
-    
+
     var xD1 = PointB.x - PointA.x;
     var xD2 = PointD.x - PointC.x;
     var yD1 = PointB.y - PointA.y;
     var yD2 = PointD.y - PointC.y;
     var xD3 = PointA.x - PointC.x;
     var yD3 = PointA.y - PointC.y;
-    
+
     var len1 = Math.sqrt(Math.pow(xD1, 2) + Math.pow(yD1, 2));
     var len2 = Math.sqrt(Math.pow(xD2, 2) + Math.pow(yD2, 2));
-    
-    var dot = (xD1 * xD2 + yD1 * yD2); // dot product  
+
+    var dot = (xD1 * xD2 + yD1 * yD2); // dot product
     var deg = dot / (len1 * len2);
-    
+
     var div = yD2 * xD1 - xD2 * yD1;
     var ua = (xD2 * yD3 - yD2 * xD3) / div;
     var ub = (xD1 * yD3 - yD1 * xD3) / div;
-    
+
     var crossx = PointA.x + ua * xD1;
     var crossy = PointA.y + ua * yD1;
-    
+
     cross = CreatePoint(crossx,crossy);
-    
+
     return cross;
 }
 // checks if the intersection point from the previous function is within certain line segments
@@ -116,14 +116,14 @@ function distance(PointA, PointB){
 //scale and offset
 function transform(oldGeometries, Boxobj, width, height){
     var TransformedGeometries = [];
-    
+
     var lw = Boxobj.Xmax - Boxobj.Xmin;
 	var ly = Boxobj.Ymax - Boxobj.Ymin;
 
     lw = lw < ly ? lw : ly;
 
     width = width < height ? width : height;
-    
+
     for (var i = 0; i < oldGeometries.length; i++) {
         var Geometries = [];
 
@@ -156,14 +156,14 @@ function getBoundingBox(Geometries)
 	var alllinesy = [];
 	var p = 0;
 	for (var i = 1; i < Geometries.length; i++) {
-	
+
 		for (var j = 0; j < Geometries[i].geometry.length; j++) {
 			alllinesx[p] = parseFloat(Geometries[i].geometry[j].x);
 			alllinesy[p] = parseFloat(Geometries[i].geometry[j].y);
 			p++;
 		}
 	}
-	
+
 	var BBox = {
 		Xmin: Math.min.apply(null, alllinesx),
 		Xmax: Math.max.apply(null, alllinesx),
@@ -177,7 +177,7 @@ function getBoundingBox(Geometries)
 function GetArea(Polygon)
 {
 	var area = 0;
-	
+
 	for (var i=0; i < Polygon.length-1; i++)
 	{
 		area = area + Polygon[i].x*Polygon[i+1].y-Polygon[i+1].x*Polygon[i].y;
@@ -207,9 +207,9 @@ function extendLineBothSides(PointA, PointB, dist)
 {
 	var slope = (PointB.y-PointA.y)/ (PointB.x-PointA.x);
 	var intercept = PointA.y-PointA.x*slope;
-	
+
 	var a,b,c,d;
-	
+
 	var result = [];
 	if (PointA.x > PointB.x) {
 		a = parseFloat(PointA.x)+dist;
@@ -226,7 +226,7 @@ function extendLineBothSides(PointA, PointB, dist)
 	}
 	result[0] = CreatePoint(a,b);
 	result[1] = CreatePoint(c,d);
-	
+
 	return result;
 }
 
@@ -239,14 +239,14 @@ function getPolygonNodes(Polygon)
 		var point = CreatePoint(Polygon[i].x, Polygon[i].y);
 		nodes[i] = {type: "point", geometry: point};
 	}
-	
+
 	return nodes;
 }
 //gets a list of nodes from a geometry collection
 function getAllNodes(Geometries)
 {
 	var nodes = [];
-	
+
 	var p = 0;
 		for (var i = 0; i < Geometries.length; i++) {
 		if (Geometries.type != "point") {
@@ -276,17 +276,17 @@ function AzimuthAngle(PointA, PointB)
 /*function scaleAndRotateGeometries(Geometries, PointAnchor,  scalex,  scaley,  angle)
 {
     var TGeometries = [];
-    
+
     for (var i=0; i < Polygon.length-1; i++)
 	{
     }
-    
+
     translate(PointAnchor.x, PointAnchor.y);
     scale(1.0D / scalex, 1.0D / scaley);
     rotate(angle);
     translate(-1.0D * PointAnchor.x, -1.0D * PointAnchor.y);
     transform(Geometries, 0, TGeometries, 0, getAllNodes(Geometries).length);
-    
+
     return TGeometries;
   }*/
 
