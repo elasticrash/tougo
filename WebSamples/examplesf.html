@@ -7,36 +7,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Foundation Template | Workspace</title>
 
-    
+
     <meta name="description" content="Documentation and reference library for ZURB Foundation. JavaScript, CSS, components, grid and more." />
-    
+
     <meta name="author" content="ZURB, inc. ZURB network also includes zurb.com" />
     <meta name="copyright" content="ZURB, inc. Copyright (c) 2013" />
 
     <link rel="stylesheet" href="stylesheets/foundation.css" />
-      
+
     <script src="javascripts/jquery.js"></script>
     <script src="javascripts/modernizr.js"></script>
-    <script src="../src/primitives.js"></script>
-    <script src="../src/geometry.js"></script>
-    <script src="../src/drawing.js"></script>
+    <script src="../src/original/primitives.js"></script>
+    <script src="../src/original/geometry.js"></script>
+    <script src="../src/original/drawing.js"></script>
     <script>
         var past = [];
 
         $( document ).ready(function() {
-            
+
             cirl(this);
-            
+
 			var defaults = {
                                         width :          $('#rw').width()-32,
                                         height :          $(window).height() - 200
                                 };
-								
+
 		var obja = $('#icq');
         obja.append('<canvas id="canvas01" style="z-index:99; float:left; border:1px solid;" width="' + defaults.width + '" height="' + defaults.height + '"></canvas>')
-								
+
             var canvas01 = document.getElementById("canvas01");
-            
+
             createCzBoxSmall();
 
 });
@@ -70,7 +70,7 @@ for (var i = 1; i < polygons.length; i++)
                    };
 	}
 }
-        
+
 function smallc(e) {
                                 createCzBoxSmall();
                                 var Point = getviewpoint(e,$('#canvas02')[0]);
@@ -118,7 +118,7 @@ function smallt(e) {
 
                                 drawing(rCircle, false, color, $('#canvas04')[0]);
 }
-   
+
 function smallst(e) {
                                 createCzBoxSmall();
                                 var Point = getviewpoint(e,$('#canvas05')[0]);
@@ -243,11 +243,11 @@ function smallst(e) {
 function pick(e)
 {
     createCzBoxLarge();
-    
+
             var Point = getviewpoint(e,$('#canvas01')[0]);
             var color = Math.round(0xffffff * Math.random()).toString(16);
             var rgeo = [];
-            
+
         for (var i = 0; i < past.length; i++)
         {
             if (past[i].type != "point")
@@ -263,7 +263,7 @@ function pick(e)
             }
         }
  }
-        
+
 function cirl(type) {
     if(type!='undefined') {
         $('#canvas01').unbind();
@@ -298,12 +298,12 @@ function cirl(type) {
             $('#canvas04').mousedown(function(event) {smallt(event);});
             $('#canvas05').mousedown(function(event) {smallst(event);});
         }
-        
+
 function getviewpoint(e, canvas) {
                                 Ccanvas = canvas;
                                 var Point = currentLocation(e, canvas);
                                 Point.y = Math.abs(Point.y);
-    
+
                                 var a = canvas.width/canvas.clientWidth;
                                 var b = canvas.height/canvas.clientHeight;
                                 Point.x = Point.x*a;
@@ -314,7 +314,7 @@ function getviewpoint(e, canvas) {
       </script>
   </head>
   <body>
-    
+
 
 <div class="row">
   <div class="large-12 columns">

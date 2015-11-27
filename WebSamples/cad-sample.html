@@ -8,11 +8,11 @@
 		<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 		<script language="JavaScript" type="text/javascript" src="../js/bootstrap.js"></script>
 		<script language="JavaScript" type="text/javascript" src="../js/bootstrap-slider.js"></script>
-        <script language="JavaScript" type="text/javascript" src="../src/drawing.js"></script>
-		<script language="JavaScript" type="text/javascript" src="../src/geometry.js"></script>
-		<script language="JavaScript" type="text/javascript" src="../src/topology.js"></script>
-		<script language="JavaScript" type="text/javascript" src="../src/drawing.js"></script>
-		<script language="JavaScript" type="text/javascript" src="../src/export.js"></script>
+        <script language="JavaScript" type="text/javascript" src="../src/original/drawing.js"></script>
+		<script language="JavaScript" type="text/javascript" src="../src/original/geometry.js"></script>
+		<script language="JavaScript" type="text/javascript" src="../src/original/topology.js"></script>
+		<script language="JavaScript" type="text/javascript" src="../src/original/drawing.js"></script>
+		<script language="JavaScript" type="text/javascript" src="../src/original/export.js"></script>
 		<script language="JavaScript" type="text/javascript">
 			var past = new Array();
 			$(document).ready(function() {
@@ -27,12 +27,12 @@
 				CzBox.Ymax = 0;
 
 				jqcomp();
-				
+
 				var obja = $('#icq');
 				obja.append('<div class="row"><div class="span9"><canvas id="canvas" style="z-index:99; float:left;padding:10px;margin-top:10px;padding-bottom:10px;margin-left:10px; border:1px solid;" width="' + defaults.width + '" height="' + defaults.height + '"></canvas></div></div>');
 
 			});
-	
+
 			function drawc(e) {
 				var Point = getviewpoint(e);
 				var seg = 125;
@@ -121,7 +121,7 @@
 				$( "#slider-range-min" ).slider({
 					value : 12,
 					min : 1,
-					max : 123,		
+					max : 123,
 				});
 				$( "#slider-range-min" ).val(12);
 			}
@@ -129,7 +129,7 @@
 			function cirl(type) {
 
 				$('#canvas').unbind();
-				
+
 				if(type.id == "circle"){
 				$('#canvas').mousedown(function(event) {drawc(event);});
 				}
@@ -152,7 +152,7 @@
 					xyarray = new Array();
 					$('#items').val(past.length);
 				}
-				
+
 			}
 
 			function exp() {
@@ -246,7 +246,7 @@
     <a class="btn" href="#" id="square" onclick="cirl(this)"><i class="icon-th-large"></i> square</a>
     <a class="btn" href="#" id="triangle" onclick="cirl(this)"><i class="icon-eject"></i> triangle</a>
     <a class="btn" href="#" id="lines" onclick="cirl(this)"><i class="icon-pencil"></i> line</a>
-    
+
     <a class="btn" href="#" id="centroid" onclick="showcentroid()"><i class="icon-plus"></i> show centroids</a>
   </div>
 </div></div>
