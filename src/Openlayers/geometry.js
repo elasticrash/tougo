@@ -1,5 +1,17 @@
 //needs primitives.js
 /*global CreateOpenLayersPoint:false */
+function PointInPolygon(feature, x, y) {
+  var poly = feature.geometry.components[0].getVertices();
+
+    for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
+        ((poly[i].y <= y && y < poly[j].y) || (poly[j].y <= y && y < poly[i].y)) &&
+        (x < (poly[j].x - poly[i].x) * (y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x) &&
+        (c = !c);
+    if (c === true)
+        return true;
+    else
+        return false;
+}
 //a polygon simplification algorithm I wrote based on a tolerance value
 function Simplify(features, tolerance) {
     var truePolygon = features[0].geometry.components[0].getVertices();
