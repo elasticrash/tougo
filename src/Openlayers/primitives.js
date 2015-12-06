@@ -1,83 +1,73 @@
 //create a circle
-function CreateCircle(point, radius, segments)
-{
-	var seg = Math.PI * 2 / segments;
+function CreateCircle(point, radius, segments) {
+    var seg = Math.PI * 2 / segments;
     var points = [];
 
     var pcount = 0;
-    for (var i = 0; i < segments; i++)
-    {
+    for (var i = 0; i < segments; i++) {
         var theta = seg * i;
-        var p1x = point.x + Math.cos( theta ) * radius;
-        var p1y = point.y + Math.sin( theta ) * radius;
+        var p1x = point.x + Math.cos(theta) * radius;
+        var p1y = point.y + Math.sin(theta) * radius;
         points[y] = CreateOpenLayersPoint(p1x, p1y);
         pcount++;
-     }
+    }
 
-    var p2x = point.x + Math.cos( 0 ) * radius;
-    var p2y = point.y + Math.sin( 0 ) * radius;
-	  points[segments] = CreateOpenLayersPoint(p2x, p2y);
+    var p2x = point.x + Math.cos(0) * radius;
+    var p2y = point.y + Math.sin(0) * radius;
+    points[segments] = CreateOpenLayersPoint(p2x, p2y);
 
-	return CreatePolygon(points);
+    return CreatePolygon(points);
 }
 
-function CreateOpenLayersPoint(x,y)
-{
-  var opoint =  new OpenLayers.Geometry.Point(x, y),
-  return opoint;
+function CreateOpenLayersPoint(x,y) {
+    var opoint = new OpenLayers.Geometry.Point(x, y);
+    return opoint;
 }
 
-function CreatePolygon(points)
-{
-  var ring = new OpenLayers.Geometry.LinearRing(points);
-  var polygon = new OpenLayers.Geometry.Polygon([ring]);
-  return polygon;
+function CreatePolygon(points) {
+    var ring = new OpenLayers.Geometry.LinearRing(points);
+    var polygon = new OpenLayers.Geometry.Polygon([ring]);
+    return polygon;
 }
-function CreateLine(points)
-{
-  var line = new OpenLayers.Geometry.LineString(points);
-  return line;
+function CreateLine(points) {
+    var line = new OpenLayers.Geometry.LineString(points);
+    return line;
 }
-function CreateStar(point, radius, segments)
-{
-	var seg = Math.PI * 2 / segments;
+function CreateStar(point, radius, segments) {
+    var seg = Math.PI * 2 / segments;
     var points = [];
 
     var pcount = 0;
-    for (var i = 0; i < segments; i++)
-    {
+    for (var i = 0; i < segments; i++) {
         var theta = seg * i;
-        if(isOdd(i))
-        {
-          var ptxodd = point.x + Math.cos( theta ) * (radius*2);
-          var ptyodd = point.y + Math.sin( theta ) * (radius*2);
-          points[pcount] = CreateOpenLayersPoint(ptxodd,ptyodd);
+        if (isOdd(i)) {
+            var ptxodd = point.x + Math.cos(theta) * (radius * 2);
+            var ptyodd = point.y + Math.sin(theta) * (radius * 2);
+            points[pcount] = CreateOpenLayersPoint(ptxodd, ptyodd);
         }
-        else
-        {
-        var ptxeven = point.x + Math.cos( theta ) * radius;
-        var ptyeven = point.y + Math.sin( theta ) * radius;
-        points[pcount] = CreateOpenLayersPoint(ptxeven,ptyeven);
+        else {
+            var ptxeven = point.x + Math.cos(theta) * radius;
+            var ptyeven = point.y + Math.sin(theta) * radius;
+            points[pcount] = CreateOpenLayersPoint(ptxeven, ptyeven);
         }
         pcount++;
-     }
-    var ptx = point.x + Math.cos( 0 ) * radius;
-    var pty = point.y + Math.sin( 0 ) * radius;
-    points[segments] = CreateOpenLayersPoint(ptx,pty);
+    }
+    var ptx = point.x + Math.cos(0) * radius;
+    var pty = point.y + Math.sin(0) * radius;
+    points[segments] = CreateOpenLayersPoint(ptx, pty);
 
-	return CreatePolygon(points);
+    return CreatePolygon(points);
 }
 
-function CreateLineFromPointAngleDist(PointA, angle, dist)
-{
+function CreateLineFromPointAngleDist(PointA, angle, dist) {
     var newPt = CreateOpenLayersPoint(PointA.x, PointA.y);
     PointA.x += Math.cos(angle) * dist;
     PointA.y += Math.sin(angle) * dist;
 
     var Line = [];
 
-    Line[0] = CreateOpenLayersPoint(PointA.x,PointA.y);
-    Line[1] = CreateOpenLayersPoint(newPt.x,newPt.y);
+    Line[0] = CreateOpenLayersPoint(PointA.x, PointA.y);
+    Line[1] = CreateOpenLayersPoint(newPt.x, newPt.y);
 
     return CreateLine(Line);
 }
