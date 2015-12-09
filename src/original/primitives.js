@@ -2,37 +2,39 @@
 function CreateCircle(point, radius, segments)
 {
 	var seg = Math.PI * 2 / segments;
-    var PTS = [];
-
-    var y = 0;
+    var Geom = [];
+    var theta;
     var i;
-    for (i = 0; i < segments; i+=1)
-    {
-        var theta = seg * i;
-        PTS[y] = point.x + Math.cos( theta ) * radius;
-        PTS[y+1] = point.y + Math.sin( theta ) * radius;
 
-        y=y+2;
-     }
-    PTS[segments*2] = point.x + Math.cos( 0 ) * radius;
-    PTS[segments*2+1] = point.y + Math.sin( 0 ) * radius;
+    for (i = 0; i < segments; i+=1){
+            theta = seg * i;
+        Geom[i] = {
+                x: point.x + Math.cos(theta) * radius,
+                y: point.y + Math.sin(theta) * radius
+            };
+    }
+    Geom[i] = {
+        x: point.x + Math.cos(0) * radius,
+        y: point.y + Math.sin(0) * radius
+    };
 
-	return CreatePolygon(PTS);
+	return Geom;
 }
 
 //create a polygon
 function CreatePolygon(xyArray){
-    var Polygon = [];
+    var Geom = [];
 	var t=0;
     var i;
+
     for (i = 0; i < xyArray.length; i = i + 2) {
-        Polygon[t] = {
+        Geom[t] = {
             x: xyArray[i],
             y: xyArray[i + 1]
         };
 		t+=1;
     }
-    return Polygon;
+    return Geom;
 }
 
 //create a point
@@ -51,33 +53,32 @@ function CreatePoint(x, y){
     return Point;
 }
 //create a star
-function CreateStar(point, radius, segments)
-{
-	var seg = Math.PI * 2 / segments;
-    var PTS = [];
-
-    var y = 0;
+function CreateStar(point, radius, segments) {
+    var seg = Math.PI * 2 / segments;
+    var Geom = [];
+    var theta;
     var i;
-    for (i = 0; i < segments; i+=1)
-    {
-        var theta = seg * i;
-        if(isOdd(i))
-        {
-        PTS[y] = point.x + Math.cos( theta ) * (radius*2);
-        PTS[y+1] = point.y + Math.sin( theta ) * (radius*2);
+    for (i = 0; i < segments; i += 1) {
+        theta = seg * i;
+        if (isOdd(i)) {
+            Geom[i] = {
+                x: point.x + Math.cos(theta) * (radius * 2),
+                y: point.y + Math.sin(theta) * (radius * 2)
+            };
         }
-        else
-        {
-        PTS[y] = point.x + Math.cos( theta ) * radius;
-        PTS[y+1] = point.y + Math.sin( theta ) * radius;
+        else {
+            Geom[i] = {
+                x: point.x + Math.cos(theta) * radius,
+                y: point.y + Math.sin(theta) * radius
+            };
         }
+    }
+    Geom[i] = {
+        x: point.x + Math.cos(0) * radius,
+        y: point.y + Math.sin(0) * radius
+    };
 
-        y=y+2;
-     }
-    PTS[segments*2] = point.x + Math.cos( 0 ) * radius;
-    PTS[segments*2+1] = point.y + Math.sin( 0 ) * radius;
-
-	return CreatePolygon(PTS);
+	return Geom;
 }
 
 //create line using point, angle, distance

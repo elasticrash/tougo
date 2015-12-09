@@ -30,15 +30,16 @@ function Simplify(polygon, tolerance) {
     var ivertex = 0;
     var ipoint = 0;
     var c;
+    var point1 = [];
+    var point2 = [];
+
     for (c = 0; c < polygon.length - 2; c+=1) {
-        var point1 = [];
 
         point1 = {
             x: polygon[ivertex].x,
             y: polygon[ivertex].y
         };
 
-        var point2 = [];
         point2 = {
             x: polygon[c + 2].x,
             y: polygon[c + 2].y
@@ -59,8 +60,9 @@ function Simplify(polygon, tolerance) {
         var run = 1;
 
         var i;
+        var dist;
         for (i = 0; i < MidPoints.length; i+=1) {
-            var dist = Math.abs(MidPoints[i].x * y1my2 + MidPoints[i].y * x2mx1 + C) / D;
+            dist = Math.abs(MidPoints[i].x * y1my2 + MidPoints[i].y * x2mx1 + C) / D;
             if (dist > tolerance) {
                 run = -1;
             }
@@ -103,12 +105,12 @@ function intersection(PointA, PointB, PointC, PointD) {
 // checks if the intersection point from the previous function is within certain line segments
 function IsIntersectionWithinLineLimits(PointA, PointB, PointC, PointD, cross){
     if (cross.x >= PointC.x && cross.x <= PointD.x && cross.x >= PointA.x && cross.x <= PointB.x) {
-        if (cross.y >= PointC.y && cross.y <= PointD.y || cross.y <= PointC.y && cross.y >= PointD.y) {
+        if ((cross.y >= PointC.y && cross.y <= PointD.y) || (cross.y <= PointC.y && cross.y >= PointD.y)) {
             return true;
         }
     }
     if (cross.x <= PointC.x && cross.x >= PointD.x && cross.x <= PointA.x && cross.x >= PointB.x) {
-        if (cross.y >= PointC.y && cross.y <= PointD.y || cross.y <= PointC.y && cross.y >= PointD.y) {
+        if ((cross.y >= PointC.y && cross.y <= PointD.y) || (cross.y <= PointC.y && cross.y >= PointD.y)) {
             return true;
         }
     }
@@ -131,30 +133,34 @@ function transform(oldGeometries, Boxobj, width, height) {
 
     width = width < height ? width : height;
 
+    var Geometries;
     var i;
-    for (i = 0; i < oldGeometries.length; i+=1) {
-        var Geometries = [];
-
-        if (oldGeometries[i].type === "point") {
+    oldGeometries.forEach(function (oldgeom) {
+        Geometries = [];
+        i = oldGeometries.indexOf(oldgeom);
+        if (oldgeom.type === "point") {
             Geometries = {
-                x: parseFloat(((oldGeometries[i].geometry.x - Boxobj.Xmin) / lw) * width),
-                y: parseFloat(height - ((oldGeometries[i].geometry.y - Boxobj.Ymin) / lw) * width)
+                x: parseFloat(((oldgeom.geometry.x - Boxobj.Xmin) / lw) * width),
+                y: parseFloat(height - ((oldgeom.geometry.y - Boxobj.Ymin) / lw) * width)
             };
         }
         else {
             var j;
-            for (j = 0; j < oldGeometries[i].geometry.length; j+=1) {
+            oldgeom.geometry.forEach(function (item) {
+                j = oldgeom.geometry.indexOf(item);
                 Geometries[j] = {
-                    x: parseFloat(((oldGeometries[i].geometry[j].x - Boxobj.Xmin) / lw) * width),
-                    y: parseFloat(height - ((oldGeometries[i].geometry[j].y - Boxobj.Ymin) / lw) * width)
+                    x: parseFloat(((item.x - Boxobj.Xmin) / lw) * width),
+                    y: parseFloat(height - ((item.y - Boxobj.Ymin) / lw) * width)
                 };
-            }
+            });
         }
+
         TransformedGeometries[i] = {
-            type: oldGeometries[i].type,
+            type: oldgeom.type,
             geometry: Geometries
         };
-    }
+    });
+
     return TransformedGeometries;
 }
 
@@ -163,15 +169,13 @@ function getBoundingBox(Geometries) {
     var alllinesx = [];
     var alllinesy = [];
     var p = 0;
-    var i;
-    for (i = 1; i < Geometries.length; i+=1) {
-        var j;
-        for (j = 0; j < Geometries[i].geometry.length; j+=1) {
-            alllinesx[p] = parseFloat(Geometries[i].geometry[j].x);
-            alllinesy[p] = parseFloat(Geometries[i].geometry[j].y);
+    Geometries.forEach(function (geom) {
+        geom.geometry.forEach(function (item) {
+            alllinesx[p] = parseFloat(item.x);
+            alllinesy[p] = parseFloat(item.y);
             p+=1;
-        }
-    }
+        });
+    });
 
     var BBox = {
         Xmin: Math.min.apply(null, alllinesx),
@@ -251,48 +255,25 @@ function getAllNodes(Geometries) {
     var nodes = [];
 
     var p = 0;
-    var i = 0;
-    for (i = 0; i < Geometries.length; i+=1) {
-        if (Geometries.type != "point") {
-            var j;
-            for (j = 0; j < Geometries[i].geometry.length; j+=1) {
-                var point = CreatePoint(Geometries[i].geometry[j].x, Geometries[i].geometry[j].y);
+    Geometries.forEach(function (geom) {
+        if (geom.type !== "point") {
+            geom.geometry.forEach(function (item) {
+                var point = CreatePoint(item.x, item.y);
                 nodes[p] = {type: "point", geometry: point};
                 p+=1;
-            }
+            });
         }
-    }
+    });
     return nodes;
 }
 
 //Gets the Azimuth Angle From 2 Points
-/**
- * @return {number}
- */
 function AzimuthAngle(PointA, PointB) {
     var dy = PointB.y - PointA.y;
     var dx = PointB.x - PointA.x;
     var angle = (Math.PI * 0.5) - Math.atan2(dy, dx);
     return angle;
 }
-
-//scale and rotate Geometries (not working have to write a bunch of transformation functions) I want to replace scale and offset function above
-/*function scaleAndRotateGeometries(Geometries, PointAnchor,  scalex,  scaley,  angle)
-{
-    var TGeometries = [];
-
-    for (var i=0; i < Polygon.length-1; i+=1)
- {
-    }
-
-    translate(PointAnchor.x, PointAnchor.y);
-    scale(1.0D / scalex, 1.0D / scaley);
-    rotate(angle);
-    translate(-1.0D * PointAnchor.x, -1.0D * PointAnchor.y);
-    transform(Geometries, 0, TGeometries, 0, getAllNodes(Geometries).length);
-
-    return TGeometries;
-  }*/
 
 //trying stuff
 function PointToLine(PointA, PointB, PointPt) {

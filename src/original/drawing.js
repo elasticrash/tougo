@@ -7,26 +7,24 @@ function drawing(Geometries, fill, fillcolor, canvas) {
     if (canvas.getContext) {
         var lines = canvas.getContext("2d");
         lines.beginPath();
-
-        for (var i = 0; i < Geometries.length; i++) {
-            if (Geometries[i].type != "point") {
-
-                for (var j = 0; j < Geometries[i].geometry.length; j++) {
-
+        Geometries.forEach(function (geom) {
+            if (geom.type !== "point") {
+                var j;
+                geom.geometry.forEach(function (item) {
+                    j = geom.geometry.indexOf(item);
                     if (j === 0) {
-
-                        lines.moveTo(Geometries[i].geometry[j].x, Geometries[i].geometry[j].y);
+                        lines.moveTo(item.x, item.y);
                     }
                     else {
-                        lines.lineTo(Geometries[i].geometry[j].x, Geometries[i].geometry[j].y);
+                        lines.lineTo(item.x, item.y);
                     }
-                }
+                });
             }
-            if (Geometries[i].type == "point") {
-                lines.moveTo(Geometries[i].geometry.x, Geometries[i].geometry.y);
-                lines.arc(Geometries[i].geometry.x, Geometries[i].geometry.y, 4, Math.PI * 2, 0, true);
+            if (geom.type === "point") {
+                lines.moveTo(geom.geometry.x, geom.geometry.y);
+                lines.arc(geom.geometry.x, geom.geometry.y, 4, Math.PI * 2, 0, true);
             }
-        }
+        });
 
         if (fill === true) {
             lines.fillStyle = '#' + fillcolor;
@@ -130,8 +128,7 @@ function pan(canvas) {
                 canvas.unbind('mousemove');
                 CzBox = Zbox;
             });
-
-        })
+        });
     });
 }
 
@@ -155,8 +152,8 @@ function currentLocation(ev,canvas) {
         yt = CzBox.Ymin + (canvas.clientHeight - ev.offsetY) * pixel;
     }
 
-    x = Math.round(xt * 100) / 100;
-    y = Math.round(yt * 100) / 100;
+    var x = Math.round(xt * 100) / 100;
+    var y = Math.round(yt * 100) / 100;
 
     var currentPoints = CreatePoint(x, y);
     return currentPoints;
@@ -167,7 +164,8 @@ function select(canvas) {
 
     canvas.mousedown(function (ev) {
         var cur = currentLocation(ev, this);
-        loop: for (var i = 0; i < Cgeometry.length; i++) {
+        var i;
+        loop: for (i = 0; i < Cgeometry.length; i+=1) {
             if (Cgeometry[i].type != "point") {
                 if (PointInPolygon(Cgeometry[i].geometry, cur.x, cur.y)) {
                     var g = new Array();
