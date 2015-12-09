@@ -4,12 +4,13 @@ function CreateCircle(point, radius, segments) {
     var points = [];
 
     var pcount = 0;
-    for (var i = 0; i < segments; i++) {
+    var i;
+    for (i = 0; i < segments; i+=1) {
         var theta = seg * i;
         var p1x = point.x + Math.cos(theta) * radius;
         var p1y = point.y + Math.sin(theta) * radius;
-        points[y] = CreateOpenLayersPoint(p1x, p1y);
-        pcount++;
+        points[pcount] = CreateOpenLayersPoint(p1x, p1y);
+        pcount+=1;
     }
 
     var p2x = point.x + Math.cos(0) * radius;
@@ -38,7 +39,8 @@ function CreateStar(point, radius, segments) {
     var points = [];
 
     var pcount = 0;
-    for (var i = 0; i < segments; i++) {
+    var i;
+    for (i = 0; i < segments; i+=1) {
         var theta = seg * i;
         if (isOdd(i)) {
             var ptxodd = point.x + Math.cos(theta) * (radius * 2);
@@ -50,7 +52,7 @@ function CreateStar(point, radius, segments) {
             var ptyeven = point.y + Math.sin(theta) * radius;
             points[pcount] = CreateOpenLayersPoint(ptxeven, ptyeven);
         }
-        pcount++;
+        pcount+=1;
     }
     var ptx = point.x + Math.cos(0) * radius;
     var pty = point.y + Math.sin(0) * radius;

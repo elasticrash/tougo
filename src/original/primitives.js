@@ -5,7 +5,8 @@ function CreateCircle(point, radius, segments)
     var PTS = [];
 
     var y = 0;
-    for (var i = 0; i < segments; i++)
+    var i;
+    for (i = 0; i < segments; i+=1)
     {
         var theta = seg * i;
         PTS[y] = point.x + Math.cos( theta ) * radius;
@@ -23,12 +24,13 @@ function CreateCircle(point, radius, segments)
 function CreatePolygon(xyArray){
     var Polygon = [];
 	var t=0;
-    for (var i = 0; i < xyArray.length; i = i + 2) {
+    var i;
+    for (i = 0; i < xyArray.length; i = i + 2) {
         Polygon[t] = {
             x: xyArray[i],
             y: xyArray[i + 1]
         };
-		t++;
+		t+=1;
     }
     return Polygon;
 }
@@ -55,7 +57,8 @@ function CreateStar(point, radius, segments)
     var PTS = [];
 
     var y = 0;
-    for (var i = 0; i < segments; i++)
+    var i;
+    for (i = 0; i < segments; i+=1)
     {
         var theta = seg * i;
         if(isOdd(i))
