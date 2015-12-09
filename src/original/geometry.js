@@ -1,16 +1,24 @@
 //needs primitives.js
-/*global CreatePoint:false */
+/*global CreatePoint */
 //returns true if a point is inside a particular polygon
 function PointInPolygon(poly, x, y) {
     "use strict";
-    for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
-        ((poly[i].y <= y && y < poly[j].y) || (poly[j].y <= y && y < poly[i].y)) &&
-        (x < (poly[j].x - poly[i].x) * (y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x) &&
-        (c = !c);
-    if (c === true)
+    var c  = false;
+    var l = poly.length;
+    var i = -1;
+    var j;
+    for (j = l - 1; ++i < l; j = i){
+        if(((poly[i].y <= y && y < poly[j].y) || (poly[j].y <= y && y < poly[i].y)) &&
+        (x < (poly[j].x - poly[i].x) * (y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x)) {
+            c = !c;
+        }
+      }
+    if (c === true) {
         return true;
-    else
+      }
+    else{
         return false;
+      }
 }
 
 //a polygon simplification algorithm I wrote 2 years ago based on a tolerance value
@@ -21,8 +29,8 @@ function Simplify(polygon, tolerance) {
 
     var ivertex = 0;
     var ipoint = 0;
-
-    for (var c = 0; c < polygon.length - 2; c++) {
+    var c;
+    for (c = 0; c < polygon.length - 2; c+=1) {
         var point1 = [];
 
         point1 = {
@@ -38,7 +46,8 @@ function Simplify(polygon, tolerance) {
 
         var MidPoints = [];
 
-        for (var j = 0; j < (c + 1 - ivertex); j++) {
+        var j;
+        for (j = 0; j < (c + 1 - ivertex); j+=1) {
             MidPoints[j] = polygon[ivertex + j + 1];
         }
 
@@ -49,7 +58,8 @@ function Simplify(polygon, tolerance) {
 
         var run = 1;
 
-        for (var i = 0; i < MidPoints.length; i++) {
+        var i;
+        for (i = 0; i < MidPoints.length; i+=1) {
             var dist = Math.abs(MidPoints[i].x * y1my2 + MidPoints[i].y * x2mx1 + C) / D;
             if (dist > tolerance) {
                 run = -1;
@@ -57,7 +67,7 @@ function Simplify(polygon, tolerance) {
         }
 
         if (run === -1) {
-            ipoint++;
+            ipoint+=1;
             ivertex = c + 1;
             simplefiedPolygon[ipoint] = polygon[c + 1];
         }
@@ -78,15 +88,8 @@ function intersection(PointA, PointB, PointC, PointD) {
     var xD3 = PointA.x - PointC.x;
     var yD3 = PointA.y - PointC.y;
 
-    var len1 = Math.sqrt(Math.pow(xD1, 2) + Math.pow(yD1, 2));
-    var len2 = Math.sqrt(Math.pow(xD2, 2) + Math.pow(yD2, 2));
-
-    var dot = (xD1 * xD2 + yD1 * yD2); // dot product
-    var deg = dot / (len1 * len2);
-
     var div = yD2 * xD1 - xD2 * yD1;
     var ua = (xD2 * yD3 - yD2 * xD3) / div;
-    var ub = (xD1 * yD3 - yD1 * xD3) / div;
 
     var crossx = PointA.x + ua * xD1;
     var crossy = PointA.y + ua * yD1;
@@ -125,7 +128,8 @@ function transform(oldGeometries, Boxobj, width, height) {
 
     width = width < height ? width : height;
 
-    for (var i = 0; i < oldGeometries.length; i++) {
+    var i;
+    for (i = 0; i < oldGeometries.length; i+=1) {
         var Geometries = [];
 
         if (oldGeometries[i].type === "point") {
@@ -135,7 +139,8 @@ function transform(oldGeometries, Boxobj, width, height) {
             };
         }
         else {
-            for (var j = 0; j < oldGeometries[i].geometry.length; j++) {
+            var j;
+            for (j = 0; j < oldGeometries[i].geometry.length; j+=1) {
                 Geometries[j] = {
                     x: parseFloat(((oldGeometries[i].geometry[j].x - Boxobj.Xmin) / lw) * width),
                     y: parseFloat(height - ((oldGeometries[i].geometry[j].y - Boxobj.Ymin) / lw) * width)
@@ -155,12 +160,13 @@ function getBoundingBox(Geometries) {
     var alllinesx = [];
     var alllinesy = [];
     var p = 0;
-    for (var i = 1; i < Geometries.length; i++) {
-
-        for (var j = 0; j < Geometries[i].geometry.length; j++) {
+    var i;
+    for (i = 1; i < Geometries.length; i+=1) {
+        var j;
+        for (j = 0; j < Geometries[i].geometry.length; j+=1) {
             alllinesx[p] = parseFloat(Geometries[i].geometry[j].x);
             alllinesy[p] = parseFloat(Geometries[i].geometry[j].y);
-            p++;
+            p+=1;
         }
     }
 
@@ -176,8 +182,8 @@ function getBoundingBox(Geometries) {
 //get the area of a polygon
 function GetArea(Polygon) {
     var area = 0;
-
-    for (var i = 0; i < Polygon.length - 1; i++) {
+    var i;
+    for (i = 0; i < Polygon.length - 1; i+=1) {
         area = area + Polygon[i].x * Polygon[i + 1].y - Polygon[i + 1].x * Polygon[i].y;
     }
     return area * 0.5;
@@ -188,7 +194,8 @@ function GetCentroid(Polygon) {
     var Centroid = [];
     var cx = 0;
     var cy = 0;
-    for (var i = 0; i < Polygon.length - 1; i++) {
+    var i;
+    for (i = 0; i < Polygon.length - 1; i+=1) {
         cx = cx + (Polygon[i].x + Polygon[i + 1].x) * (Polygon[i].x * Polygon[i + 1].y - Polygon[i + 1].x * Polygon[i].y);
         cy = cy + (Polygon[i].y + Polygon[i + 1].y) * (Polygon[i].x * Polygon[i + 1].y - Polygon[i + 1].x * Polygon[i].y);
     }
@@ -228,7 +235,8 @@ function extendLineBothSides(PointA, PointB, dist) {
 function getPolygonNodes(Polygon)
 {
  var nodes = [];
-  for (var i=0; i < Polygon.length; i++) {
+    var i;
+  for (i=0; i < Polygon.length; i+=1) {
       var point = CreatePoint(Polygon[i].x, Polygon[i].y);
       nodes[i] = {type: "point", geometry: point};
   }
@@ -240,12 +248,14 @@ function getAllNodes(Geometries) {
     var nodes = [];
 
     var p = 0;
-    for (var i = 0; i < Geometries.length; i++) {
+    var i = 0;
+    for (i = 0; i < Geometries.length; i+=1) {
         if (Geometries.type != "point") {
-            for (var j = 0; j < Geometries[i].geometry.length; j++) {
+            var j;
+            for (j = 0; j < Geometries[i].geometry.length; j+=1) {
                 var point = CreatePoint(Geometries[i].geometry[j].x, Geometries[i].geometry[j].y);
                 nodes[p] = {type: "point", geometry: point};
-                p++;
+                p+=1;
             }
         }
     }
@@ -268,7 +278,7 @@ function AzimuthAngle(PointA, PointB) {
 {
     var TGeometries = [];
 
-    for (var i=0; i < Polygon.length-1; i++)
+    for (var i=0; i < Polygon.length-1; i+=1)
  {
     }
 

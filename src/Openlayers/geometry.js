@@ -1,16 +1,24 @@
 //needs primitives.js
-/*global CreateOpenLayersPoint:false */
+/*global CreateOpenLayersPoint*/
 function PointInPolygon(feature, x, y) {
+    "use strict";
     var poly = feature.geometry.components[0].getVertices();
-
-    for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
-        ((poly[i].y <= y && y < poly[j].y) || (poly[j].y <= y && y < poly[i].y)) &&
-        (x < (poly[j].x - poly[i].x) * (y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x) &&
-        (c = !c);
-    if (c === true)
+    var c  = false;
+    var l = poly.length;
+    var i = -1;
+    var j;
+    for (j = l - 1; ++i < l; j = i){
+        if(((poly[i].y <= y && y < poly[j].y) || (poly[j].y <= y && y < poly[i].y)) &&
+            (x < (poly[j].x - poly[i].x) * (y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x)) {
+            c = !c;
+        }
+    }
+    if (c === true) {
         return true;
-    else
+    }
+    else{
         return false;
+    }
 }
 //a polygon simplification algorithm I wrote based on a tolerance value
 function Simplify(features, tolerance) {
@@ -21,14 +29,14 @@ function Simplify(features, tolerance) {
 
     var ivertex = 0;
     var ipoint = 0;
-
-    for (var c = 0; c < truePolygon.length - 2; c++) {
+    var c;
+    for (c = 0; c < truePolygon.length - 2; c+=1) {
         var point1 = CreateOpenLayersPoint(truePolygon[ivertex].x, truePolygon[ivertex].y);
         var point2 = CreateOpenLayersPoint(truePolygon[c + 2].x, truePolygon[c + 2].y);
 
         var MidPoints = [];
-
-        for (var j = 0; j < (c + 1 - ivertex); j++) {
+        var j;
+        for (j = 0; j < (c + 1 - ivertex); j+=1) {
             MidPoints[j] = truePolygon[ivertex + j + 1];
         }
 
@@ -38,8 +46,8 @@ function Simplify(features, tolerance) {
         var C = (point2.y * point1.x) - (point1.y * point2.x);
 
         var run = 1;
-
-        for (var i = 0; i < MidPoints.length; i++) {
+        var i;
+        for (i = 0; i < MidPoints.length; i+=1) {
             var dist = Math.abs(MidPoints[i].x * y1my2 + MidPoints[i].y * x2mx1 + C) / D;
             if (dist > tolerance) {
                 run = -1;
@@ -47,7 +55,7 @@ function Simplify(features, tolerance) {
         }
 
         if (run === -1) {
-            ipoint++;
+            ipoint+=1;
             ivertex = c + 1;
             simplefiedPolygon[ipoint] = CreateOpenLayersPoint(truePolygon[c + 1].x, truePolygon[c + 1].y);
         }
