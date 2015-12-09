@@ -77,6 +77,7 @@ function Simplify(polygon, tolerance) {
 
     return simplefiedPolygon;
 }
+
 // get the intersection of 2 lines
 function intersection(PointA, PointB, PointC, PointD) {
     var cross;
@@ -98,6 +99,7 @@ function intersection(PointA, PointB, PointC, PointD) {
 
     return cross;
 }
+
 // checks if the intersection point from the previous function is within certain line segments
 function IsIntersectionWithinLineLimits(PointA, PointB, PointC, PointD, cross){
     if (cross.x >= PointC.x && cross.x <= PointD.x && cross.x >= PointA.x && cross.x <= PointB.x) {
@@ -112,6 +114,7 @@ function IsIntersectionWithinLineLimits(PointA, PointB, PointC, PointD, cross){
     }
     return false;
 }
+
 //simple 2D distance function
 function distance(PointA, PointB){
     return Math.sqrt(Math.pow(PointB.x - PointA.x, 2) + Math.pow(PointB.y - PointA.y, 2));
@@ -300,6 +303,7 @@ function PointToLine(PointA, PointB, PointPt) {
 
     return CreatePoint(PointA.x + dx * x / len, PointA.y + dx * y / len);
 }
+
 // three points on same line
 function betweenPoints(PointA, PointB, PointC) {
     return (PointC.x <= Math.max(PointA.x, PointB.x)) && (PointC.x >= Math.min(PointA.x, PointB.x)) && (PointC.y <= Math.max(PointA.y, PointB.y)) && (PointC.y >= Math.min(PointA.y, PointB.y));

@@ -20,6 +20,7 @@ function PointInPolygon(feature, x, y) {
         return false;
     }
 }
+
 //a polygon simplification algorithm I wrote based on a tolerance value
 function Simplify(features, tolerance) {
     var truePolygon = features[0].geometry.components[0].getVertices();
