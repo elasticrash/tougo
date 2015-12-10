@@ -32,7 +32,7 @@ function breaklinear(data, tolerance){
 					var PointC = LineB[0];
 					var PointD = LineB[1];
 					
-					if (PointA.x == PointB.x && PointA.y == PointB.y) {
+					if (PointA.x === PointB.x && PointA.y === PointB.y) {
 						break loop;
 					}
 					else {
@@ -59,16 +59,17 @@ function deleteduplicatePoints(Geometries)
 	var points = [];
 	var p= 0;
 			for (var i = 0; i < Geometries.length; i++) {
-		if (Geometries[i].type == "point") {
+		if (Geometries[i].type === "point") {
 				for (var j = 0; j < Geometries.length; j++) {
-					if (Geometries[i].geometry.x == Geometries[j].geometry.x && Geometries[i].geometry.y == Geometries[j].geometry.y) {
+					if (Geometries[i].geometry.x == Geometries[j].geometry.x && Geometries[i].geometry.y === Geometries[j].geometry.y) {
 						if (i != j && Geometries[i].geometry.x !=0 && Geometries[i].geometry.y !=0) {
 							Geometries[j].geometry.x =0;
 							Geometries[j].geometry.y =0;
 						}
 					}
 				}
-				if(Geometries[i].geometry.x != 0)
+				
+				if(Geometries[i].geometry.x !== 0)
 				{
 					var point = CreatePoint(Geometries[i].geometry.x, Geometries[i].geometry.y);
 					points[p] = {type: "point", geometry: point};
@@ -126,12 +127,13 @@ function removeDangles(Lines, tolerance){
 					break;
 				}
 			}
-			if (danglePoint == 0) {
+			
+			if (danglePoint === 0) {
 				alone[p] = nodes[i];
 				p++;
 			}
 		}
-		if (alone.length == 0) {
+		if (alone.length === 0) {
 			dangles = 0;
 		}			
 		for (var i = 0; i < alone.length; i++) {
@@ -140,11 +142,11 @@ function removeDangles(Lines, tolerance){
 				var A = CreatePoint(Lines[j].geometry[0].x, Lines[j].geometry[0].y);
 				var B = CreatePoint(Lines[j].geometry[1].x, Lines[j].geometry[1].y);
 				
-				if (alone[i].geometry.x == A.x && alone[i].geometry.y == A.y) {
+				if (alone[i].geometry.x === A.x && alone[i].geometry.y === A.y) {
 					Lines.splice(j, 1);
 					continue;
 				}
-				if (alone[i].geometry.x == B.x && alone[i].geometry.y == B.y) {
+				if (alone[i].geometry.x === B.x && alone[i].geometry.y === B.y) {
 					Lines.splice(j, 1);
 					continue;
 				}
@@ -177,10 +179,10 @@ function getAnchorPoints(Geometries){
 	var anchor = [];
     var anchorCount;
 	for (var i = 0; i < Geometries.length; i++) {
-		if (Geometries[i].type == "point") {
+		if (Geometries[i].type === "point") {
             anchorCount = 0;
 			for (var j = 0; j < Geometries.length; j++) {
-				if (Geometries[i].geometry.x == Geometries[j].geometry.x && Geometries[i].geometry.y == Geometries[j].geometry.y) {
+				if (Geometries[i].geometry.x === Geometries[j].geometry.x && Geometries[i].geometry.y === Geometries[j].geometry.y) {
 					if (i != j && Geometries[i].geometry.x != 0 && Geometries[i].geometry.y != 0) {
 						anchorCount++;
 					}
