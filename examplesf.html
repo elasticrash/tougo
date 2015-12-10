@@ -222,7 +222,7 @@
                 if (past[i][0].type != "line") {
                     cen.push({
                         type: "point",
-                        geometry: GetCentroid(past[i][0].geometry)
+                        geometry: GetCentroid(past[i][0])
                     });
                 } else {
                     for (var j = 0; j < past[i][0].length; j++) {
