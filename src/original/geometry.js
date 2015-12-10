@@ -188,11 +188,18 @@ function getBoundingBox(Geometries) {
 
 //get the area of a polygon
 function GetArea(Polygon) {
+    var p1 = 0;
+    var p2 = 0;
     var area = 0;
     var i;
-    for (i = 0; i < Polygon.length - 1; i+=1) {
-        area = area + Polygon[i].x * Polygon[i + 1].y - Polygon[i + 1].x * Polygon[i].y;
-    }
+    Polygon.geometry.forEach(function (vertex) {
+        i = Polygon.geometry.indexOf(vertex);
+        if (i < Polygon.geometry.length - 1) {
+            p1 += (vertex.x * Polygon.geometry[i + 1].y);
+            p2 += (vertex.y * Polygon.geometry[i + 1].x);
+        }
+    });
+    area = p1 -p2;
     return area * 0.5;
 }
 

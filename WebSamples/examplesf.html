@@ -23,246 +23,256 @@
     <script>
         var past = [];
 
-        $( document ).ready(function() {
+$( document ).ready(function() {
 
-            cirl(this);
+    cirl(this);
 
-			var defaults = {
-                                        width :          $('#rw').width()-32,
-                                        height :          $(window).height() - 200
-                                };
+    var defaults = {
+        width: $('#rw').width() - 32,
+        height: $(window).height() - 200
+    };
 
-		var obja = $('#icq');
-        obja.append('<canvas id="canvas01" style="z-index:99; float:left; border:1px solid;" width="' + defaults.width + '" height="' + defaults.height + '"></canvas>')
+    var obja = $('#icq');
+    obja.append('<canvas id="canvas01" style="z-index:99; float:left; border:1px solid;" width="' + defaults.width + '" height="' + defaults.height + '"></canvas>')
 
-            var canvas01 = document.getElementById("canvas01");
+    var canvas01 = document.getElementById("canvas01");
 
-            createCzBoxSmall();
+    createCzBoxSmall();
 
 });
-        function createCzBoxSmall()
-        {
-                        CzBox = [];
-            CzBox.Xmax =  $('#canvas02').width();
-            CzBox.Xmin =  0;
-            CzBox.Ymax =  0;
-            CzBox.Ymin =  -$('#canvas02').height();
-        }
 
-         function createCzBoxLarge()
-        {
-                        CzBox = [];
-            CzBox.Xmax =  $('#canvas01').width();
-            CzBox.Xmin =  0;
-            CzBox.Ymax =  0;
-            CzBox.Ymin =  -$('#canvas01').height();
-        }
+function createCzBoxSmall() {
+    CzBox = [];
+    CzBox.Xmax = $('#canvas02').width();
+    CzBox.Xmin = 0;
+    CzBox.Ymax = 0;
+    CzBox.Ymin = -$('#canvas02').height();
+}
 
-function read(data)
-{
-    var polygons  = data.split("POLYGON:");
-for (var i = 1; i < polygons.length; i++)
-	{
-	var xyArray = polygons[i].split(",");
+function createCzBoxLarge() {
+    CzBox = [];
+    CzBox.Xmax = $('#canvas01').width();
+    CzBox.Xmin = 0;
+    CzBox.Ymax = 0;
+    CzBox.Ymin = -$('#canvas01').height();
+}
 
-    datastream[i-1] ={ type : "polygon",
-                     geometry : CreatePolygon(xyArray)
-                   };
-	}
+function read(data) {
+    var polygons = data.split("POLYGON:");
+    for (var i = 1; i < polygons.length; i++) {
+        var xyArray = polygons[i].split(",");
+
+        datastream[i - 1] = {
+            type: "polygon",
+            geometry: CreatePolygon(xyArray)
+        };
+    }
 }
 
 function smallc(e) {
-                                createCzBoxSmall();
-                                var Point = getviewpoint(e,$('#canvas02')[0]);
-                                var seg = 125;
+    createCzBoxSmall();
+    var Point = getviewpoint(e, $('#canvas02')[0]);
+    var seg = 125;
 
-                                var Circle = CreateCircle(Point, 12, seg);
-                                var rCircle = [];
-                                rCircle[0] = {
-                                        type : "polygon",
-                                        geometry : Circle
-                                }
-                                var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+    var Circle = CreateCircle(Point, 12, seg);
+    var rCircle = [];
+    rCircle[0] = {
+        type: "polygon",
+        geometry: Circle
+    }
+    var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 
-                                drawing(rCircle, false, color, $('#canvas02')[0]);
+    drawing(rCircle, false, color, $('#canvas02')[0]);
 }
 
 function smalls(e) {
-                                createCzBoxSmall();
-                                var Point = getviewpoint(e,$('#canvas03')[0]);
-                                var seg = 4;
+    createCzBoxSmall();
+    var Point = getviewpoint(e, $('#canvas03')[0]);
+    var seg = 4;
 
-                                var Circle = CreateCircle(Point, 12, seg);
-                                var rCircle = [];
-                                rCircle[0] = {
-                                        type : "polygon",
-                                        geometry : Circle
-                                }
-                                var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+    var Circle = CreateCircle(Point, 12, seg);
+    var rCircle = [];
+    rCircle[0] = {
+        type: "polygon",
+        geometry: Circle
+    }
+    var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 
-                                drawing(rCircle, false, color, $('#canvas03')[0]);
+    drawing(rCircle, false, color, $('#canvas03')[0]);
 }
 
 function smallt(e) {
-                                createCzBoxSmall();
-                                var Point = getviewpoint(e,$('#canvas04')[0]);
-                                var seg = 3;
+    createCzBoxSmall();
+    var Point = getviewpoint(e, $('#canvas04')[0]);
+    var seg = 3;
 
-                                var Circle = CreateCircle(Point, 12, seg);
-                                var rCircle = [];
-                                rCircle[0] = {
-                                        type : "polygon",
-                                        geometry : Circle
-                                }
-                                var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+    var Circle = CreateCircle(Point, 12, seg);
+    var rCircle = [];
+    rCircle[0] = {
+        type: "polygon",
+        geometry: Circle
+    }
+    var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 
-                                drawing(rCircle, false, color, $('#canvas04')[0]);
+    drawing(rCircle, false, color, $('#canvas04')[0]);
 }
 
 function smallst(e) {
-                                createCzBoxSmall();
-                                var Point = getviewpoint(e,$('#canvas05')[0]);
-                                var seg = 22;
+    createCzBoxSmall();
+    var Point = getviewpoint(e, $('#canvas05')[0]);
+    var seg = 22;
 
-                                var Circle = CreateStar(Point, 12, seg);
-                                var rCircle = [];
-                                rCircle[0] = {
-                                        type : "polygon",
-                                        geometry : Circle
-                                }
-                                var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+    var Circle = CreateStar(Point, 12, seg);
+    var rCircle = [];
+    rCircle[0] = {
+        type: "polygon",
+        geometry: Circle
+    }
+    var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 
-                                drawing(rCircle, false, color, $('#canvas05')[0]);
+    drawing(rCircle, false, color, $('#canvas05')[0]);
 }
         //drawing stuff
         datastream = [];
-        function drawl(e) {
-            createCzBoxLarge();
-            var Point = getviewpoint(e,$('#canvas01')[0]);
+function drawl(e) {
+    createCzBoxLarge();
+    var Point = getviewpoint(e, $('#canvas01')[0]);
 
-            datastream.push(Point.x);
-            datastream.push(Point.y);
+    datastream.push(Point.x);
+    datastream.push(Point.y);
 
-            var pol = CreatePolygon(datastream);
-            var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+    var pol = CreatePolygon(datastream);
+    var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 
-            var rpol = [];
-            rpol[0] = {
-                type : "line",
-                geometry : pol
+    var rpol = [];
+    rpol[0] = {
+        type: "line",
+        geometry: pol
+    }
+    past.push(rpol);
+    drawing(rpol, false, color, $('#canvas01')[0]);
+}
+
+function drawc(e) {
+    createCzBoxLarge();
+    var Point = getviewpoint(e, $('#canvas01')[0]);
+    var seg = 125;
+
+    var Circle = CreateCircle(Point, 33, seg);
+    var rCircle = [];
+    rCircle[0] = {
+        type: "polygon",
+        geometry: Circle
+    }
+    var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+
+    past.push(rCircle);
+    drawing(rCircle, false, color, $('#canvas01')[0]);
+}
+
+function draws(e) {
+    createCzBoxLarge();
+    var Point = getviewpoint(e, $('#canvas01')[0]);
+    var seg = 4;
+
+    var Circle = CreateCircle(Point, 33, seg);
+    var rCircle = [];
+    rCircle[0] = {
+        type: "polygon",
+        geometry: Circle
+    }
+    var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+    past.push(rCircle);
+
+    drawing(rCircle, false, color, $('#canvas01')[0]);
+}
+
+function drawt(e) {
+    createCzBoxLarge();
+    var Point = getviewpoint(e, $('#canvas01')[0]);
+    var seg = 3;
+
+    var Circle = CreateCircle(Point, 33, seg);
+    var rCircle = [];
+    rCircle[0] = {
+        type: "polygon",
+        geometry: Circle
+    }
+    var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+
+    past.push(rCircle);
+
+    drawing(rCircle, false, color, $('#canvas01')[0]);
+}
+
+function getviewpoint(e) {
+    var canvas = document.getElementById("canvas");
+    Ccanvas = canvas;
+    var Point = currentLocation(e, canvas);
+    Point.y = Math.abs(Point.y);
+
+    Point.x = Point.x - 9;
+    Point.y = Point.y - 9;
+    return Point;
+}
+
+function showcentroid() {
+    var cen = [];
+    for (var i = 0; i < past.length; i++) {
+        if (past[i][0].type != "line") {
+            cen.push({
+                type: "point",
+                geometry: GetCentroid(past[i][0].geometry)
+            });
+        } else {
+            for (var j = 0; j < past[i][0].length; j++) {
+                cen.push({
+                    type: "point",
+                    geometry: past[i][0].geometry[j]
+                });
             }
-            past.push(rpol);
-            drawing(rpol, false, color, $('#canvas01')[0]);
         }
+    }
+    var color = "FF0000";//Math.round(0xffffff * Math.random()).toString(16);
 
-        function drawc(e) {
-            createCzBoxLarge();
-            var Point = getviewpoint(e,$('#canvas01')[0]);
-            var seg = 125;
-
-            var Circle = CreateCircle(Point, 33, seg);
-            var rCircle = [];
-            rCircle[0] = {
-                type : "polygon",
-                geometry : Circle
-            }
-            var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
-
-            past.push(rCircle);
-            drawing(rCircle, false, color, $('#canvas01')[0]);
-
-        }
-
-        function draws(e) {
-            createCzBoxLarge();
-            var Point = getviewpoint(e,$('#canvas01')[0]);
-            var seg = 4;
-
-            var Circle = CreateCircle(Point, 33, seg);
-            var rCircle = [];
-            rCircle[0] = {
-                type : "polygon",
-                geometry : Circle
-            }
-            var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
-            past.push(rCircle);
-
-            drawing(rCircle, false, color, $('#canvas01')[0]);
-        }
-
-        function drawt(e) {
-            createCzBoxLarge();
-            var Point = getviewpoint(e,$('#canvas01')[0]);
-            var seg = 3;
-
-            var Circle = CreateCircle(Point, 33, seg);
-            var rCircle = [];
-            rCircle[0] = {
-                type : "polygon",
-                geometry : Circle
-            }
-            var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
-
-            past.push(rCircle);
-
-            drawing(rCircle, false, color, $('#canvas01')[0]);
-        }
-
-        function getviewpoint(e) {
-            var canvas = document.getElementById("canvas");
-            Ccanvas = canvas;
-            var Point = currentLocation(e, canvas);
-            Point.y = Math.abs(Point.y);
-
-            Point.x = Point.x-9;
-            Point.y = Point.y-9;
-            return Point;
-        }
-
-        function showcentroid() {
-            var cen = [];
-            for(var i = 0; i < past.length; i++) {
-                if(past[i][0].type != "line") {
-                    cen.push({
-                        type : "point",
-                        geometry : GetCentroid(past[i][0].geometry)
-                    });
-                } else {
-                    for(var j = 0; j < past[i][0].length; j++) {
-                        cen.push({
-                            type : "point",
-                            geometry : past[i][0].geometry[j]
-                        });
-                    }
-                }
-            }
-            var color = "FF0000"//Math.round(0xffffff * Math.random()).toString(16);
-
-            drawing(cen, false, color,  $('#canvas01')[0]);
-        }
-function pick(e)
-{
+    drawing(cen, false, color, $('#canvas01')[0]);
+}
+function pick(e) {
     createCzBoxLarge();
 
-            var Point = getviewpoint(e,$('#canvas01')[0]);
-            var color = Math.round(0xffffff * Math.random()).toString(16);
-            var rgeo = [];
+    var Point = getviewpoint(e, $('#canvas01')[0]);
+    var color = Math.round(0xffffff * Math.random()).toString(16);
+    var rgeo = [];
 
-        for (var i = 0; i < past.length; i++)
-        {
-            if (past[i].type != "point")
-            {
-                if( PointInPolygon(past[i][0].geometry, Point.x, Point.y))
-                   {
-                       rgeo[0] = {
-                                        type : "polygon",
-                                        geometry : past[i][0].geometry
-                                }
-                   drawing(rgeo, true, color, $('#canvas01')[0]);
-                   }
+    for (var i = 0; i < past.length; i++) {
+        if (past[i].type != "point") {
+            if (PointInPolygon(past[i][0].geometry, Point.x, Point.y)) {
+                rgeo[0] = {
+                    type: "polygon",
+                    geometry: past[i][0].geometry
+                }
+                drawing(rgeo, true, color, $('#canvas01')[0]);
             }
         }
- }
+    }
+}
+function get_area(e) {
+    createCzBoxLarge();
+    var Point = getviewpoint(e, $('#canvas01')[0]);
+    var rgeo = [];
+
+    for (var i = 0; i < past.length; i++) {
+        if (past[i].type != "point") {
+            if (PointInPolygon(past[i][0].geometry, Point.x, Point.y)) {
+                rgeo[0] = {
+                    type: "polygon",
+                    geometry: past[i][0].geometry
+                }
+                alert(GetArea(rgeo[0]));
+            }
+        }
+    }
+}
 
 function cirl(type) {
     if(type!='undefined') {
@@ -284,31 +294,41 @@ function cirl(type) {
         if(type.id == "pick"){
             $('#canvas01').mousedown(function(event) {pick(event);});
         }
+        if(type.id == "getarea"){
+            $('#canvas01').mousedown(function(event) {get_area(event);});
+        }
     }
 }
-        function smallcirl()
-        {
-            $('#canvas02').unbind();
-            $('#canvas03').unbind();
-            $('#canvas04').unbind();
-            $('#canvas05').unbind();
+function smallcirl() {
+    $('#canvas02').unbind();
+    $('#canvas03').unbind();
+    $('#canvas04').unbind();
+    $('#canvas05').unbind();
 
-            $('#canvas02').mousedown(function(event) {smallc(event);});
-            $('#canvas03').mousedown(function(event) {smalls(event);});
-            $('#canvas04').mousedown(function(event) {smallt(event);});
-            $('#canvas05').mousedown(function(event) {smallst(event);});
-        }
+    $('#canvas02').mousedown(function (event) {
+        smallc(event);
+    });
+    $('#canvas03').mousedown(function (event) {
+        smalls(event);
+    });
+    $('#canvas04').mousedown(function (event) {
+        smallt(event);
+    });
+    $('#canvas05').mousedown(function (event) {
+        smallst(event);
+    });
+}
 
 function getviewpoint(e, canvas) {
-                                Ccanvas = canvas;
-                                var Point = currentLocation(e, canvas);
-                                Point.y = Math.abs(Point.y);
+    Ccanvas = canvas;
+    var Point = currentLocation(e, canvas);
+    Point.y = Math.abs(Point.y);
 
-                                var a = canvas.width/canvas.clientWidth;
-                                var b = canvas.height/canvas.clientHeight;
-                                Point.x = Point.x*a;
-                                Point.y = Point.y*b;
-                                return Point;
+    var a = canvas.width / canvas.clientWidth;
+    var b = canvas.height / canvas.clientHeight;
+    Point.x = Point.x * a;
+    Point.y = Point.y * b;
+    return Point;
 }
 
       </script>
@@ -356,6 +376,7 @@ function getviewpoint(e, canvas) {
 
     <a class="button [radius round]" href="#" id="centroid" onclick="showcentroid()"><i class="icon-plus"></i> show centroids</a>
     <a class="button [radius round]" href="#" id="pick" onclick="cirl(this)"><i class="icon-plus"></i> fill</a>
+    <a class="button [radius round]" href="#" id="getarea" onclick="cirl(this)"><i class="icon-plus"></i> get Area</a>
 
 </div>
     </div>
