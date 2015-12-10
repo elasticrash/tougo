@@ -274,6 +274,12 @@ function get_area(e) {
     }
 }
 
+function get_nodes() {
+    var nodes = getAllNodes(past);
+    var color = "FF0000";
+    drawing(nodes, false, color, $('#canvas01')[0]);
+}
+
 function cirl(type) {
     if(type!='undefined') {
         $('#canvas01').unbind();
@@ -369,14 +375,15 @@ function getviewpoint(e, canvas) {
     <div class="large-12 columns">
 <div class="btn-group">
     <a class="button [radius round]" href="#" onclick="clearcanvas(Ccanvas);past=new Array();"><i class="icon-minus-sign"></i> clear</a>
-    <a class="button [radius round]" href="#" id="circle" onclick="cirl(this)"><i class="icon-plus-sign"></i> circle</a>
-    <a class="button [radius round]" href="#" id="square" onclick="cirl(this)"><i class="icon-th-large"></i> square</a>
-    <a class="button [radius round]" href="#" id="triangle" onclick="cirl(this)"><i class="icon-eject"></i> triangle</a>
-    <a class="button [radius round]" href="#" id="lines" onclick="cirl(this)"><i class="icon-pencil"></i> line</a>
+    <a class="button [radius round]" href="#" id="circle" onclick="cirl(this)">circle</a>
+    <a class="button [radius round]" href="#" id="square" onclick="cirl(this)">square</a>
+    <a class="button [radius round]" href="#" id="triangle" onclick="cirl(this)">triangle</a>
+    <a class="button [radius round]" href="#" id="lines" onclick="cirl(this)">line</a>
 
-    <a class="button [radius round]" href="#" id="centroid" onclick="showcentroid()"><i class="icon-plus"></i> show centroids</a>
-    <a class="button [radius round]" href="#" id="pick" onclick="cirl(this)"><i class="icon-plus"></i> fill</a>
-    <a class="button [radius round]" href="#" id="getarea" onclick="cirl(this)"><i class="icon-plus"></i> get Area</a>
+    <a class="button [radius round]" href="#" id="centroid" onclick="showcentroid()">centroids</a>
+    <a class="button [radius round]" href="#" id="pick" onclick="cirl(this)">fill</a>
+    <a class="button [radius round]" href="#" id="getarea" onclick="cirl(this)">area</a>
+    <a class="button [radius round]" href="#" id="nodes" onclick="get_nodes()">nodes</a>
 
 </div>
     </div>
@@ -429,7 +436,7 @@ function getviewpoint(e, canvas) {
         <div class="panel radius">
           <div class="row">
             <div class="large-6 small-6 columns">
-              <h4>Header</h4>
+              <h4>Msg From Outer Space</h4>
               <hr>
 
               <h5 class="subheader">Have Fun Enjoy Thy Self</h5>
@@ -441,9 +448,7 @@ function getviewpoint(e, canvas) {
             </div>
 
             <div class="large-6 small-6 columns">
-              <p>Suspendisse ultrices ornare tempor. Aenean eget ultricies libero. Phasellus non ipsum eros. Vivamus
-              at dignissim massa. Aenean dolor libero, blandit quis interdum et, malesuada nec ligula. Nullam erat
-              erat, eleifend sed pulvinar ac. Suspendisse ultrices ornare tempor. Aenean eget ultricies libero.</p>
+              <p></p>
             </div>
           </div>
         </div>
@@ -476,19 +481,19 @@ function getviewpoint(e, canvas) {
       <div class="large-6 columns">
         <ul class="inline-list right">
           <li>
-            <a href="#">Link 1</a>
+            <a href="http://codentonic.net/">Blog</a>
           </li>
 
           <li>
-            <a href="#">Link 2</a>
+            <a href="https://github.com/elasticrash">Github</a>
           </li>
 
           <li>
-            <a href="#">Link 3</a>
+            <a href="#">Reserved Space</a>
           </li>
 
           <li>
-            <a href="#">Link 4</a>
+            <a href="#">Reserved Space</a>
           </li>
         </ul>
       </div>
