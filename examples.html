@@ -21,61 +21,60 @@
     <script src="src/geometry.js"></script>
     <script src="src/drawing.js"></script>
     <script>
-        var datastream =[];
-        var tr;
+var datastream =[];
+var tr;
 
-        $( document ).ready(function() {
-            
-            cirl();
-            
-			var defaults = {
-                                        width :          $('#rw').width()-32,
-                                        height :          $(window).height() - 200
-                                };
-								
-		var obja = $('#icq');
-        obja.append('<canvas onclick="cirl()" id="canvas01" style="z-index:99; float:left; border:1px solid;" width="' + defaults.width + '" height="' + defaults.height + '"></canvas>')
-								
-            var canvas01 = document.getElementById("canvas01");
-            
-            createCzBoxSmall();
-            
+$( document ).ready(function() {
+
+    cirl();
+
+    var defaults = {
+        width: $('#rw').width() - 32,
+        height: $(window).height() - 200
+    };
+
+    var obja = $('#icq');
+    obja.append('<canvas onclick="cirl()" id="canvas01" style="z-index:99; float:left; border:1px solid;" width="' + defaults.width + '" height="' + defaults.height + '"></canvas>')
+
+    var canvas01 = document.getElementById("canvas01");
+
+    createCzBoxSmall();
+
     $.ajax({
-		  type: 'GET',
-		  url: 'geom.txt',
-		  success:function(data){
-		  	read(data);
-              var BBox = getBoundingBox(datastream);
-              tr = transform(datastream, BBox, $('#canvas01').width(), $('#canvas01').height());
-              drawing(tr, false, '243011', canvas01);
-		  },
-		  error:function(){}
-		  });
+        type: 'GET',
+        url: 'geom.txt',
+        success: function (data) {
+            read(data);
+            var BBox = getBoundingBox(datastream);
+            tr = transform(datastream, BBox, $('#canvas01').width(), $('#canvas01').height());
+            drawing(tr, false, '243011', canvas01);
+        },
+        error: function () {
+        }
+    });
 
 });
-        function createCzBoxSmall()
-        {
-                        CzBox = [];
-            CzBox.Xmax =  $('#canvas02').width();
-            CzBox.Xmin =  0;
-            CzBox.Ymax =  0;
-            CzBox.Ymin =  -$('#canvas02').height();
-        }
-        
-         function createCzBoxLarge()
-        {
-                        CzBox = [];
-            CzBox.Xmax =  $('#canvas01').width();
-            CzBox.Xmin =  0;
-            CzBox.Ymax =  0;
-            CzBox.Ymin =  -$('#canvas01').height();
-        }
-        
+function createCzBoxSmall() {
+    CzBox = [];
+    CzBox.Xmax = $('#canvas02').width();
+    CzBox.Xmin = 0;
+    CzBox.Ymax = 0;
+    CzBox.Ymin = -$('#canvas02').height();
+}
+
+function createCzBoxLarge() {
+    CzBox = [];
+    CzBox.Xmax = $('#canvas01').width();
+    CzBox.Xmin = 0;
+    CzBox.Ymax = 0;
+    CzBox.Ymin = -$('#canvas01').height();
+}
+
 function read(data)
 {
     var polygons  = data.split("POLYGON:");
 for (var i = 1; i < polygons.length; i++)
-	{	
+	{
 	var xyArray = polygons[i].split(",");
 
     datastream[i-1] ={ type : "polygon",
@@ -83,125 +82,131 @@ for (var i = 1; i < polygons.length; i++)
                    };
 	}
 }
-        
+
 function drawc(e) {
-                                createCzBoxSmall();
-                                var Point = getviewpoint(e,$('#canvas02')[0]);
-                                var seg = 125;
+    createCzBoxSmall();
+    var Point = getviewpoint(e, $('#canvas02')[0]);
+    var seg = 125;
 
-                                var Circle = CreateCircle(Point, 12, seg);
-                                var rCircle = [];
-                                rCircle[0] = {
-                                        type : "polygon",
-                                        geometry : Circle
-                                }
-                                var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+    var Circle = CreateCircle(Point, 12, seg);
+    var rCircle = [];
+    rCircle[0] = {
+        type: "polygon",
+        geometry: Circle
+    }
+    var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 
-                                drawing(rCircle, false, color, $('#canvas02')[0]);
+    drawing(rCircle, false, color, $('#canvas02')[0]);
 }
 
 function draws(e) {
-                                createCzBoxSmall();
-                                var Point = getviewpoint(e,$('#canvas03')[0]);
-                                var seg = 4;
+    createCzBoxSmall();
+    var Point = getviewpoint(e, $('#canvas03')[0]);
+    var seg = 4;
 
-                                var Circle = CreateCircle(Point, 12, seg);
-                                var rCircle = [];
-                                rCircle[0] = {
-                                        type : "polygon",
-                                        geometry : Circle
-                                }
-                                var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+    var Circle = CreateCircle(Point, 12, seg);
+    var rCircle = [];
+    rCircle[0] = {
+        type: "polygon",
+        geometry: Circle
+    }
+    var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 
-                                drawing(rCircle, false, color, $('#canvas03')[0]);
+    drawing(rCircle, false, color, $('#canvas03')[0]);
 }
 
 function drawt(e) {
-                                createCzBoxSmall();
-                                var Point = getviewpoint(e,$('#canvas04')[0]);
-                                var seg = 3;
+    createCzBoxSmall();
+    var Point = getviewpoint(e, $('#canvas04')[0]);
+    var seg = 3;
 
-                                var Circle = CreateCircle(Point, 12, seg);
-                                var rCircle = [];
-                                rCircle[0] = {
-                                        type : "polygon",
-                                        geometry : Circle
-                                }
-                                var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+    var Circle = CreateCircle(Point, 12, seg);
+    var rCircle = [];
+    rCircle[0] = {
+        type: "polygon",
+        geometry: Circle
+    }
+    var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 
-                                drawing(rCircle, false, color, $('#canvas04')[0]);
+    drawing(rCircle, false, color, $('#canvas04')[0]);
 }
-   
+
 function drawst(e) {
-                                createCzBoxSmall();
-                                var Point = getviewpoint(e,$('#canvas05')[0]);
-                                var seg = 22;
+    createCzBoxSmall();
+    var Point = getviewpoint(e, $('#canvas05')[0]);
+    var seg = 22;
 
-                                var Circle = CreateStar(Point, 12, seg);
-                                var rCircle = [];
-                                rCircle[0] = {
-                                        type : "polygon",
-                                        geometry : Circle
-                                }
-                                var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+    var Circle = CreateStar(Point, 12, seg);
+    var rCircle = [];
+    rCircle[0] = {
+        type: "polygon",
+        geometry: Circle
+    }
+    var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 
-                                drawing(rCircle, false, color, $('#canvas05')[0]);
+    drawing(rCircle, false, color, $('#canvas05')[0]);
 }
-        
-function pick(e)
-{
+
+function pick(e) {
     createCzBoxLarge();
-    
-            var Point = getviewpoint(e,$('#canvas01')[0]);
-            var color = Math.round(0xffffff * Math.random()).toString(16);
-            var rgeo = [];
-            
-        for (var i = 0; i < tr.length; i++)
-        {
-            if (tr[i].type != "point")
-            {
-                if( PointInPolygon(tr[i].geometry, Point.x, Point.y))
-                   {
-                       rgeo[0] = {
-                                        type : "polygon",
-                                        geometry : tr[i].geometry
-                                }
-                   drawing(rgeo, true, color, $('#canvas01')[0]);
-                   }
+
+    var Point = getviewpoint(e, $('#canvas01')[0]);
+    var color = Math.round(0xffffff * Math.random()).toString(16);
+    var rgeo = [];
+
+    for (var i = 0; i < tr.length; i++) {
+        if (tr[i].type != "point") {
+            if (PointInPolygon(tr[i].geometry, Point.x, Point.y)) {
+                rgeo[0] = {
+                    type: "polygon",
+                    geometry: tr[i].geometry
+                }
+                drawing(rgeo, true, color, $('#canvas01')[0]);
             }
         }
- }
-        
-function cirl() {
-$('#canvas01').unbind();
-$('#canvas02').unbind();
-$('#canvas03').unbind();
-$('#canvas04').unbind();
-$('#canvas05').unbind();
-
-                                $('#canvas01').mousedown(function(event) {pick(event);});
-                                $('#canvas02').mousedown(function(event) {drawc(event);});
-                                $('#canvas03').mousedown(function(event) {draws(event);});
-                                $('#canvas04').mousedown(function(event) {drawt(event);});
-                                $('#canvas05').mousedown(function(event) {drawst(event);});                                
+    }
 }
-        
+
+function cirl() {
+    $('#canvas01').unbind();
+    $('#canvas02').unbind();
+    $('#canvas03').unbind();
+    $('#canvas04').unbind();
+    $('#canvas05').unbind();
+
+    $('#canvas01').mousedown(function (event) {
+        pick(event);
+    });
+    $('#canvas02').mousedown(function (event) {
+        drawc(event);
+    });
+    $('#canvas03').mousedown(function (event) {
+        draws(event);
+    });
+    $('#canvas04').mousedown(function (event) {
+        drawt(event);
+    });
+    $('#canvas05').mousedown(function (event) {
+        drawst(event);
+    });
+}
+
 function getviewpoint(e, canvas) {
-                                Ccanvas = canvas;
-                                var Point = currentLocation(e, canvas);
-                                Point.y = Math.abs(Point.y);
-    
-                                var a = canvas.width/canvas.clientWidth;
-                                var b = canvas.height/canvas.clientHeight;
-                                Point.x = Point.x*a;
-                                Point.y = Point.y*b;
-                                return Point;
+    Ccanvas = canvas;
+    var Point = currentLocation(e, canvas);
+    Point.y = Math.abs(Point.y);
+
+    var a = canvas.width / canvas.clientWidth;
+    var b = canvas.height / canvas.clientHeight;
+    Point.x = Point.x * a;
+    Point.y = Point.y * b;
+    return Point;
 }
 
       </script>
   </head>
   <body>
-    
+
 
 <div class="row">
   <div class="large-12 columns">
@@ -227,7 +232,7 @@ function getviewpoint(e, canvas) {
           </li>
 
         </ul>
-          
+
       </section>
     </nav><!-- End Navigation -->
   </div>
@@ -272,86 +277,84 @@ function getviewpoint(e, canvas) {
   </div>
 
 <div class="row">
-  <div class="large-12 columns">
-    <div class="row">
-      <!-- Content -->
+    <div class="large-12 columns">
+        <div class="row">
+            <!-- Content -->
 
-      <div class="large-8 columns">
-        <div class="panel radius">
-          <div class="row">
-            <div class="large-6 small-6 columns">
-              <h4>Header</h4>
-              <hr>
+            <div class="large-8 columns">
+                <div class="panel radius">
+                    <div class="row">
+                        <div class="large-6 small-6 columns">
+                            <h4>Msg From Outer Space</h4>
+                            <hr>
 
-              <h5 class="subheader">Have Fun Enjoy Thy Self</h5>
+                            <h5 class="subheader">Have Fun Enjoy Thy Self</h5>
 
-              <div class="show-for-small" style="text-align: center">
-                <a class="small radius button" href="#">Call To Action!</a><br>
-                <a class="small radius button" href="#">Call To Action!</a>
-              </div>
+                            <div class="show-for-small" style="text-align: center">
+                                <a class="small radius button" href="#">Call To Action!</a><br>
+                                <a class="small radius button" href="#">Call To Action!</a>
+                            </div>
+                        </div>
+
+                        <div class="large-6 small-6 columns">
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="large-6 small-6 columns">
-              <p>Suspendisse ultrices ornare tempor. Aenean eget ultricies libero. Phasellus non ipsum eros. Vivamus
-              at dignissim massa. Aenean dolor libero, blandit quis interdum et, malesuada nec ligula. Nullam erat
-              erat, eleifend sed pulvinar ac. Suspendisse ultrices ornare tempor. Aenean eget ultricies libero.</p>
-            </div>
-          </div>
+            <div class="large-4 columns hide-for-small">
+                <h4>Get In Touch!</h4>
+                <hr>
+                <a href="#">
+                    <div class="panel radius callout" style="text-align: center">
+                        <strong>Call To Action!</strong>
+                    </div></a> <a href="#">
+                <div class="panel radius callout" style="text-align: center">
+                    <strong>Call To Action!</strong>
+                </div></a>
+            </div><!-- End Content -->
         </div>
-      </div>
-
-      <div class="large-4 columns hide-for-small">
-        <h4>Get In Touch!</h4>
-        <hr>
-        <a href="#">
-        <div class="panel radius callout" style="text-align: center">
-          <strong>Call To Action!</strong>
-        </div></a> <a href="#">
-        <div class="panel radius callout" style="text-align: center">
-          <strong>Call To Action!</strong>
-        </div></a>
-      </div><!-- End Content -->
     </div>
-  </div>
 </div><!-- Footer -->
 
 <footer class="row">
-  <div class="large-12 columns">
-    <hr>
+    <div class="large-12 columns">
+        <hr>
 
-    <div class="row">
-      <div class="large-6 columns">
-        <p>? Copyright no one at all. Go to town.</p>
-      </div>
+        <div class="row">
+            <div class="large-6 columns">
+                <p>? Copyright no one at all. Go to town.</p>
+            </div>
 
-      <div class="large-6 columns">
-        <ul class="inline-list right">
-          <li>
-            <a href="#">Link 1</a>
-          </li>
+            <div class="large-6 columns">
+                <ul class="inline-list right">
+                    <li>
+                        <a href="http://codentonic.net/">Blog</a>
+                    </li>
 
-          <li>
-            <a href="#">Link 2</a>
-          </li>
+                    <li>
+                        <a href="https://github.com/elasticrash">Github</a>
+                    </li>
 
-          <li>
-            <a href="#">Link 3</a>
-          </li>
+                    <li>
+                        <a href="#">Reserved Space</a>
+                    </li>
 
-          <li>
-            <a href="#">Link 4</a>
-          </li>
-        </ul>
-      </div>
+                    <li>
+                        <a href="#">Reserved Space</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
-  </div>
 </footer>
-    <script src="javascripts/foundation.js"></script>
-    <script>
-      $(document).foundation();
+<script src="javascripts/foundation.js"></script>
+<script>
+    $(document).foundation();
 
-      var doc = document.documentElement;
-      doc.setAttribute('data-useragent', navigator.userAgent);
-    </script>
+    var doc = document.documentElement;
+    doc.setAttribute('data-useragent', navigator.userAgent);
+</script>
   </body>
 </html>
