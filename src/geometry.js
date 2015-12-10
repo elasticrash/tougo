@@ -204,15 +204,19 @@ function GetArea(Polygon) {
 }
 
 //gets the centroid of a polygon
+//gets the centroid of a polygon
 function GetCentroid(Polygon) {
     var Centroid = [];
     var cx = 0;
     var cy = 0;
     var i;
-    for (i = 0; i < Polygon.length - 1; i+=1) {
-        cx = cx + (Polygon[i].x + Polygon[i + 1].x) * (Polygon[i].x * Polygon[i + 1].y - Polygon[i + 1].x * Polygon[i].y);
-        cy = cy + (Polygon[i].y + Polygon[i + 1].y) * (Polygon[i].x * Polygon[i + 1].y - Polygon[i + 1].x * Polygon[i].y);
-    }
+    Polygon.geometry.forEach(function (vertex) {
+        i = Polygon.geometry.indexOf(vertex);
+        if (i < Polygon.geometry.length - 1) {
+            cx = cx + (vertex.x + Polygon.geometry[i + 1].x) * (vertex.x * Polygon.geometry[i + 1].y - Polygon.geometry[i + 1].x * vertex.y);
+            cy = cy + (vertex.y + Polygon.geometry[i + 1].y) * (vertex.x * Polygon.geometry[i + 1].y - Polygon.geometry[i + 1].x * vertex.y);
+        }
+    });
     cx = 1 / (6 * GetArea(Polygon)) * cx;
     cy = 1 / (6 * GetArea(Polygon)) * cy;
     Centroid = {x: cx, y: cy};
