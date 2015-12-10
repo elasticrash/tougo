@@ -22,10 +22,10 @@ function PointInPolygon(poly, x, y) {
 }
 
 //a polygon simplification algorithm I wrote 2 years ago based on a tolerance value
-function Simplify(polygon, tolerance) {
+function Simplify(Polygon, tolerance) {
     var simplefiedPolygon = [];
 
-    simplefiedPolygon[0] = polygon[0];
+    simplefiedPolygon[0] = Polygon[0];
 
     var ivertex = 0;
     var ipoint = 0;
@@ -33,49 +33,50 @@ function Simplify(polygon, tolerance) {
     var point1 = [];
     var point2 = [];
 
-    for (c = 0; c < polygon.length - 2; c+=1) {
+    Polygon.geometry.forEach(function (vertex) {
+        c = Polygon.geometry.indexOf(vertex);
+        if (c < Polygon.geometry.length - 2) {
+            point1 = {
+                x: Polygon.geometry[ivertex].x,
+                y: Polygon.geometry[ivertex].y
+            };
 
-        point1 = {
-            x: polygon[ivertex].x,
-            y: polygon[ivertex].y
-        };
+            point2 = {
+                x: Polygon.geometry[c + 2].x,
+                y: Polygon.geometry[c + 2].y
+            };
 
-        point2 = {
-            x: polygon[c + 2].x,
-            y: polygon[c + 2].y
-        };
+            var MidPoints = [];
 
-        var MidPoints = [];
+            var j;
+            for (j = 0; j < (c + 1 - ivertex); j += 1) {
+                MidPoints[j] = Polygon.geometry[ivertex + j + 1];
+            }
 
-        var j;
-        for (j = 0; j < (c + 1 - ivertex); j+=1) {
-            MidPoints[j] = polygon[ivertex + j + 1];
-        }
+            var D = Math.sqrt(Math.pow((point1.x - point2.x), 2) + Math.pow((point1.y - point2.y), 2));
+            var y1my2 = (point1.y - point2.y);
+            var x2mx1 = (point2.x - point1.x);
+            var C = (point2.y * point1.x) - (point1.y * point2.x);
 
-        var D = Math.sqrt(Math.pow((point1.x - point2.x), 2) + Math.pow((point1.y - point2.y), 2));
-        var y1my2 = (point1.y - point2.y);
-        var x2mx1 = (point2.x - point1.x);
-        var C = (point2.y * point1.x) - (point1.y * point2.x);
+            var run = 1;
 
-        var run = 1;
+            var dist;
+            MidPoints.geometry.forEach(function (midp) {
+                dist = Math.abs(midp.x * y1my2 + midp.y * x2mx1 + C) / D;
+                if (dist > tolerance) {
+                    run = -1;
+                }
+            });
 
-        var i;
-        var dist;
-        for (i = 0; i < MidPoints.length; i+=1) {
-            dist = Math.abs(MidPoints[i].x * y1my2 + MidPoints[i].y * x2mx1 + C) / D;
-            if (dist > tolerance) {
-                run = -1;
+            if (run === -1) {
+                ipoint += 1;
+                ivertex = c + 1;
+                simplefiedPolygon[ipoint] = Polygon.geometry[c + 1];
             }
         }
-
-        if (run === -1) {
-            ipoint+=1;
-            ivertex = c + 1;
-            simplefiedPolygon[ipoint] = polygon[c + 1];
-        }
-    }
-    simplefiedPolygon[ipoint + 1] = polygon[polygon.length - 2];
-    simplefiedPolygon[ipoint + 2] = polygon[polygon.length - 1];
+    });
+    simplefiedPolygon[ipoint + 1] = Polygon.geometry[Polygon.geometry.length - 2];
+    simplefiedPolygon[ipoint + 2] = Polygon.geometry[Polygon.geometry.length - 1];
 
     return simplefiedPolygon;
 }
@@ -204,7 +205,6 @@ function GetArea(Polygon) {
 }
 
 //gets the centroid of a polygon
-//gets the centroid of a polygon
 function GetCentroid(Polygon) {
     var Centroid = [];
     var cx = 0;
@@ -254,10 +254,11 @@ function getPolygonNodes(Polygon)
 {
  var nodes = [];
     var i;
-  for (i=0; i < Polygon.length; i+=1) {
-      var point = CreatePoint(Polygon[i].x, Polygon[i].y);
+    Polygon.geometry.forEach(function (vertex) {
+        i = Polygon.geometry.indexOf(vertex);
+        var point = CreatePoint(vertex.x, vertex.y);
       nodes[i] = {type: "point", geometry: point};
-  }
+  });
 
  return nodes;
 }
@@ -267,8 +268,8 @@ function getAllNodes(Geometries) {
 
     var p = 0;
     Geometries.forEach(function (geom) {
-        if (geom.type !== "point") {
-            geom.geometry.forEach(function (item) {
+        if (geom[0].type !== "point") {
+            geom[0].geometry.forEach(function (item) {
                 var point = CreatePoint(item.x, item.y);
                 nodes[p] = {type: "point", geometry: point};
                 p+=1;
@@ -299,4 +300,10 @@ function PointToLine(PointA, PointB, PointPt) {
 // three points on same line
 function betweenPoints(PointA, PointB, PointC) {
     return (PointC.x <= Math.max(PointA.x, PointB.x)) && (PointC.x >= Math.min(PointA.x, PointB.x)) && (PointC.y <= Math.max(PointA.y, PointB.y)) && (PointC.y >= Math.min(PointA.y, PointB.y));
+}
+
+//whether a point is left or right from a line
+function isLeft(a, b, c) {
+    "use strict";
+    return ((b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x)) > 0;
 }
