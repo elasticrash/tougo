@@ -16,8 +16,9 @@ I decided to port the library to be used out of the box with OpenLayers 2.x beca
 
 ## 10 December 2015
 
-I noticed how poorly some things were written (we grow/ we learn) and I am currently re-writing everything, plus I am adding some extra algorithms, I have written in the meantime, for some other projects. Also I am expanding the examples. If anyone is even remotely interested he/she can join and do a PR
+I noticed how poorly some things were written (we grow/ we learn) and I am currently re-writing everything, plus I am adding some extra algorithms I have written in the meantime, for some other projects. Also I am expanding the examples. If anyone is even remotely interested he/she can join and do a PR
 
+beware, examples demonstratre a small portion of the code, currently due to redesigning there are a lot of things that aren't working 
 
 additionally
 =====
