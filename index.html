@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-  <head>
+<head>
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
     <meta name="description" content="Tougo : javascript geometry and topology tools" />
@@ -9,83 +9,84 @@
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
     <title>Tougo</title>
-  </head>
+</head>
 
-  <body>
+<body>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/elasticrash/tougo">View on GitHub</a>
+<!-- HEADER -->
+<div id="header_wrap" class="outer">
+    <header class="inner">
+        <a id="forkme_banner" href="https://github.com/elasticrash/tougo">View on GitHub</a>
 
-          <h1 id="project_title">Tougo</h1>
-          <h2 id="project_tagline">javascript geometry and topology tools</h2>
+        <h1 id="project_title">Tougo</h1>
+        <h2 id="project_tagline">javascript geometry and topology tools</h2>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/elasticrash/tougo/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/elasticrash/tougo/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
+        <section id="downloads">
+            <a class="zip_download_link" href="https://github.com/elasticrash/tougo/zipball/master">Download this project as a .zip file</a>
+            <a class="tar_download_link" href="https://github.com/elasticrash/tougo/tarball/master">Download this project as a tar.gz file</a>
+        </section>
+    </header>
+</div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
+<!-- MAIN CONTENT -->
+<div id="main_content_wrap" class="outer">
+    <section id="main_content" class="inner">
         <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+            <a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
 
-<p>This is a small set of geometry tools I had written around a years ago for a small project, as well as a basic html5 renderer. I opened this repo in case I am back in the mood. As it turns out, there is plently of mood, but not adequate time. Nevertheless I do spend a few hours per week on this.</p>
+        <p>This is a small set of geometry tools I had written around a years ago for a small project, as well as a basic html5 renderer. I opened this repo in case I am back in the mood. As it turns out, there is plently of mood, but not adequate time. Nevertheless I do spend a few hours per week on this.</p>
 
-<p>Personally I am especially proud of the removeDangles function in the topology.js file, that, for those that are not familiar with the term, it trims any line, in a line collection that does not participate in any potential line to polygon conversion.</p>
+        <p>Personally I am especially proud of the removeDangles function in the topology.js file, that, for those that are not familiar with the term, it trims any line, in a line collection that does not participate in any potential line to polygon conversion.</p>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Usage Examples</h3>
+        <h3>
+            <a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Usage Examples</h3>
 
--display polygons
+        -display polygons
 
-<ol>
-  <li>Read Polygon Coordinates as a xy Array <pre><code>Geometries[i] ={ type : "polygon", geometry : CreatePolygon(xyArray)};</code></pre></li>
-<li>Calculate the Bounding Box <pre><code>var BBox = getBoundingBox(Geometries);</code></pre></li>
-<li>Transform Polygon Coordinate to the Local Canvas System <pre><code>var tr = transform(Geometries, BBox, Canvas_width, Canvas_height);</code></pre></li>
-<li>Draw the Polygons on the Canvas Element <pre><code>drawing(tr (transformed geometries), fill (true/false), '243011'(hex color without #), canvas (the canvas object));</code></pre> <pre><code>drawing(tr, false, '243011', canvas);</code></pre></li>
-</ol>
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Example Page</h3>
+        <ol>
+            <li>Read Polygon Coordinates as a xy Array <pre><code>Geometries[i] ={ type : "polygon", geometry : CreatePolygon(xyArray)};</code></pre></li>
+            <li>Calculate the Bounding Box <pre><code>var BBox = getBoundingBox(Geometries);</code></pre></li>
+            <li>Transform Polygon Coordinate to the Local Canvas System <pre><code>var tr = transform(Geometries, BBox, Canvas_width, Canvas_height);</code></pre></li>
+            <li>Draw the Polygons on the Canvas Element <pre><code>drawing(tr (transformed geometries), fill (true/false), '243011'(hex color without #), canvas (the canvas object));</code></pre> <pre><code>drawing(tr, false, '243011', canvas);</code></pre></li>
+        </ol>
+        <h3>
+            <a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Example Page</h3>
 
-<p><a href="http://elasticrash.github.io/tougo/examples.html" class="user-mention">Examples</a></p>
-<p><a href="http://elasticrash.github.io/tougo/examplesf.html" class="user-mention">Examples 2</a></p>
+        <p><a href="http://elasticrash.github.io/tougo/examples.html" class="user-mention">Map/Point in Polygon Example</a></p>
+        <p><a href="http://elasticrash.github.io/tougo/examplesf.html" class="user-mention">Draw/Fill/Area/Centroids/Nodes Examples</a></p>
+        <p><a href="http://elasticrash.github.io/tougo/example_dangles.html" class="user-mention">Remove Dangles Example</a></p>
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+        <h3>
+            <a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
 
-<p>elasticrash</p>
+        <p>elasticrash</p>
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+        <h3>
+            <a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
 
-<p>You are welcome to post any comments or ideas</p>
-      </section>
-    </div>
+        <p>You are welcome to post any comments or ideas</p>
+    </section>
+</div>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
+<!-- FOOTER  -->
+<div id="footer_wrap" class="outer">
+    <footer class="inner">
         <p class="copyright">Tougo maintained by <a href="https://github.com/elasticrash">elasticrash</a></p>
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
+    </footer>
+</div>
 
-              <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("UA-46333274-1");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
+<script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+    try {
+        var pageTracker = _gat._getTracker("UA-46333274-1");
+        pageTracker._trackPageview();
+    } catch(err) {}
+</script>
 
 
-  </body>
+</body>
 </html>
