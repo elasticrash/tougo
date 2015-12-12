@@ -24,61 +24,67 @@ function PointInPolygon(poly, x, y) {
 //a polygon simplification algorithm I wrote 2 years ago based on a tolerance value
 function Simplify(Polygon, tolerance) {
     var simplefiedPolygon = [];
+    if(Polygon.geometry.length > 2) {
+        simplefiedPolygon[0] = Polygon.geometry[0];
 
-    simplefiedPolygon[0] = Polygon[0];
+        var ivertex = 0;
+        var ipoint = 0;
+        var c = 0;
+        var point1 = [];
+        var point2 = [];
 
-    var ivertex = 0;
-    var ipoint = 0;
-    var c;
-    var point1 = [];
-    var point2 = [];
+        Polygon.geometry.forEach(function (vertex) {
+            if (c < Polygon.geometry.length - 2) {
+                point1 = {
+                    x: Polygon.geometry[ivertex].x,
+                    y: Polygon.geometry[ivertex].y
+                };
 
-    Polygon.geometry.forEach(function (vertex) {
-        c = Polygon.geometry.indexOf(vertex);
-        if (c < Polygon.geometry.length - 2) {
-            point1 = {
-                x: Polygon.geometry[ivertex].x,
-                y: Polygon.geometry[ivertex].y
-            };
+                point2 = {
+                    x: Polygon.geometry[c + 2].x,
+                    y: Polygon.geometry[c + 2].y
+                };
 
-            point2 = {
-                x: Polygon.geometry[c + 2].x,
-                y: Polygon.geometry[c + 2].y
-            };
+                var MidPoints = [];
 
-            var MidPoints = [];
-
-            var j;
-            for (j = 0; j < (c + 1 - ivertex); j += 1) {
-                MidPoints[j] = Polygon.geometry[ivertex + j + 1];
-            }
-
-            var D = Math.sqrt(Math.pow((point1.x - point2.x), 2) + Math.pow((point1.y - point2.y), 2));
-            var y1my2 = (point1.y - point2.y);
-            var x2mx1 = (point2.x - point1.x);
-            var C = (point2.y * point1.x) - (point1.y * point2.x);
-
-            var run = 1;
-
-            var dist;
-            MidPoints.geometry.forEach(function (midp) {
-                dist = Math.abs(midp.x * y1my2 + midp.y * x2mx1 + C) / D;
-                if (dist > tolerance) {
-                    run = -1;
+                var j;
+                for (j = 0; j < (c + 1 - ivertex); j += 1) {
+                    MidPoints[j] = Polygon.geometry[ivertex + j + 1];
                 }
-            });
 
-            if (run === -1) {
-                ipoint += 1;
-                ivertex = c + 1;
-                simplefiedPolygon[ipoint] = Polygon.geometry[c + 1];
+                var D = Math.sqrt(Math.pow((point1.x - point2.x), 2) + Math.pow((point1.y - point2.y), 2));
+                var y1my2 = (point1.y - point2.y);
+                var x2mx1 = (point2.x - point1.x);
+                var C = (point2.y * point1.x) - (point1.y * point2.x);
+
+                var run = 1;
+
+                var dist;
+                MidPoints.forEach(function (midp) {
+                    dist = Math.abs(midp.x * y1my2 + midp.y * x2mx1 + C) / D;
+                    if (dist > tolerance) {
+                        run = -1;
+                    }
+                });
+
+                if (run === -1) {
+                    ipoint += 1;
+                    ivertex = c + 1;
+                    simplefiedPolygon[ipoint] = Polygon.geometry[c + 1];
+                }
             }
-        }
-    });
-    simplefiedPolygon[ipoint + 1] = Polygon.geometry[Polygon.geometry.length - 2];
-    simplefiedPolygon[ipoint + 2] = Polygon.geometry[Polygon.geometry.length - 1];
+            c += 1;
+        });
+        simplefiedPolygon[ipoint + 1] = Polygon.geometry[Polygon.geometry.length - 2];
+        simplefiedPolygon[ipoint + 2] = Polygon.geometry[Polygon.geometry.length - 1];
 
+    }
+    else {
+        simplefiedPolygon[0] = Polygon.geometry[0];
+        simplefiedPolygon[1] = Polygon.geometry[1];
+    }
     return simplefiedPolygon;
+
 }
 
 // get the intersection of 2 lines
@@ -171,9 +177,9 @@ function getBoundingBox(Geometries) {
     var alllinesy = [];
     var p = 0;
     Geometries.forEach(function (geom) {
-        geom.geometry.forEach(function (item) {
-            alllinesx[p] = parseFloat(item.x);
-            alllinesy[p] = parseFloat(item.y);
+        geom.geometry.forEach(function (vertex) {
+            alllinesx[p] = parseFloat(vertex.x);
+            alllinesy[p] = parseFloat(vertex.y);
             p+=1;
         });
     });
@@ -268,8 +274,8 @@ function getAllNodes(Geometries) {
 
     var p = 0;
     Geometries.forEach(function (geom) {
-        if (geom[0].type !== "point") {
-            geom[0].geometry.forEach(function (item) {
+        if (geom.type !== "point") {
+            geom.geometry.forEach(function (item) {
                 var point = CreatePoint(item.x, item.y);
                 nodes[p] = {type: "point", geometry: point};
                 p+=1;
