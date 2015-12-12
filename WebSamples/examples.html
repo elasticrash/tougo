@@ -1,280 +1,289 @@
-
 <!doctype html>
-<!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]-->
+<!--[if IE 9]>
+<html class="lt-ie10" lang="en"> <![endif]-->
 <html class="no-js" lang="en" data-useragent="Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Foundation Template | Workspace</title>
 
 
-    <meta name="description" content="Documentation and reference library for ZURB Foundation. JavaScript, CSS, components, grid and more." />
+    <meta name="description"
+          content="Documentation and reference library for ZURB Foundation. JavaScript, CSS, components, grid and more."/>
 
-    <meta name="author" content="ZURB, inc. ZURB network also includes zurb.com" />
-    <meta name="copyright" content="ZURB, inc. Copyright (c) 2013" />
+    <meta name="author" content="ZURB, inc. ZURB network also includes zurb.com"/>
+    <meta name="copyright" content="ZURB, inc. Copyright (c) 2013"/>
 
-    <link rel="stylesheet" href="stylesheets/foundation.css" />
+    <link rel="stylesheet" href="stylesheets/foundation.css"/>
 
     <script src="javascripts/jquery.js"></script>
     <script src="javascripts/modernizr.js"></script>
     <script src="../src/original/primitives.js"></script>
     <script src="../src/original/geometry.js"></script>
     <script src="../src/original/drawing.js"></script>
+    <script src="../src/original/taskhelper.js"></script>
+
     <script>
-var datastream =[];
-var tr;
+        var datastream = [];
+        var tr;
 
-$( document ).ready(function() {
+        $(document).ready(function () {
 
-    cirl();
+            cirl();
 
-    var defaults = {
-        width: $('#rw').width() - 32,
-        height: $(window).height() - 200
-    };
+            var defaults = {
+                width: $('#rw').width() - 32,
+                height: $(window).height() - 200
+            };
 
-    var obja = $('#icq');
-    obja.append('<canvas onclick="cirl()" id="canvas01" style="z-index:99; float:left; border:1px solid;" width="' + defaults.width + '" height="' + defaults.height + '"></canvas>')
+            var obja = $('#icq');
+            obja.append('<canvas onclick="cirl()" id="canvas01" style="z-index:99; float:left; border:1px solid;" width="' + defaults.width + '" height="' + defaults.height + '"></canvas>')
 
-    var canvas01 = document.getElementById("canvas01");
+            var canvas01 = document.getElementById("canvas01");
 
-    createCzBoxSmall();
+            createCzBoxSmall();
 
-    $.ajax({
-        type: 'GET',
-        url: 'geom.txt',
-        success: function (data) {
-            read(data);
-            var BBox = getBoundingBox(datastream);
-            tr = transform(datastream, BBox, $('#canvas01').width(), $('#canvas01').height());
-            drawing(tr, false, '243011', canvas01);
-        },
-        error: function () {
-        }
-    });
-
-});
-function createCzBoxSmall() {
-    CzBox = [];
-    CzBox.Xmax = $('#canvas02').width();
-    CzBox.Xmin = 0;
-    CzBox.Ymax = 0;
-    CzBox.Ymin = -$('#canvas02').height();
-}
-
-function createCzBoxLarge() {
-    CzBox = [];
-    CzBox.Xmax = $('#canvas01').width();
-    CzBox.Xmin = 0;
-    CzBox.Ymax = 0;
-    CzBox.Ymin = -$('#canvas01').height();
-}
-
-function read(data)
-{
-    var polygons  = data.split("POLYGON:");
-for (var i = 1; i < polygons.length; i++)
-	{
-	var xyArray = polygons[i].split(",");
-
-    datastream[i-1] ={ type : "polygon",
-                     geometry : CreatePolygon(xyArray)
-                   };
-	}
-}
-
-function drawc(e) {
-    createCzBoxSmall();
-    var Point = getviewpoint(e, $('#canvas02')[0]);
-    var seg = 125;
-
-    var Circle = CreateCircle(Point, 12, seg);
-    var rCircle = [];
-    rCircle[0] = {
-        type: "polygon",
-        geometry: Circle
-    }
-    var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
-
-    drawing(rCircle, false, color, $('#canvas02')[0]);
-}
-
-function draws(e) {
-    createCzBoxSmall();
-    var Point = getviewpoint(e, $('#canvas03')[0]);
-    var seg = 4;
-
-    var Circle = CreateCircle(Point, 12, seg);
-    var rCircle = [];
-    rCircle[0] = {
-        type: "polygon",
-        geometry: Circle
-    }
-    var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
-
-    drawing(rCircle, false, color, $('#canvas03')[0]);
-}
-
-function drawt(e) {
-    createCzBoxSmall();
-    var Point = getviewpoint(e, $('#canvas04')[0]);
-    var seg = 3;
-
-    var Circle = CreateCircle(Point, 12, seg);
-    var rCircle = [];
-    rCircle[0] = {
-        type: "polygon",
-        geometry: Circle
-    }
-    var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
-
-    drawing(rCircle, false, color, $('#canvas04')[0]);
-}
-
-function drawst(e) {
-    createCzBoxSmall();
-    var Point = getviewpoint(e, $('#canvas05')[0]);
-    var seg = 22;
-
-    var Circle = CreateStar(Point, 12, seg);
-    var rCircle = [];
-    rCircle[0] = {
-        type: "polygon",
-        geometry: Circle
-    }
-    var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
-
-    drawing(rCircle, false, color, $('#canvas05')[0]);
-}
-
-function pick(e) {
-    createCzBoxLarge();
-
-    var Point = getviewpoint(e, $('#canvas01')[0]);
-    var color = Math.round(0xffffff * Math.random()).toString(16);
-    var rgeo = [];
-
-    for (var i = 0; i < tr.length; i++) {
-        if (tr[i].type != "point") {
-            if (PointInPolygon(tr[i].geometry, Point.x, Point.y)) {
-                rgeo[0] = {
-                    type: "polygon",
-                    geometry: tr[i].geometry
+            $.ajax({
+                type: 'GET',
+                url: 'geom.txt',
+                success: function (data) {
+                    read(data);
+                    var BBox = getBoundingBox(datastream);
+                    tr = transform(datastream, BBox, $('#canvas01').width(), $('#canvas01').height());
+                    drawing(tr, false, '243011', canvas01);
+                },
+                error: function () {
                 }
-                drawing(rgeo, true, color, $('#canvas01')[0]);
+            });
+
+        });
+        function createCzBoxSmall() {
+            CzBox = [];
+            CzBox.Xmax = $('#canvas02').width();
+            CzBox.Xmin = 0;
+            CzBox.Ymax = 0;
+            CzBox.Ymin = -$('#canvas02').height();
+        }
+
+        function createCzBoxLarge() {
+            CzBox = [];
+            CzBox.Xmax = $('#canvas01').width();
+            CzBox.Xmin = 0;
+            CzBox.Ymax = 0;
+            CzBox.Ymin = -$('#canvas01').height();
+        }
+
+        function read(data) {
+            var polygons = data.split("POLYGON:");
+            for (var i = 1; i < polygons.length; i++) {
+                var xyArray = polygons[i].split(",");
+
+                datastream[i - 1] = {
+                    type: "polygon",
+                    geometry: CreatePolygon(xyArray)
+                };
             }
         }
-    }
-}
 
-function cirl() {
-    $('#canvas01').unbind();
-    $('#canvas02').unbind();
-    $('#canvas03').unbind();
-    $('#canvas04').unbind();
-    $('#canvas05').unbind();
+        function drawc(e) {
+            createCzBoxSmall();
+            var Point = getviewpoint(e, $('#canvas02')[0]);
+            var seg = 125;
 
-    $('#canvas01').mousedown(function (event) {
-        pick(event);
-    });
-    $('#canvas02').mousedown(function (event) {
-        drawc(event);
-    });
-    $('#canvas03').mousedown(function (event) {
-        draws(event);
-    });
-    $('#canvas04').mousedown(function (event) {
-        drawt(event);
-    });
-    $('#canvas05').mousedown(function (event) {
-        drawst(event);
-    });
-}
+            var Circle = CreateCircle(Point, 12, seg);
+            var rCircle = [];
+            rCircle[0] = {
+                type: "polygon",
+                geometry: Circle
+            }
+            var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 
-function getviewpoint(e, canvas) {
-    Ccanvas = canvas;
-    var Point = currentLocation(e, canvas);
-    Point.y = Math.abs(Point.y);
+            drawing(rCircle, false, color, $('#canvas02')[0]);
+        }
 
-    var a = canvas.width / canvas.clientWidth;
-    var b = canvas.height / canvas.clientHeight;
-    Point.x = Point.x * a;
-    Point.y = Point.y * b;
-    return Point;
-}
+        function draws(e) {
+            createCzBoxSmall();
+            var Point = getviewpoint(e, $('#canvas03')[0]);
+            var seg = 4;
 
-      </script>
-  </head>
-  <body>
+            var Circle = CreateCircle(Point, 12, seg);
+            var rCircle = [];
+            rCircle[0] = {
+                type: "polygon",
+                geometry: Circle
+            }
+            var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+
+            drawing(rCircle, false, color, $('#canvas03')[0]);
+        }
+
+        function drawt(e) {
+            createCzBoxSmall();
+            var Point = getviewpoint(e, $('#canvas04')[0]);
+            var seg = 3;
+
+            var Circle = CreateCircle(Point, 12, seg);
+            var rCircle = [];
+            rCircle[0] = {
+                type: "polygon",
+                geometry: Circle
+            }
+            var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+
+            drawing(rCircle, false, color, $('#canvas04')[0]);
+        }
+
+        function drawst(e) {
+            createCzBoxSmall();
+            var Point = getviewpoint(e, $('#canvas05')[0]);
+            var seg = 22;
+
+            var Circle = CreateStar(Point, 12, seg);
+            var rCircle = [];
+            rCircle[0] = {
+                type: "polygon",
+                geometry: Circle
+            }
+            var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+
+            drawing(rCircle, false, color, $('#canvas05')[0]);
+        }
+
+        function pick(e) {
+            createCzBoxLarge();
+
+            var Point = getviewpoint(e, $('#canvas01')[0]);
+            var color = Math.round(0xffffff * Math.random()).toString(16);
+            var rgeo = [];
+
+            for (var i = 0; i < tr.length; i++) {
+                if (tr[i].type != "point") {
+                    if (PointInPolygon(tr[i].geometry, Point.x, Point.y)) {
+                        rgeo[0] = {
+                            type: "polygon",
+                            geometry: tr[i].geometry
+                        }
+                        drawing(rgeo, true, color, $('#canvas01')[0]);
+                    }
+                }
+            }
+        }
+
+        function cirl() {
+            $('#canvas01').unbind();
+            $('#canvas02').unbind();
+            $('#canvas03').unbind();
+            $('#canvas04').unbind();
+            $('#canvas05').unbind();
+
+            $('#canvas01').mousedown(function (event) {
+                pick(event);
+            });
+            $('#canvas02').mousedown(function (event) {
+                drawc(event);
+            });
+            $('#canvas03').mousedown(function (event) {
+                draws(event);
+            });
+            $('#canvas04').mousedown(function (event) {
+                drawt(event);
+            });
+            $('#canvas05').mousedown(function (event) {
+                drawst(event);
+            });
+        }
+
+        function getviewpoint(e, canvas) {
+            Ccanvas = canvas;
+            var Point = currentLocation(e, canvas);
+            Point.y = Math.abs(Point.y);
+
+            var a = canvas.width / canvas.clientWidth;
+            var b = canvas.height / canvas.clientHeight;
+            Point.x = Point.x * a;
+            Point.y = Point.y * b;
+            return Point;
+        }
+
+    </script>
+</head>
+<body>
 
 
 <div class="row">
-  <div class="large-12 columns">
-    <!-- Navigation -->
+    <div class="large-12 columns">
+        <!-- Navigation -->
 
-    <nav class="top-bar" data-topbar>
-      <ul class="title-area">
-        <!-- Title Area -->
+        <nav class="top-bar" data-topbar>
+            <ul class="title-area">
+                <!-- Title Area -->
 
-        <li class="name">
-          <h1><a href="http://elasticrash.github.io/tougo/">Tougo Homepage</a></h1>
-        </li>
+                <li class="name">
+                    <h1><a href="http://elasticrash.github.io/tougo/">Tougo Homepage</a></h1>
+                </li>
 
-        <li class="toggle-topbar menu-icon">
-          <a href="#"><span>menu</span></a>
-        </li>
-      </ul>
+                <li class="toggle-topbar menu-icon">
+                    <a href="#"><span>menu</span></a>
+                </li>
+            </ul>
 
-      <section class="top-bar-section">
-        <ul class="left">
-          <li>
-            <a href="http://codentonic.net/">Code n Tonic</a>
-          </li>
+            <section class="top-bar-section">
+                <ul class="left">
+                    <li>
+                        <a href="http://codentonic.net/">Code n Tonic</a>
+                    </li>
 
-        </ul>
+                </ul>
 
-      </section>
-    </nav><!-- End Navigation -->
-  </div>
+            </section>
+        </nav>
+        <!-- End Navigation -->
+    </div>
 </div>
 
 <div id="rw" class="row">
-  <div class="large-12 columns">
-      <div id="icq"></div>
-  </div>
+    <div class="large-12 columns">
+        <div id="icq"></div>
+    </div>
     <h6>Click a Polygon to fill it with a random color. Its a type of Polygon select tool</h6>
-</div><br>
+</div>
+<br>
 
 <div class="row">
-  <div  class="large-12 columns">
-    <div class="row">
-      <!-- Thumbnails -->
-<div class="large-3 small-6 columns">
-      <canvas onclick="cirl()" id="canvas02" style="z-index:99; float:left; border:1px solid; width: 100%; height: 100%;">        </canvas>
+    <div class="large-12 columns">
+        <div class="row">
+            <!-- Thumbnails -->
+            <div class="large-3 small-6 columns">
+                <canvas onclick="cirl()" id="canvas02"
+                        style="z-index:99; float:left; border:1px solid; width: 100%; height: 100%;"></canvas>
 
-        <h6 class="panel">Draw A Circle</h6>
-      </div>
+                <h6 class="panel">Draw A Circle</h6>
+            </div>
 
-<div class="large-3 small-6 columns">
-      <canvas onclick="cirl()" id="canvas03" style="z-index:99; float:left; border:1px solid; width: 100%; height: 100%;">        </canvas>
+            <div class="large-3 small-6 columns">
+                <canvas onclick="cirl()" id="canvas03"
+                        style="z-index:99; float:left; border:1px solid; width: 100%; height: 100%;"></canvas>
 
-        <h6 class="panel">Draw A Square</h6>
-      </div>
+                <h6 class="panel">Draw A Square</h6>
+            </div>
 
-<div class="large-3 small-6 columns">
-      <canvas onclick="cirl()" id="canvas04" style="z-index:99; float:left; border:1px solid; width: 100%; height: 100%;">        </canvas>
+            <div class="large-3 small-6 columns">
+                <canvas onclick="cirl()" id="canvas04"
+                        style="z-index:99; float:left; border:1px solid; width: 100%; height: 100%;"></canvas>
 
-        <h6 class="panel">Draw A Triangle</h6>
-      </div>
+                <h6 class="panel">Draw A Triangle</h6>
+            </div>
 
-<div class="large-3 small-6 columns">
-      <canvas onclick="cirl()" id="canvas05" style="z-index:99; float:left; border:1px solid; width: 100%; height: 100%;">        </canvas>
+            <div class="large-3 small-6 columns">
+                <canvas onclick="cirl()" id="canvas05"
+                        style="z-index:99; float:left; border:1px solid; width: 100%; height: 100%;"></canvas>
 
-        <h6 class="panel">Draw A Star</h6>
-      </div>
-      </div><!-- End Thumbnails -->
+                <h6 class="panel">Draw A Star</h6>
+            </div>
+        </div>
+        <!-- End Thumbnails -->
     </div>
-  </div>
+</div>
 
 <div class="row">
     <div class="large-12 columns">
@@ -309,14 +318,18 @@ function getviewpoint(e, canvas) {
                 <a href="#">
                     <div class="panel radius callout" style="text-align: center">
                         <strong>Call To Action!</strong>
-                    </div></a> <a href="#">
+                    </div>
+                </a> <a href="#">
                 <div class="panel radius callout" style="text-align: center">
                     <strong>Call To Action!</strong>
-                </div></a>
-            </div><!-- End Content -->
+                </div>
+            </a>
+            </div>
+            <!-- End Content -->
         </div>
     </div>
-</div><!-- Footer -->
+</div>
+<!-- Footer -->
 
 <footer class="row">
     <div class="large-12 columns">
@@ -356,5 +369,5 @@ function getviewpoint(e, canvas) {
     var doc = document.documentElement;
     doc.setAttribute('data-useragent', navigator.userAgent);
 </script>
-  </body>
+</body>
 </html>

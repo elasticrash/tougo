@@ -1,0 +1,96 @@
+<html>
+<head>
+    <script src="javascripts/jquery.js"></script>
+    <script src="../src/original/primitives.js"></script>
+    <script src="../src/original/geometry.js"></script>
+    <script src="../src/original/drawing.js"></script>
+    <script src="../src/original/topology.js"></script>
+    <script src="../src/original/taskhelper.js"></script>
+
+    <script language='JavaScript' type="text/javascript">
+        function readdata()
+        {
+            query = "roadnet.txt";
+
+            $.ajax({
+                type: 'POST',
+                url: query,
+                beforeSend:function(){
+                    $('#info').html('');
+                },
+                success:function(data){
+                    dostaff(splitdata(data));
+                },
+                error:function(){}
+            });
+        }
+        function init()
+        {
+            readdata();
+        }
+        function splitdata(data){
+            var polygons = new Array();
+            var mid = new Array();
+            var finalresult = new Array();
+            polygons = data.split("LINE:");
+
+            for (var j = 1; j < polygons.length; j++) {
+                mid = polygons[j].split(",");
+                var t = 0;
+                var result = new Array();
+
+                var Polygon = {
+                    type: "polygon",
+                    geometry: CreatePolygon(mid)
+                }
+
+                result = Simplify(Polygon, 50);
+
+                finalresult[j-1] = {
+                    type: "polygon",
+                    geometry: result
+                }
+            }
+
+            return finalresult;
+        }
+        function dostaff(geometry)
+        {
+            var canvas = document.getElementById("canvas");
+            var canvasres = document.getElementById("canvasres");
+
+            var Boxobj = getBoundingBox(geometry);
+
+            var lines = getlines(geometry);
+            var gm = transform(geometry, Boxobj, canvas.width, canvas.height);
+            drawing(gm, false, "00f", canvas);
+
+            var nodes = getAllNodes(gm);
+            var color = "FF0000";
+            drawing(nodes, false, color, canvas);
+
+            var dangles = removeDangles(lines, 1);
+
+
+            var tdangles = transform(dangles, Boxobj, canvas.width, canvas.height);
+            var nodesx = getAllNodes(tdangles);
+            drawing(nodesx, false, color, canvasres);
+            drawing(tdangles, false, "00f", canvasres)
+        }
+    </script>
+
+
+</head>
+<body onload="init();">
+<h2>BEFORE AND AFTER REMOVING DANGLES</h2>
+<canvas id="canvas" style="float: left; border:1px solid;" width="800" height="450" >
+    yo! if you can see this msg then you utterly fail..change browser
+</canvas>
+<canvas id="canvasres" style="float: left; border:1px solid;" width="800" height="450" >
+    yo! if you can see this msg then you utterly fail..change browser
+</canvas>
+<div id="info" style="float: left;"></div><br>
+<br>
+<div id="test"></div>
+</body>
+</html>
