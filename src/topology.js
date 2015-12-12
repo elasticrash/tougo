@@ -1,101 +1,112 @@
 //needs primitives.js and geometry.js
 //create nodes at line intersections
-function breaklinear(data, tolerance){
-	var points = [];
-	var p= 0;
-    for (var i = 0; i < data.length; i++) {
-		for (var j = 0; j < data[i].geometry.length - 1; j++) {
-			loop: for (var k = i; k < data.length; k++) {
-				for (var l = 0; l < data[k].geometry.length - 1; l++) {
-				
-				var a, b, c, d, e, f, g, h;
-				
-				a = data[i].geometry[j].x;
-				b = data[i].geometry[j].y;
-				c = data[i].geometry[j + 1].x;
-				d = data[i].geometry[j + 1].y;
-				
-				e = data[k].geometry[l].x;
-				f = data[k].geometry[l].y;
-				g = data[k].geometry[l + 1].x;
-				h = data[k].geometry[l + 1].y;
-					
-					var PointAt = CreatePoint(a, b);
-					var PointBt = CreatePoint(c, d);
-					var PointCt = CreatePoint(e, f);
-					var PointDt = CreatePoint(g, h);		
-					
-					var LineA = extendLineBothSides(PointAt, PointBt, tolerance);
-					var PointA = LineA[0];
-					var PointB = LineA[1];
-					var LineB = extendLineBothSides(PointCt, PointDt, tolerance);
-					var PointC = LineB[0];
-					var PointD = LineB[1];
-					
-					if (PointA.x === PointB.x && PointA.y === PointB.y) {
-						break loop;
-					}
-					else {
-						var PointIN = intersection(PointA, PointB, PointC, PointD);
-						if (IsIntersectionWithinLineLimits(PointA, PointB, PointC, PointD, PointIN) === true) {
-							points[p] = {
-								type: "point",
-								geometry: PointIN
-							};
-							p++;
-						}
-					}
-				}
-			}
-		}
-	}
-	
-	return points;
+function breaklinear(Geometries, tolerance){
+    var points = [];
+    var p= 0;
+    for (var i = 0; i < Geometries.length; i++) {
+        for (var j = 0; j < Geometries[i].geometry.length - 1; j++) {
+            loop: for (var k = i; k < Geometries.length; k++) {
+                for (var l = 0; l < Geometries[k].geometry.length - 1; l++) {
+
+                    var a, b, c, d, e, f, g, h;
+
+                    a = Geometries[i].geometry[j].x;
+                    b = Geometries[i].geometry[j].y;
+                    c = Geometries[i].geometry[j + 1].x;
+                    d = Geometries[i].geometry[j + 1].y;
+
+                    e = Geometries[k].geometry[l].x;
+                    f = Geometries[k].geometry[l].y;
+                    g = Geometries[k].geometry[l + 1].x;
+                    h = Geometries[k].geometry[l + 1].y;
+
+                    var PointAt = CreatePoint(a, b);
+                    var PointBt = CreatePoint(c, d);
+                    var PointCt = CreatePoint(e, f);
+                    var PointDt = CreatePoint(g, h);
+
+                    var LineA = extendLineBothSides(PointAt, PointBt, tolerance);
+                    var PointA = LineA[0];
+                    var PointB = LineA[1];
+                    var LineB = extendLineBothSides(PointCt, PointDt, tolerance);
+                    var PointC = LineB[0];
+                    var PointD = LineB[1];
+
+                    if (PointA.x === PointB.x && PointA.y === PointB.y) {
+                        break loop;
+                    }
+                    else {
+                        var PointIN = intersection(PointA, PointB, PointC, PointD);
+                        if (IsIntersectionWithinLineLimits(PointA, PointB, PointC, PointD, PointIN) === true) {
+                            points[p] = {
+                                type: "point",
+                                geometry: PointIN
+                            };
+                            p+=1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return points;
 }
 
+
 //delete duplicate points
-function deleteduplicatePoints(Geometries)
-{
-	var points = [];
-	var p= 0;
-			for (var i = 0; i < Geometries.length; i++) {
-		if (Geometries[i].type === "point") {
-				for (var j = 0; j < Geometries.length; j++) {
-					if (Geometries[i].geometry.x == Geometries[j].geometry.x && Geometries[i].geometry.y === Geometries[j].geometry.y) {
-						if (i != j && Geometries[i].geometry.x !=0 && Geometries[i].geometry.y !=0) {
-							Geometries[j].geometry.x =0;
-							Geometries[j].geometry.y =0;
-						}
-					}
-				}
-				
-				if(Geometries[i].geometry.x !== 0)
-				{
-					var point = CreatePoint(Geometries[i].geometry.x, Geometries[i].geometry.y);
-					points[p] = {type: "point", geometry: point};
-					p++;
-				}
-		}
-	}
-	return points;
+function deleteduplicatePoints(Geometries) {
+    var points = [];
+    var p = 0;
+    var i = 0;
+    var j;
+    Geometries.forEach(function (geom) {
+        if (geom.type === "point") {
+            j = 0;
+            Geometries.forEach(function (altgeom) {
+                if (geom.geometry.x == altgeom.geometry.x && geom.geometry.y === altgeom.geometry.y) {
+                    if (i != j && geom.geometry.x != 0 && geom.geometry.y != 0) {
+                        altgeom.geometry.x = 0;
+                        altgeom.geometry.y = 0;
+                    }
+                }
+                j += 1;
+            });
+            if (geom.geometry.x !== 0) {
+                var point = CreatePoint(geom.geometry.x, geom.geometry.y);
+                points[p] = {type: "point", geometry: point};
+                p += 1;
+            }
+        }
+        i += 1;
+    });
+    return points;
 }
 //get the lines from a collection
 function getlines(Geometries){
 	var p = 0;
 	var lines = [];
-	for (var i = 0; i < Geometries.length; i++) {
-		if (Geometries[i].type != "point") 
-			for (var j = 0; j < Geometries[i].geometry.length - 1; j++) {
-				var Polygon = [];
-				Polygon[0] = CreatePoint(Geometries[i].geometry[j].x,Geometries[i].geometry[j].y);
-				Polygon[1] = CreatePoint(Geometries[i].geometry[j + 1].x,Geometries[i].geometry[j + 1].y);
-				lines[p] = {
-					type: "lines",
-					geometry: Polygon
-				};
-				p++;
-			}
-	}
+    var tlines = [];
+    var j;
+    Geometries.forEach(function (geom) {
+        if (geom.type != "point") {
+            j=0;
+            geom.geometry.forEach(function (vertex) {
+                if (j < geom.geometry.length - 1) {
+                    var Polygon = [];
+                    Polygon[0] = CreatePoint(vertex.x, vertex.y);
+                    Polygon[1] = CreatePoint(geom.geometry[j + 1].x, geom.geometry[j + 1].y);
+                    tlines = {
+                        type: "lines",
+                        geometry: Polygon
+                    };
+                    lines.push(tlines);
+                    p+=1;
+                }
+                j+=1
+            });
+        }
+	});
 	return lines;
 }
 
