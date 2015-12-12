@@ -4,6 +4,9 @@ var Ccanvas;
 var Cgeometry;
 var CzBox;
 function drawing(Geometries, fill, fillcolor, canvas) {
+
+    Geometries = Geometry2Collection(Geometries);
+
     if (canvas.getContext) {
         var lines = canvas.getContext("2d");
         lines.beginPath();
