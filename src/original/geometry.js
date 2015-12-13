@@ -141,10 +141,8 @@ function transform(oldGeometries, Boxobj, width, height) {
     width = width < height ? width : height;
 
     var Geometries;
-    var i;
     oldGeometries.forEach(function (oldgeom) {
         Geometries = [];
-        i = oldGeometries.indexOf(oldgeom);
         if (oldgeom.type === "point") {
             Geometries = {
                 x: parseFloat(((oldgeom.geometry.x - Boxobj.Xmin) / lw) * width),
@@ -162,10 +160,10 @@ function transform(oldGeometries, Boxobj, width, height) {
             });
         }
 
-        TransformedGeometries[i] = {
+        TransformedGeometries.push({
             type: oldgeom.type,
             geometry: Geometries
-        };
+        });
     });
 
     return TransformedGeometries;
@@ -175,12 +173,10 @@ function transform(oldGeometries, Boxobj, width, height) {
 function getBoundingBox(Geometries) {
     var alllinesx = [];
     var alllinesy = [];
-    var p = 0;
     Geometries.forEach(function (geom) {
         geom.geometry.forEach(function (vertex) {
-            alllinesx[p] = parseFloat(vertex.x);
-            alllinesy[p] = parseFloat(vertex.y);
-            p+=1;
+            alllinesx.push(parseFloat(vertex.x));
+            alllinesy.push(parseFloat(vertex.y));
         });
     });
 
@@ -197,16 +193,11 @@ function getBoundingBox(Geometries) {
 function GetArea(Polygon) {
     var p1 = 0;
     var p2 = 0;
-    var area = 0;
-    var i;
-    Polygon.geometry.forEach(function (vertex) {
-        i = Polygon.geometry.indexOf(vertex);
-        if (i < Polygon.geometry.length - 1) {
-            p1 += (vertex.x * Polygon.geometry[i + 1].y);
-            p2 += (vertex.y * Polygon.geometry[i + 1].x);
-        }
+    Polygon.geometry.forEachPair(function (vertices) {
+            p1 += (vertices[0].x * vertices[1].y);
+            p2 += (vertices[0].y * vertices[1].x);
     });
-    area = p1 -p2;
+    var area = p1 -p2;
     return area * 0.5;
 }
 
@@ -215,13 +206,9 @@ function GetCentroid(Polygon) {
     var Centroid = [];
     var cx = 0;
     var cy = 0;
-    var i;
-    Polygon.geometry.forEach(function (vertex) {
-        i = Polygon.geometry.indexOf(vertex);
-        if (i < Polygon.geometry.length - 1) {
-            cx = cx + (vertex.x + Polygon.geometry[i + 1].x) * (vertex.x * Polygon.geometry[i + 1].y - Polygon.geometry[i + 1].x * vertex.y);
-            cy = cy + (vertex.y + Polygon.geometry[i + 1].y) * (vertex.x * Polygon.geometry[i + 1].y - Polygon.geometry[i + 1].x * vertex.y);
-        }
+    Polygon.geometry.forEachPair(function (vertices) {
+            cx = cx + (vertices[0].x + vertices[1].x) * (vertices[0].x * vertices[1].y - vertices[1].x * vertices[0].y);
+            cy = cy + (vertices[0].y + vertices[1].y) * (vertices[0].x * vertices[1].y - vertices[1].x * vertices[0].y);
     });
     cx = 1 / (6 * GetArea(Polygon)) * cx;
     cy = 1 / (6 * GetArea(Polygon)) * cy;
@@ -259,11 +246,9 @@ function extendLineBothSides(PointA, PointB, dist) {
 function getPolygonNodes(Polygon)
 {
  var nodes = [];
-    var i;
     Polygon.geometry.forEach(function (vertex) {
-        i = Polygon.geometry.indexOf(vertex);
         var point = CreatePoint(vertex.x, vertex.y);
-      nodes[i] = {type: "point", geometry: point};
+      nodes.push({type: "point", geometry: point});
   });
 
  return nodes;

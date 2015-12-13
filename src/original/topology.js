@@ -84,26 +84,19 @@ function deleteduplicatePoints(Geometries) {
 }
 //get the lines from a collection
 function getlines(Geometries){
-	var p = 0;
 	var lines = [];
     var tlines = [];
-    var j;
     Geometries.forEach(function (geom) {
         if (geom.type != "point") {
-            j=0;
-            geom.geometry.forEach(function (vertex) {
-                if (j < geom.geometry.length - 1) {
+            geom.geometry.forEachPair(function (vertices) {
                     var Polygon = [];
-                    Polygon[0] = CreatePoint(vertex.x, vertex.y);
-                    Polygon[1] = CreatePoint(geom.geometry[j + 1].x, geom.geometry[j + 1].y);
+                    Polygon[0] = CreatePoint(vertices[0].x, vertices[0].y);
+                    Polygon[1] = CreatePoint(vertices[1].x, vertices[1].y);
                     tlines = {
                         type: "lines",
                         geometry: Polygon
                     };
                     lines.push(tlines);
-                    p+=1;
-                }
-                j+=1
             });
         }
 	});
@@ -169,45 +162,44 @@ function removeDangles(Lines, tolerance){
 }
 
 //Convert a geometry to points
-function convertToPoints(Geometries){
-	var points = [];
-	
-	for (var i = 0; i < Geometries.length; i++) {
-		if (Geometries[i].type != "point") {
-			for (var j = 0; j < Geometries[i].geometry.length - 1; j++) {
-				var p = CreatePoint(Geometries[i].geometry[j].x, Geometries[i].geometry[j].y);
-			points.push({
-                                type: "point",
-                                geometry: p
-                            });
-			}
-		}
-	}
-	return points;
+function convertToPoints(Geometries) {
+    var points = [];
+
+    for (var i = 0; i < Geometries.length; i++) {
+        if (Geometries[i].type != "point") {
+            for (var j = 0; j < Geometries[i].geometry.length - 1; j++) {
+                var p = CreatePoint(Geometries[i].geometry[j].x, Geometries[i].geometry[j].y);
+                points.push({
+                    type: "point",
+                    geometry: p
+                });
+            }
+        }
+    }
+    return points;
 }
 //get anchor points
-function getAnchorPoints(Geometries){
-	var anchor = [];
+function getAnchorPoints(Geometries) {
+    var anchor = [];
     var anchorCount;
-	for (var i = 0; i < Geometries.length; i++) {
-		if (Geometries[i].type === "point") {
+    for (var i = 0; i < Geometries.length; i++) {
+        if (Geometries[i].type === "point") {
             anchorCount = 0;
-			for (var j = 0; j < Geometries.length; j++) {
-				if (Geometries[i].geometry.x === Geometries[j].geometry.x && Geometries[i].geometry.y === Geometries[j].geometry.y) {
-					if (i != j && Geometries[i].geometry.x != 0 && Geometries[i].geometry.y != 0) {
-						anchorCount++;
-					}
-				}
-			}
-		}
-		if (anchorCount > 2) {
-			var p = CreatePoint(Geometries[i].geometry.x, Geometries[i].geometry.y);
-			anchor.push({
-				type: "point",
-				geometry: p
-			});
-		}
-	}
-	return anchor;
+            for (var j = 0; j < Geometries.length; j++) {
+                if (Geometries[i].geometry.x === Geometries[j].geometry.x && Geometries[i].geometry.y === Geometries[j].geometry.y) {
+                    if (i != j && Geometries[i].geometry.x != 0 && Geometries[i].geometry.y != 0) {
+                        anchorCount++;
+                    }
+                }
+            }
+        }
+        if (anchorCount > 2) {
+            var p = CreatePoint(Geometries[i].geometry.x, Geometries[i].geometry.y);
+            anchor.push({
+                type: "point",
+                geometry: p
+            });
+        }
+    }
+    return anchor;
 }
-
