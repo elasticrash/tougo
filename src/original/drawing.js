@@ -38,6 +38,15 @@ function drawing(Geometries, fill, fillcolor, canvas) {
         lines.closePath();
     }
 }
+function drawingtext(Geometries, attribute, canvas) {
+    if (canvas.getContext) {
+        Geometries.forEach(function (geom) {
+            var text = canvas.getContext("2d");
+            text.font = "18px serif";
+            text.fillText(geom[attribute], geom.geometry.x, geom.geometry.y);
+        });
+    }
+}
 
 function getpixelsize(width){
     var lw = CzBox.Xmax - CzBox.Xmin;

@@ -93,7 +93,7 @@ function getlines(Geometries){
                     Polygon[0] = CreatePoint(vertices[0].x, vertices[0].y);
                     Polygon[1] = CreatePoint(vertices[1].x, vertices[1].y);
                     tlines = {
-                        type: "lines",
+                        type: "line",
                         geometry: Polygon
                     };
                     lines.push(tlines);
@@ -202,4 +202,22 @@ function getAnchorPoints(Geometries) {
         }
     }
     return anchor;
+}
+
+function getConnectedLineNumbers(Lines, tolerance) {
+    var all_point = getAllNodes(Lines);
+    var points_no_duplicates = deleteduplicatePoints(getAllNodes(Lines));
+    var PC = [];
+    points_no_duplicates.forEach(function (pnt) {
+        var pntcount = 0;
+        all_point.forEach(function (pnt2) {
+            if (pnt.geometry.x === pnt2.geometry.x && pnt.geometry.y === pnt2.geometry.y) {
+                pntcount++;
+            }
+        });
+        pnt.pntCount = pntcount;
+        PC.push(pnt);
+    });
+
+    return PC;
 }

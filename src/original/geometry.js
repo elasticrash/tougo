@@ -160,10 +160,9 @@ function transform(oldGeometries, Boxobj, width, height) {
             });
         }
 
-        TransformedGeometries.push({
-            type: oldgeom.type,
-            geometry: Geometries
-        });
+        var transformed_geom = oldgeom;
+        transformed_geom.geometry = Geometries;
+        TransformedGeometries.push(transformed_geom);
     });
 
     return TransformedGeometries;
