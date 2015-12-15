@@ -75,11 +75,16 @@
 
             var tdangles = transform(dangles, Boxobj, canvas.width, canvas.height);
             var ConnectedLineNumbers = getConnectedLineNumbers(tdangles, 1);
-            drawing(tdangles, false, "00f", canvas);
+            drawing(tdangles, false, "ffe000", canvas);
 
             var nodesx = getAllNodes(tdangles);
             drawing(nodesx, false, color, canvas);
             drawingtext(ConnectedLineNumbers,"pntCount", canvas);
+            var connected_lines = connectEverything(nodesx);
+            //drawing(connected_lines, false, "fff00f", canvas);
+            //var cleaned_lines = cleanupIntersectingFeatures(connected_lines,tdangles);
+            //drawing(cleaned_lines, false, "00f", canvas);
+
         }
     </script>
 

@@ -110,17 +110,27 @@ function intersection(PointA, PointB, PointC, PointD) {
 }
 
 // checks if the intersection point from the previous function is within certain line segments
-function IsIntersectionWithinLineLimits(PointA, PointB, PointC, PointD, cross){
-    if (cross.x >= PointC.x && cross.x <= PointD.x && cross.x >= PointA.x && cross.x <= PointB.x) {
-        if ((cross.y >= PointC.y && cross.y <= PointD.y) || (cross.y <= PointC.y && cross.y >= PointD.y)) {
-            return true;
+function IsIntersectionWithinLineLimits(PointA, PointB, PointC, PointD, cross, equals){
+    var Ax = [PointA.x, PointB.x];
+    var Ay = [PointA.y, PointA.y];
+
+    var Bx = [PointC.x, PointD.x];
+    var By = [PointC.y, PointD.y];
+
+    if(!equals){
+        if (cross.x > Bx.min() && cross.x < Bx.max() && cross.x > Ax.min() && cross.x < Ax.max()) {
+            if ((cross.y > By.min() && cross.y < By.max()) || (cross.y > Ay.min() && cross.y < Ay.max())) {
+                return true;
+            }
+        }
+    } else {
+        if (cross.x >= Bx.min() && cross.x <= Bx.max() && cross.x >= Ax.min() && cross.x <= Ax.max()) {
+            if ((cross.y >= By.min() && cross.y <= By.max()) || (cross.y >= Ay.min() && cross.y <= Ay.max())) {
+                return true;
+            }
         }
     }
-    if (cross.x <= PointC.x && cross.x >= PointD.x && cross.x <= PointA.x && cross.x >= PointB.x) {
-        if ((cross.y >= PointC.y && cross.y <= PointD.y) || (cross.y <= PointC.y && cross.y >= PointD.y)) {
-            return true;
-        }
-    }
+    
     return false;
 }
 

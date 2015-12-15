@@ -12,15 +12,15 @@ function drawing(Geometries, fill, fillcolor, canvas) {
         lines.beginPath();
         Geometries.forEach(function (geom) {
             if (geom.type !== "point") {
-                var j;
+                var j = 0;
                 geom.geometry.forEach(function (item) {
-                    j = geom.geometry.indexOf(item);
                     if (j === 0) {
                         lines.moveTo(item.x, item.y);
                     }
                     else {
                         lines.lineTo(item.x, item.y);
                     }
+                    j+=1;
                 });
             }
             if (geom.type === "point") {

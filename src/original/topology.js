@@ -221,3 +221,46 @@ function getConnectedLineNumbers(Lines, tolerance) {
 
     return PC;
 }
+
+function connectEverything(nodes) {
+
+    var lines = [];
+    nodes.forEach(function (node_init) {
+        nodes.forEach(function (node_clone) {
+            if (node_init.geometry.x !== node_clone.geometry.x && node_init.geometry.y !== node_clone.geometry.y) {
+                var feature=[];
+                feature[0] = CreatePoint(node_init.geometry.x, node_init.geometry.y);
+                feature[1] = CreatePoint(node_clone.geometry.x, node_clone.geometry.y);
+                var nlines = {
+                    type: "line",
+                    geometry: feature
+                };
+                lines.push(nlines);
+            }
+        });
+    });
+    return lines;
+}
+
+function cleanupIntersectingFeatures(lines, original_lines) {
+    var cleaned_lines = [];
+    lines.forEach(function (line) {
+        var allfalse = false;
+        var j;
+        for (j = 0; j < original_lines.length; j++) {
+            line_orig = original_lines[j];
+            var inter = intersection(line.geometry[0], line.geometry[1],line_orig.geometry[0], line_orig.geometry[1]);
+            var lwll = IsIntersectionWithinLineLimits(line.geometry[0], line.geometry[1],line_orig.geometry[0], line_orig.geometry[1],inter);
+           if(lwll === true)
+           {
+               allfalse = true;
+               break;
+           }
+        };
+        if(allfalse === false)
+        {
+            cleaned_lines.push(line);
+        }
+    });
+    return cleaned_lines;
+}
