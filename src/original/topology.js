@@ -112,10 +112,11 @@ function removeDangles(Lines, tolerance){
 		var intersections = deleteduplicatePoints(breaklinear(Lines, tolerance));
 		var alone = [];
 		var p = 0;
-
-		for (var i = 0; i < nodes.length; i++) {
+        var i;
+        var j;
+		for (i = 0; i < nodes.length; i++) {
 			var danglePoint = 0;
-			for (var j = 0; j < intersections.length; j++) {
+			for (j = 0; j < intersections.length; j++) {
 				var stream = [];
 				stream[0] = intersections[j].geometry.x - tolerance;
 				stream[1] = parseFloat(intersections[j].geometry.y) + tolerance;
@@ -140,8 +141,8 @@ function removeDangles(Lines, tolerance){
 		if (alone.length === 0) {
 			dangles = 0;
 		}			
-		for (var i = 0; i < alone.length; i++) {
-			for (var j = 0; j < Lines.length; j++) {
+		for (i = 0; i < alone.length; i++) {
+			for (j = 0; j < Lines.length; j++) {
 			
 				var A = CreatePoint(Lines[j].geometry[0].x, Lines[j].geometry[0].y);
 				var B = CreatePoint(Lines[j].geometry[1].x, Lines[j].geometry[1].y);
@@ -256,7 +257,7 @@ function cleanupIntersectingFeatures(lines, original_lines) {
                allfalse = true;
                break;
            }
-        };
+        }
         if(allfalse === false)
         {
             cleaned_lines.push(line);

@@ -50,10 +50,9 @@ function drawingtext(Geometries, attribute, canvas) {
 
 function getpixelsize(width){
     var lw = CzBox.Xmax - CzBox.Xmin;
-    
-    var pixel = Math.round((lw / width) * 100) / 100;
-    
-    return pixel;
+
+    //pixel
+   return Math.round((lw / width) * 100) / 100;
 }
 
 function createZoomBox(A, B, bxy){
@@ -167,8 +166,8 @@ function currentLocation(ev,canvas) {
     var x = Math.round(xt * 100) / 100;
     var y = Math.round(yt * 100) / 100;
 
-    var currentPoints = CreatePoint(x, y);
-    return currentPoints;
+    //currentPoints
+    return CreatePoint(x, y);
 }
 
 
@@ -180,7 +179,7 @@ function select(canvas) {
         loop: for (i = 0; i < Cgeometry.length; i+=1) {
             if (Cgeometry[i].type != "point") {
                 if (PointInPolygon(Cgeometry[i].geometry, cur.x, cur.y)) {
-                    var g = new Array();
+                    var g = [];
                     g[0] = Cgeometry[i];
                     var lg = transform(g, CzBox, canvas.width, canvas.height);
                     drawing(lg, true, "8D638B", this);
