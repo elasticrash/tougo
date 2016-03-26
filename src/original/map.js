@@ -121,7 +121,9 @@ var wmsDisplay = function(canvasId) {
     var currentScale = 6;
 
     //Our Canvas Object
-    var ctx = document.getElementById(canvasId).getContext("2d");
+    var canvas = document.getElementById(canvasId);
+    var ctx = canvas.getContext("2d");
+
 
     //get The pixelSize of the Requested Level
     function getPixelSize(zoomLevel) {
@@ -141,6 +143,33 @@ var wmsDisplay = function(canvasId) {
         x: mapULPoint.x + ctx.canvas.width * currentPixelSize,
         y: mapULPoint.y - ctx.canvas.height * currentPixelSize
     };
+
+    //event for coordinates
+    var canvasLeft = canvas.offsetLeft;
+    var canvasTop = canvas.offsetTop;
+    canvas.addEventListener('click', function() {
+
+        alert(localx + " "+ localy);
+    }, false);
+
+
+    function writeMessage(canvas, message) {
+        ctx.fillStyle="#FFFFFF";
+        ctx.fillRect(1,1,250,33);
+        ctx.font = '16pt Calibri';
+        ctx.fillStyle = 'black';
+        ctx.fillText(message, 10, 25);
+    }
+
+    canvas.addEventListener('mousemove', function(evt) {
+        var x = event.pageX - canvasLeft;
+        var y = event.pageY - canvasTop;
+        var local = {
+            x: Math.round((mapULPoint.x + x * currentPixelSize)*100)/100,
+            y: Math.round((mapULPoint.y - y * currentPixelSize)*100)/100
+        };
+        writeMessage(canvas, "x: " + local.x + " y: "+ local.y);
+    }, false);
 
     //function expression for replacing characters
     var Replacer = function (StringForReplace) {
