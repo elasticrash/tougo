@@ -130,7 +130,7 @@ function IsIntersectionWithinLineLimits(PointA, PointB, PointC, PointD, cross, e
             }
         }
     }
-    
+
     return false;
 }
 
