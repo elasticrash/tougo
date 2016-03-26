@@ -9,6 +9,9 @@ renderer. Since then I try to maintain it and expand it further. I know there ar
 The part where I differ and I am especially proud of is the removeDangles function in the topology.js file, that, for those that are not familiar with the term, it trims any line, in a line collection that does not participate in any potential line to polygon conversion.
 
 Unfortunately I havent yet written the function to transform the lines to polygons, but I intend to do so.
+## 26 March 2016
+
+Big changes in my life, switched jobs, countries. Big changed for this small project as well. I am making it a bit more GIS-ish (Geographical Information Systems -ish). I know there are a lot of map viewers out there but sometimes if we don't do things from scratch we won't grow and learn. So I made a WMS viewer for Canvas. Unfortunately on this first commit it doesnt work about the box for every coordinate system out there, but soon I hope it will. Also its not 100% compatible :P with the rest of the project, more like a standalone feature for the time being. [Check it out](http://elasticrash.github.io/tougo/example_wms.html)
 
 ## 10 December 2015
 
