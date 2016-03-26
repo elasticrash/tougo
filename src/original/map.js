@@ -147,11 +147,6 @@ var wmsDisplay = function(canvasId) {
     //event for coordinates
     var canvasLeft = canvas.offsetLeft;
     var canvasTop = canvas.offsetTop;
-    canvas.addEventListener('click', function() {
-
-        alert(localx + " "+ localy);
-    }, false);
-
 
     function writeMessage(canvas, message) {
         ctx.fillStyle="#FFFFFF";
