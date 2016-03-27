@@ -1,5 +1,6 @@
 <html>
 <head>
+    <link type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
     <script src="javascripts/jquery.js"></script>
     <script src="../src/original/primitives.js"></script>
     <script src="../src/original/geometry.js"></script>
@@ -27,11 +28,80 @@
 
 </head>
 <body>
-<canvas id="canvas" style="float: left; border:1px solid;" width="1200" height="1000" >
-    yo! if you can see this msg then you utterly fail..change browser
-</canvas>
-<div id="info" style="float: left;"></div><br>
-<br>
-<div id="test"></div>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Canvas Based Map Viewer</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <div class="navbar-form navbar-right">
+                <input id="search" type="text" class="form-control" placeholder="Search...">
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- toolbar -->
+<div class="container-fluid">
+    <div class="row">
+        <div style="margin-top: 3.9em; margin-left: 0.2em" class="btn-toolbar" role="toolbar" aria-label="...">
+            <div class="btn-group" role="group" aria-label="...">
+                <button type=button id="tool_pan" class="btn btn-default">PAN</button>
+                <button type=button id="tool_zoom_in" class="btn btn-default">ZOOM IN</button>
+                <button type=button id="tool_zoom_out" class="btn btn-default">ZOOM OUT</button>
+                <button type=button class="btn btn-default">D</button>
+                <button type=button class="btn btn-default">E</button>
+                <button type=button class="btn btn-default">F</button>
+                <button type=button class="btn btn-default">G</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- navigation sidebar and map -->
+<div class="container-fluid">
+    <div class="row">
+        <div style="margin-top: 0.2em; margin-left: 1em;" class="col-sm-3 col-md-2 sidebar">
+            <ul id="tree" class="nav nav-sidebar">
+            </ul>
+        </div>
+        <div class="col-sm-offset-3 col-md-offset-2 main">
+            <canvas id="canvas" style="margin-top: 0.2em; border:1px solid;" width="1000" height="700" >
+                yo! if you can see this msg then you utterly fail..change browser
+            </canvas>
+        </div>
+    </div>
+</div>
+
+<!-- modal -->
+<div id="searchModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Search Results</h4>
+            </div>
+            <div class="modal-body">
+                <table id="searchtable" class="table">
+                    <tr>
+                        <th>Results</th>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 </body>
 </html>
