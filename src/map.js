@@ -121,7 +121,9 @@ var wmsDisplay = function(canvasId) {
     var currentScale = 6;
 
     //Our Canvas Object
-    var ctx = document.getElementById(canvasId).getContext("2d");
+    var canvas = document.getElementById(canvasId);
+    var ctx = canvas.getContext("2d");
+
 
     //get The pixelSize of the Requested Level
     function getPixelSize(zoomLevel) {
@@ -134,13 +136,54 @@ var wmsDisplay = function(canvasId) {
     //Initial and Current map Upper Left Point
     //Initial and Current map Lower Left Point
     var mapULPoint = {
-        x: 460000,
+        x: 440000,
         y: 4300000
     };
     var mapLLPoint = {
         x: mapULPoint.x + ctx.canvas.width * currentPixelSize,
         y: mapULPoint.y - ctx.canvas.height * currentPixelSize
     };
+
+    //event for coordinates
+    var canvasLeft = canvas.offsetLeft;
+    var canvasTop = canvas.offsetTop;
+
+    function writeMessage(canvas, message) {
+        ctx.fillStyle="#FFFFFF";
+        ctx.fillRect(1,1,250,33);
+        ctx.font = '16pt Calibri';
+        ctx.fillStyle = 'black';
+        ctx.fillText(message, 10, 25);
+    }
+
+    function CalculateCursonPosition(event){
+        var x = event.pageX - canvasLeft;
+        var y = event.pageY - canvasTop;
+        return {
+            x: Math.round((mapULPoint.x + x * currentPixelSize)*100)/100,
+            y: Math.round((mapULPoint.y - y * currentPixelSize)*100)/100
+        };
+    }
+
+    var pan_tool = false;
+    var pan_point;
+
+    canvas.addEventListener('mousemove', function(evt) {
+        var local = CalculateCursonPosition(evt);
+        writeMessage(canvas, "x: " + local.x + " y: "+ local.y);
+        if(pan_tool) {
+            var moveDifferencePoint = {
+                x: local.x - pan_point.x,
+                y: local.y - pan_point.y
+            };
+
+            mapULPoint.x = mapULPoint.x + moveDifferencePoint.x;
+            mapULPoint.y = mapULPoint.y + moveDifferencePoint.y;
+            mapLLPoint.x = mapLLPoint.x + moveDifferencePoint.x;
+            mapLLPoint.y = mapLLPoint.y + moveDifferencePoint.y;
+            FullRefresh();
+        }
+    }, false);
 
     //function expression for replacing characters
     var Replacer = function (StringForReplace) {
@@ -257,10 +300,6 @@ var wmsDisplay = function(canvasId) {
         iterateTiles(tileList);
     }
 
-    //TODO refreshes the canvas when doing some action like zooming or panning (not implemented)
-    function FullRefresh() {
-    }
-
     //Useful but not used for the time, to generate random ids
     function guid() {
         function s4() {
@@ -273,8 +312,64 @@ var wmsDisplay = function(canvasId) {
             s4() + '-' + s4() + s4() + s4();
     }
 
+    // Create the navigation (tree-like) sidebar
+    function Create_Tree_And_Events() {
+        var mguid = guid();
+        globalLayerList.forEach(function(layer){
+            $('#tree').append("<div class='checkbox'><li><input id='"
+            + mguid
+            + "' type='checkbox' value='"
+            + layer.LayerName
+            + "' >"
+            + layer.LayerName
+            + "</div>");
+        });
+    }
+
+    function GetMapMidPoint(){
+        return {
+            x: (mapULPoint.x + mapLLPoint.x)/2,
+            y: (mapULPoint.y + mapLLPoint.y)/2
+        };
+    }
+
+    function RecalculateCanvasBBox(midpoint){
+        mapULPoint.x = midpoint.x - (canvas.width/2*currentPixelSize);
+        mapULPoint.y = midpoint.y + (canvas.height/2*currentPixelSize);
+        mapLLPoint.x = midpoint.x + (canvas.width/2*currentPixelSize);
+        mapLLPoint.y = midpoint.y - (canvas.height/2*currentPixelSize);
+    }
+
+    //Toolbar Events
+    function Toolbar_Events(){
+        //$('#tool_pan').on("click", function () {
+        //    canvas.addEventListener("mousedown", function (evt) {
+        //        pan_point = CalculateCursonPosition(evt);
+        //        pan_tool = true;
+        //    }, false);
+        //    canvas.addEventListener("mouseup", function (evt) {
+        //        pan_tool = false;
+        //    }, false);
+        //});
+        $('#tool_zoom_in').on("click", function () {
+            currentScale+=1;
+            currentPixelSize = getPixelSize(currentScale);
+            var midpoint = GetMapMidPoint();
+            RecalculateCanvasBBox(midpoint);
+            FullRefresh();
+        });
+        $('#tool_zoom_out').on("click", function () {
+            currentScale-=1;
+            currentPixelSize = getPixelSize(currentScale);
+            var midpoint = GetMapMidPoint();
+            RecalculateCanvasBBox(midpoint);
+            FullRefresh();
+        });
+    }
+
     //PUBLIC FUNCTIONS
     function CreateLayer(layerName, layerType, url) {
+        Toolbar_Events();
         return {
             LayerName: layerName,
             LayerType: layerType,
@@ -290,12 +385,19 @@ var wmsDisplay = function(canvasId) {
                 layer.MaxVisibleScale = 0;
                 globalLayerList[globalLayerList.length] = layer;
             }
-            tileCalculation();
+            FullRefresh();
+            Create_Tree_And_Events();
         }
+    }
+
+    function FullRefresh() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        tileCalculation();
     }
 
     return {
         CreateLayer : CreateLayer,
-        AddLayer: AddLayer
+        AddLayer: AddLayer,
+        FullRefresh: FullRefresh
     };
 };
