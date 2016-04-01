@@ -145,6 +145,32 @@ var wmsDisplay = function(canvasId) {
         };
     }();
 
+    //NOT WORKING WITHOUT CORS SUPPORT
+    var imageOperations = function(){
+        var currentBrightness = 0;
+        var data;
+        return{
+            brightness: function(value){
+                for (var y = 0; y < ctx.canvas.height; ++y) {
+                    for (var x = 0; x < ctx.canvas.width; ++x) {
+                        var index = (y * ctx.canvas.width + x) * 4;
+                        data[index] = data[index] +value;
+                        data[index+1] = data[index+1] +value;
+                        data[index+2] = data[index+2] +value;
+                        data[index+3] = data[index+3] +value;
+                    }
+                }
+                ctx.putImageData(data,0,0);
+            },
+            getBrightness: function(){
+                return currentBrightness;
+            },
+            getImagePixels: function(){
+                data = canvas;
+            }
+        }
+    }();
+
     //The pixelSize of the current Level
     mapAttributes.getPixelSize(mapAttributes.getCurrentScale());
 
@@ -219,6 +245,8 @@ var wmsDisplay = function(canvasId) {
             tileAttributes.serviceUrl = layerObject[2];
 
             var image = new Image();
+            //for cors
+            //image.crossOrigin = '';
             image.src = tileAttributes.serviceUrl;
             image.onload = function () {
                 ctx.drawImage(image, tileAttributes.sx, tileAttributes.sy, tileWidth, tileWidth);
@@ -383,6 +411,10 @@ var wmsDisplay = function(canvasId) {
             var midpoint = GetMapMidPoint();
             RecalculateCanvasBBox(midpoint);
             FullRefresh();
+        });
+        $('#tool_add_brightness').on("click", function(){
+            imageOperations.getImagePixels();
+            imageOperations.brightness(15);
         });
     }
 
