@@ -166,7 +166,7 @@ var wmsDisplay = function(canvasId) {
                 return currentBrightness;
             },
             getImagePixels: function(){
-                data = canvas;
+                data = ctx.getImageData(0,0, ctx.canvas.width, ctx.canvas.height);
             }
         }
     }();
@@ -178,7 +178,7 @@ var wmsDisplay = function(canvasId) {
     //Initial and Current map Lower Left Point
     var mapULPoint = {
         x: 440000,
-        y: 4300000
+        y: 4240000
     };
     var mapLLPoint = {
         x: mapULPoint.x + ctx.canvas.width * mapAttributes.getCurrentPixelSize(),
@@ -253,44 +253,77 @@ var wmsDisplay = function(canvasId) {
             };
             return;
         }
+        if (tileAttributes.serviceUrl.indexOf("GEO::") !== -1) {
+            var layerObject = tileAttributes.serviceUrl.split("::");
+            tileAttributes.serviceUrl = layerObject[2];
+
+            var image = new Image();
+            //for cors
+            //image.crossOrigin = '';
+            image.src = tileAttributes.serviceUrl;
+            image.onload = function () {
+                ctx.drawImage(image, tileAttributes.sx, tileAttributes.sy, (image.width*tileAttributes.pixelSize)/mapAttributes.getCurrentPixelSize(),
+                    (image.height*tileAttributes.pixelSize)/mapAttributes.getCurrentPixelSize());
+            };
+            return;
+        }
     }
 
     //Iterates the tiles and sends them to drawTiles to be drawned
     function iterateTiles(tiles) {
         var tileNameComponents;
+
         if (globalLayerList.length > 0) {
             var CoordinateXOfTile;
             var CoordinateYOfTile;
-            tiles.forEach(function (tile) {
-                globalLayerList.forEach(function (layer, j){
-                    if (layer.visible === true) {
-                        if (mapAttributes.getCurrentScale() <= layer.MinVisibleScale &&
-                            mapAttributes.getCurrentScale() >= layer.MaxVisibleScale) {
-                            var tileAttributes = {};
+            globalLayerList.forEach(function (layer, j) {
+                if (layer.LayerType === 'WMS') {
+                    tiles.forEach(function (tile) {
+                        if (layer.visible === true) {
+                            if (mapAttributes.getCurrentScale() <= layer.MinVisibleScale &&
+                                mapAttributes.getCurrentScale() >= layer.MaxVisibleScale) {
+                                var tileAttributes = {};
 
-                            tileNameComponents = tile.split("~");
-                            tileAttributes.row = parseInt(tileNameComponents[0]);
-                            tileAttributes.col = parseInt(tileNameComponents[1]);
-                            CoordinateXOfTile = WestEnd + tileAttributes.col * tileWidthInMeters;
-                            CoordinateYOfTile = NorthEnd - tileAttributes.row * tileHeightInMeters;
-                            tileAttributes.sx = -Math.round(((mapULPoint.x - CoordinateXOfTile) / tileWidthInMeters) * tileWidth);
-                            tileAttributes.sy = Math.round(((mapULPoint.y - CoordinateYOfTile) / tileHeightInMeters) * tileHeight);
+                                tileNameComponents = tile.split("~");
+                                tileAttributes.row = parseInt(tileNameComponents[0]);
+                                tileAttributes.col = parseInt(tileNameComponents[1]);
+                                CoordinateXOfTile = WestEnd + tileAttributes.col * tileWidthInMeters;
+                                CoordinateYOfTile = NorthEnd - tileAttributes.row * tileHeightInMeters;
+                                tileAttributes.sx = -Math.round(((mapULPoint.x - CoordinateXOfTile) / tileWidthInMeters) * tileWidth);
+                                tileAttributes.sy = Math.round(((mapULPoint.y - CoordinateYOfTile) / tileHeightInMeters) * tileHeight);
 
-                            tileAttributes.serviceUrl = "WMS::"
-                            + j + "::"
-                            + layer.LayerSource
-                            + "&REQUEST=GetMap&WIDTH="
-                            + tileWidth + "&HEIGHT="
-                            + tileHeight + "&BBOX="
-                            + new Replacer(CoordinateXOfTile).commaWithDot() + ","
-                            + new Replacer(CoordinateYOfTile - tileHeightInMeters).commaWithDot() + ","
-                            + new Replacer(CoordinateXOfTile + tileWidthInMeters).commaWithDot() + ","
-                            + new Replacer(CoordinateYOfTile).commaWithDot();
+                                tileAttributes.serviceUrl = "WMS::"
+                                    + j + "::"
+                                    + layer.LayerSource
+                                    + "&REQUEST=GetMap&WIDTH="
+                                    + tileWidth + "&HEIGHT="
+                                    + tileHeight + "&BBOX="
+                                    + new Replacer(CoordinateXOfTile).commaWithDot() + ","
+                                    + new Replacer(CoordinateYOfTile - tileHeightInMeters).commaWithDot() + ","
+                                    + new Replacer(CoordinateXOfTile + tileWidthInMeters).commaWithDot() + ","
+                                    + new Replacer(CoordinateYOfTile).commaWithDot();
 
-                            drawTiles(tileAttributes);
+                                drawTiles(tileAttributes);
+                            }
                         }
-                    }
-                });
+                    });
+                }
+                if (layer.LayerType === 'GEO') {
+
+                    $.ajax({
+                        url: layer.LayerSource.replace("jpg", "jgw")
+                    }).done(function (result) {
+                        var jgwValues = result.split('\n');
+                        var tileAttributes = {};
+                        tileAttributes.pixelSize = jgwValues[0];
+                        tileAttributes.sx = (jgwValues[4] - mapULPoint.x)/mapAttributes.getCurrentPixelSize();
+                        tileAttributes.sy = -(jgwValues[5] - mapULPoint.y)/mapAttributes.getCurrentPixelSize() ;
+                        tileAttributes.serviceUrl = "GEO::0::" + layer.LayerSource;
+                        tileAttributes.width = 1000;
+                        tileAttributes.height = 1000;
+                        drawTiles(tileAttributes);
+                    });
+                }
             });
         }
     }
@@ -359,6 +392,7 @@ var wmsDisplay = function(canvasId) {
     // Create the navigation (tree-like) sidebar
     function Create_Tree_And_Events() {
         var mguid = guid();
+        $('#tree').empty();
         globalLayerList.forEach(function(layer){
             $('#tree').append("<div class='checkbox'><li><input id='"
             + mguid
@@ -386,17 +420,41 @@ var wmsDisplay = function(canvasId) {
 
     //Toolbar Events
     function Toolbar_Events(){
-        $('#tool_pan').on("click", function () {
-            canvas.addEventListener("mousedown", function (evt) {
-                pan_point = CalculateCursonPosition(evt);
-                pan_tool = true;
-            }, false);
-            canvas.addEventListener("mouseup", function (evt) {
-                pan_tool = false;
-                $('#tool_pan').removeEventListener('click');
-                canvas.removeEventListener('mousedown');
-
-            }, false);
+        // $('#tool_pan').on("click", function () {
+        //     canvas.addEventListener("mousedown", function (evt) {
+        //         pan_point = CalculateCursonPosition(evt);
+        //         pan_tool = true;
+        //     }, false);
+        //     canvas.addEventListener("mouseup", function (evt) {
+        //         pan_tool = false;
+        //         $('#tool_pan').removeEventListener('click');
+        //         canvas.removeEventListener('mousedown');
+        //
+        //     }, false);
+        // });
+        $('#tool_pan_left').on("click", function () {
+            var midpoint = GetMapMidPoint();
+            midpoint.x += 10*mapAttributes.getCurrentPixelSize();
+            RecalculateCanvasBBox(midpoint);
+            FullRefresh();
+        });
+        $('#tool_pan_right').on("click", function () {
+            var midpoint = GetMapMidPoint();
+            midpoint.x -= 10*mapAttributes.getCurrentPixelSize();
+            RecalculateCanvasBBox(midpoint);
+            FullRefresh();
+        });
+        $('#tool_pan_up').on("click", function () {
+            var midpoint = GetMapMidPoint();
+            midpoint.y += 10*mapAttributes.getCurrentPixelSize();
+            RecalculateCanvasBBox(midpoint);
+            FullRefresh();
+        });
+        $('#tool_pan_down').on("click", function () {
+            var midpoint = GetMapMidPoint();
+            midpoint.y -= 10*mapAttributes.getCurrentPixelSize();
+            RecalculateCanvasBBox(midpoint);
+            FullRefresh();
         });
         $('#tool_zoom_in').on("click", function () {
             mapAttributes.changeCurrentScaleBy(1);
@@ -420,7 +478,6 @@ var wmsDisplay = function(canvasId) {
 
     //PUBLIC FUNCTIONS
     function CreateLayer(layerName, layerType, url) {
-        Toolbar_Events();
         return {
             LayerName: layerName,
             LayerType: layerType,
@@ -436,19 +493,19 @@ var wmsDisplay = function(canvasId) {
                 layer.MaxVisibleScale = 0;
                 globalLayerList[globalLayerList.length] = layer;
             }
-            FullRefresh();
-            Create_Tree_And_Events();
         }
     }
 
     function FullRefresh() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         tileCalculation();
+        Create_Tree_And_Events();
     }
 
     return {
         CreateLayer : CreateLayer,
         AddLayer: AddLayer,
-        FullRefresh: FullRefresh
+        FullRefresh: FullRefresh,
+        Toolbar_Events: Toolbar_Events
     };
 };
