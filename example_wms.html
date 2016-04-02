@@ -22,6 +22,10 @@
                 var app  = new wmsDisplay('canvas');
                 var mylayer = app.CreateLayer('GAEC', 'WMS', 'http://geoserver.elpho.biz/geoserver/ELPHO/wms?service=WMS&version=1.1.0&request=GetMap&layers=ELPHO:SMU_MV_DESC&styles=&format=image/png&transparent=true&srs=EPSG:2100');
                 app.AddLayer(mylayer);
+                var geotifflayer = app.CreateLayer('P2A', 'GEO', 'data/G6814_A9_1920_E4_sh3.jpg');
+                app.AddLayer(geotifflayer);
+                app.Toolbar_Events();
+                app.FullRefresh();
                 //FullRefresh();
             }
         });
@@ -55,11 +59,14 @@
     <div class="row">
         <div style="margin-top: 3.9em; margin-left: 0.2em" class="btn-toolbar" role="toolbar" aria-label="...">
             <div class="btn-group" role="group" aria-label="...">
-                <button type=button id="tool_pan" class="btn btn-default">PAN</button>
+                <button type=button id="tool_pan_left" class="btn btn-default">PAN left </button>
+                <button type=button id="tool_pan_right" class="btn btn-default">PAN right </button>
+                <button type=button id="tool_pan_up" class="btn btn-default">PAN up </button>
+                <button type=button id="tool_pan_down" class="btn btn-default">PAN down </button>
                 <button type=button id="tool_zoom_in" class="btn btn-default">ZOOM IN</button>
                 <button type=button id="tool_zoom_out" class="btn btn-default">ZOOM OUT</button>
-                <button type=button class="btn btn-default">D</button>
-                <button type=button class="btn btn-default">E</button>
+                <button type=button id="tool_add_brightness" class="btn btn-default">B+</button>
+                <button type=button id="tool_remove_brightness" class="btn btn-default">B-</button>
                 <button type=button class="btn btn-default">F</button>
                 <button type=button class="btn btn-default">G</button>
             </div>
