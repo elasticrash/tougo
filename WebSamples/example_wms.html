@@ -18,8 +18,8 @@
 
             function readwms() {
                 var app  = new wmsDisplay('canvas');
-                var mylayer = app.CreateLayer('GAEC', 'WMS', 'http://geoserver.elpho.biz/geoserver/ELPHO/wms?service=WMS&version=1.1.0&request=GetMap&layers=ELPHO:SMU_MV_DESC&styles=&format=image/png&transparent=true&srs=EPSG:2100');
-                app.AddLayer(mylayer);
+                //var mylayer = app.CreateLayer('GAEC', 'WMS', 'http://geoserver.elpho.biz/geoserver/ELPHO/wms?service=WMS&version=1.1.0&request=GetMap&layers=ELPHO:SMU_MV_DESC&styles=&format=image/png&transparent=true&srs=EPSG:2100');
+                //app.AddLayer(mylayer);
                 var geotifflayer = app.CreateLayer('P2A', 'GEO', 'data/G6814_A9_1920_E4_sh3.jpg');
                 app.AddLayer(geotifflayer);
                 app.Toolbar_Events();

@@ -151,13 +151,19 @@ var wmsDisplay = function(canvasId) {
         var data;
         return{
             brightness: function(value){
-                for (var y = 0; y < ctx.canvas.height; ++y) {
-                    for (var x = 0; x < ctx.canvas.width; ++x) {
-                        var index = (y * ctx.canvas.width + x) * 4;
-                        data[index] = data[index] +value;
-                        data[index+1] = data[index+1] +value;
-                        data[index+2] = data[index+2] +value;
-                        data[index+3] = data[index+3] +value;
+                var y;
+                var x;
+                var z;
+                for (y = 0; y < ctx.canvas.height; y+=1) {
+                    for (x = 0; x < ctx.canvas.width; x+=1) {
+                        for (z = 0; z < 4; z+=1) {
+                            var index = ((y * ctx.canvas.width + x) * 4)+z;
+                            if(data.data[index] + value > 255) {
+                                data.data[index] = 255;
+                            } else {
+                                data.data[index] = data.data[index] + value;
+                            }
+                        }
                     }
                 }
                 ctx.putImageData(data,0,0);
@@ -473,6 +479,10 @@ var wmsDisplay = function(canvasId) {
         $('#tool_add_brightness').on("click", function(){
             imageOperations.getImagePixels();
             imageOperations.brightness(15);
+        });
+        $('#tool_remove_brightness').on("click", function(){
+            imageOperations.getImagePixels();
+            imageOperations.brightness(-15);
         });
     }
 
