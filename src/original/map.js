@@ -156,7 +156,7 @@ var wmsDisplay = function(canvasId) {
                 var z;
                 for (y = 0; y < ctx.canvas.height; y+=1) {
                     for (x = 0; x < ctx.canvas.width; x+=1) {
-                        for (z = 0; z < 4; z+=1) {
+                        for (z = 0; z < 3; z+=1) {
                             var index = ((y * ctx.canvas.width + x) * 4)+z;
                             if(data.data[index] + value > 255) {
                                 data.data[index] = 255;
@@ -173,6 +173,29 @@ var wmsDisplay = function(canvasId) {
             },
             getImagePixels: function(){
                 data = ctx.getImageData(0,0, ctx.canvas.width, ctx.canvas.height);
+            },
+            bitonal : function(){
+                var y;
+                var x;
+                var z;
+                
+                for (y = 0; y < ctx.canvas.height; y+=1) {
+                    for (x = 0; x < ctx.canvas.width; x+=1) {
+                        var indexR = ((y * ctx.canvas.width + x) * 4);
+                        var indexG = indexR+1;
+                        var indexB = indexG+1;
+                        if(data.data[indexR]+ data.data[indexG]+ data.data[indexB] > 768/2){
+                            data.data[indexR] = 255;
+                            data.data[indexG] = 255;
+                            data.data[indexB] = 255;
+                        } else {
+                            data.data[indexR] = 0;
+                            data.data[indexG] = 0;
+                            data.data[indexB] = 0;
+                        }
+                    }
+                }
+                ctx.putImageData(data,0,0);
             }
         }
     }();
@@ -483,6 +506,10 @@ var wmsDisplay = function(canvasId) {
         $('#tool_remove_brightness').on("click", function(){
             imageOperations.getImagePixels();
             imageOperations.brightness(-15);
+        });
+        $('#tool_bitonal').on("click", function(){
+            imageOperations.getImagePixels();
+            imageOperations.bitonal();
         });
     }
 
