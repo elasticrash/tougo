@@ -80,7 +80,7 @@
 
                 datastream[i - 1] = {
                     type: "polygon",
-                    geometry: CreatePolygon(xyArray)
+                    geometry: primitives.CreatePolygon(xyArray)
                 };
             }
         }
@@ -90,7 +90,7 @@
             var Point = getviewpoint(e, $('#canvas02')[0]);
             var seg = 125;
 
-            var Circle = CreateCircle(Point, 12, seg);
+            var Circle = primitives.CreateCircle(Point, 12, seg);
             var rCircle = [];
             rCircle[0] = {
                 type: "polygon",
@@ -106,7 +106,7 @@
             var Point = getviewpoint(e, $('#canvas03')[0]);
             var seg = 4;
 
-            var Circle = CreateCircle(Point, 12, seg);
+            var Circle = primitives.CreateCircle(Point, 12, seg);
             var rCircle = [];
             rCircle[0] = {
                 type: "polygon",
@@ -122,7 +122,7 @@
             var Point = getviewpoint(e, $('#canvas04')[0]);
             var seg = 3;
 
-            var Circle = CreateCircle(Point, 12, seg);
+            var Circle = primitives.CreateCircle(Point, 12, seg);
             var rCircle = [];
             rCircle[0] = {
                 type: "polygon",
@@ -138,7 +138,7 @@
             var Point = getviewpoint(e, $('#canvas05')[0]);
             var seg = 22;
 
-            var Circle = CreateStar(Point, 12, seg);
+            var Circle = primitives.CreateStar(Point, 13, seg);
             var rCircle = [];
             rCircle[0] = {
                 type: "polygon",

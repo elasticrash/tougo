@@ -1,96 +1,98 @@
-//create a circle
-function CreateCircle(point, radius, segments)
-{
-	var seg = Math.PI * 2 / segments;
-    var Geom = [];
-    var theta;
-    var i;
+var primitives = function () {
 
-    for (i = 0; i < segments; i+=1){
+    function isOdd(num) {
+        return num % 2;
+    }
+    
+    return {
+        //create a circle
+        CreateCircle: function (point, radius, segments) {
+        var seg = Math.PI * 2 / segments;
+        var Geom = [];
+        var theta;
+        var i;
+
+        for (i = 0; i < segments; i += 1) {
             theta = seg * i;
+            Geom[i] = {
+                x: point.x + Math.cos(theta) * radius,
+                y: point.y + Math.sin(theta) * radius
+            };
+        }
         Geom[i] = {
-                x: point.x + Math.cos(theta) * radius,
-                y: point.y + Math.sin(theta) * radius
-            };
-    }
-    Geom[i] = {
-        x: point.x + Math.cos(0) * radius,
-        y: point.y + Math.sin(0) * radius
-    };
-
-	return Geom;
-}
-
-//create a polygon
-function CreatePolygon(xyArray){
-    var Geom = [];
-	var t=0;
-    var i;
-
-    for (i = 0; i < xyArray.length; i = i + 2) {
-        Geom[t] = {
-            x: xyArray[i],
-            y: xyArray[i + 1]
+            x: point.x + Math.cos(0) * radius,
+            y: point.y + Math.sin(0) * radius
         };
-		t+=1;
-    }
-    return Geom;
-}
 
-//create a point
-function CreatePoint(x, y){
+        return Geom;
+    },
+        //create a polygon
+        CreatePolygon: function (xyArray) {
+        var Geom = [];
+        var t = 0;
+        var i;
 
-	x = x*1000;
-	y = y*1000;
-
-	x = Math.round(x);
-	y = Math.round(y);
-
-    var Point = {
-        x: x/1000,
-        y: y/1000
-    };
-    return Point;
-}
-//create a star
-function CreateStar(point, radius, segments) {
-    var seg = Math.PI * 2 / segments;
-    var Geom = [];
-    var theta;
-    var i;
-    for (i = 0; i < segments; i += 1) {
-        theta = seg * i;
-        if (isOdd(i)) {
-            Geom[i] = {
-                x: point.x + Math.cos(theta) * (radius * 2),
-                y: point.y + Math.sin(theta) * (radius * 2)
+        for (i = 0; i < xyArray.length; i = i + 2) {
+            Geom[t] = {
+                x: xyArray[i],
+                y: xyArray[i + 1]
             };
+            t += 1;
         }
-        else {
-            Geom[i] = {
-                x: point.x + Math.cos(theta) * radius,
-                y: point.y + Math.sin(theta) * radius
-            };
+        return Geom;
+    },
+        //create a point
+        CreatePoint: function (x, y) {
+
+        x = x * 1000;
+        y = y * 1000;
+
+        x = Math.round(x);
+        y = Math.round(y);
+
+        var Point = {
+            x: x / 1000,
+            y: y / 1000
+        };
+        return Point;
+    },
+        //create a star
+        CreateStar: function (point, radius, segments) {
+        var seg = Math.PI * 2 / segments;
+        var Geom = [];
+        var theta;
+        var i;
+        for (i = 0; i < segments; i += 1) {
+            theta = seg * i;
+            if (isOdd(i)) {
+                Geom[i] = {
+                    x: point.x + Math.cos(theta) * (radius * 2),
+                    y: point.y + Math.sin(theta) * (radius * 2)
+                };
+            }
+            else {
+                Geom[i] = {
+                    x: point.x + Math.cos(theta) * radius,
+                    y: point.y + Math.sin(theta) * radius
+                };
+            }
         }
-    }
-    Geom[i] = {
-        x: point.x + Math.cos(0) * radius,
-        y: point.y + Math.sin(0) * radius
-    };
+        Geom[i] = {
+            x: point.x + Math.cos(0) * radius,
+            y: point.y + Math.sin(0) * radius
+        };
 
-	return Geom;
-}
+        return Geom;
+    },
+        //create line using point, angle, distance
+        CreateLineFromPointAngleDist: function (PointA, angle, dist) {
+        var newPt = this.CreatePoint(PointA.x, PointA.y);
+        PointA.x += Math.cos(angle) * dist;
+        PointA.y += Math.sin(angle) * dist;
 
-//create line using point, angle, distance
-function CreateLineFromPointAngleDist(PointA, angle, dist)
-{
-    var newPt = CreatePoint(PointA.x, PointA.y);
-    PointA.x += Math.cos(angle) * dist;
-    PointA.y += Math.sin(angle) * dist;
+        var Line = [];
 
-    var Line = [];
-
-    Line[0] = {
+        Line[0] = {
             x: PointA.x,
             y: PointA.y
         };
@@ -100,7 +102,7 @@ function CreateLineFromPointAngleDist(PointA, angle, dist)
             y: newPt.y
         };
 
-    return Line;
+        return Line;
+    }
 }
-
-function isOdd(num) { return num % 2;}
+}();

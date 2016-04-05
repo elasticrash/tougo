@@ -91,7 +91,7 @@ function zoomout(canvas){
 
 function zin() {
     clearcanvas();
-    var Zbox = createZoomBox(CreatePoint(CzBox.Xmin, CzBox.Ymax), CreatePoint(CzBox.Xmax, CzBox.Ymin), getZoomValue());
+    var Zbox = createZoomBox(primitives.CreatePoint(CzBox.Xmin, CzBox.Ymax), CreatePoint(CzBox.Xmax, CzBox.Ymin), getZoomValue());
     CzBox = Zbox;
     var gitem = transform(Cgeometry, CzBox, canvas.width, canvas.height);
     drawing(gitem, false, "00f", canvas);
@@ -99,7 +99,7 @@ function zin() {
 
 function zout() {
     clearcanvas();
-    var Zbox = createZoomBox(CreatePoint(CzBox.Xmin, CzBox.Ymax), CreatePoint(CzBox.Xmax, CzBox.Ymin), -getZoomValue());
+    var Zbox = createZoomBox(primitives.CreatePoint(CzBox.Xmin, CzBox.Ymax), CreatePoint(CzBox.Xmax, CzBox.Ymin), -getZoomValue());
     CzBox = Zbox;
     var gitem = transform(Cgeometry, CzBox, canvas.width, canvas.height);
     drawing(gitem, false, "00f", canvas);
@@ -167,7 +167,7 @@ function currentLocation(ev,canvas) {
     var y = Math.round(yt * 100) / 100;
 
     //currentPoints
-    return CreatePoint(x, y);
+    return primitives.CreatePoint(x, y);
 }
 
 

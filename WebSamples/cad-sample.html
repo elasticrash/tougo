@@ -3,263 +3,471 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-7">
 		<title></title>
-		<link type="text/css" href="../css/bootstrap.css" rel="stylesheet" />
-		<link type="text/css" href="../css/slider.css" rel="stylesheet" />
-		<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-		<script language="JavaScript" type="text/javascript" src="../js/bootstrap.js"></script>
-		<script language="JavaScript" type="text/javascript" src="../js/bootstrap-slider.js"></script>
-        <script language="JavaScript" type="text/javascript" src="../src/original/drawing.js"></script>
+		<link rel="stylesheet" href="stylesheets/foundation.css" />
+		<script src="javascripts/jquery.js"></script>
+		<script src="javascripts/modernizr.js"></script>
+		<script language="JavaScript" type="text/javascript" src="../src/original/primitives.js"></script>
 		<script language="JavaScript" type="text/javascript" src="../src/original/geometry.js"></script>
 		<script language="JavaScript" type="text/javascript" src="../src/original/topology.js"></script>
 		<script language="JavaScript" type="text/javascript" src="../src/original/drawing.js"></script>
+		<script language="JavaScript" type="text/javascript" src="../src/original/taskhelper.js"></script>
 		<script language="JavaScript" type="text/javascript" src="../src/original/export.js"></script>
 		<script language="JavaScript" type="text/javascript">
-			var past = new Array();
-			$(document).ready(function() {
+			var past = [];
+			$(document).ready(function () {
+				cirl(this);
 				var defaults = {
-					width :          $('#rw').width() - 50,
-					height :          $(window).height() - 600
+					width: $('#rw').width() - 32,
+					height: $(window).height() - 200
 				};
-
-				CzBox.Xmin = 0;
-				CzBox.Ymin = -defaults.height;
-				CzBox.Xmax = defaults.width;
-				CzBox.Ymax = 0;
-
-				jqcomp();
-
 				var obja = $('#icq');
-				obja.append('<div class="row"><div class="span9"><canvas id="canvas" style="z-index:99; float:left;padding:10px;margin-top:10px;padding-bottom:10px;margin-left:10px; border:1px solid;" width="' + defaults.width + '" height="' + defaults.height + '"></canvas></div></div>');
-
+				obja.append('<canvas id="canvas01" style="z-index:99; float:left; border:1px solid;" width="' + defaults.width + '" height="' + defaults.height + '"></canvas>')
+				var canvas01 = document.getElementById("canvas01");
+				createCzBoxSmall();
 			});
-
-			function drawc(e) {
-				var Point = getviewpoint(e);
+			function createCzBoxSmall() {
+				CzBox = [];
+				CzBox.Xmax = $('#canvas02').width();
+				CzBox.Xmin = 0;
+				CzBox.Ymax = 0;
+				CzBox.Ymin = -$('#canvas02').height();
+			}
+			function createCzBoxLarge() {
+				CzBox = [];
+				CzBox.Xmax = $('#canvas01').width();
+				CzBox.Xmin = 0;
+				CzBox.Ymax = 0;
+				CzBox.Ymin = -$('#canvas01').height();
+			}
+			function read(data) {
+				var polygons = data.split("POLYGON:");
+				for (var i = 1; i < polygons.length; i++) {
+					var xyArray = polygons[i].split(",");
+					datastream[i - 1] = {
+						type: "polygon",
+						geometry: primitives.CreatePolygon(xyArray)
+					};
+				}
+			}
+			function smallc(e) {
+				createCzBoxSmall();
+				var Point = getviewpoint(e, $('#canvas02')[0]);
 				var seg = 125;
-
-				var Circle = CreateCircle(Point, $( "#slider-range-min" ).val(), seg);
-				var rCircle = new Array();
+				var Circle = primitives.CreateCircle(Point, 12, seg);
+				var rCircle = [];
 				rCircle[0] = {
-					type : "polygon",
-					geometry : Circle
+					type: "polygon",
+					geometry: Circle
 				}
 				var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
-
-				past.push(rCircle);
-				drawing(rCircle, false, color, canvas);
-
-				$('#items').val(past.length);
+				drawing(rCircle, false, color, $('#canvas02')[0]);
 			}
-
-			function draws(e) {
-				var Point = getviewpoint(e);
+			function smalls(e) {
+				createCzBoxSmall();
+				var Point = getviewpoint(e, $('#canvas03')[0]);
 				var seg = 4;
-
-				var Circle = CreateCircle(Point, $( "#slider-range-min" ).val(), seg);
-				var rCircle = new Array();
+				var Circle = primitives.CreateCircle(Point, 12, seg);
+				var rCircle = [];
 				rCircle[0] = {
-					type : "polygon",
-					geometry : Circle
+					type: "polygon",
+					geometry: Circle
 				}
 				var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
-				past.push(rCircle);
-
-				drawing(rCircle, false, color, canvas);
-				$('#items').val(past.length);
+				drawing(rCircle, false, color, $('#canvas03')[0]);
 			}
-
-			function drawt(e) {
-				var Point = getviewpoint(e);
+			function smallt(e) {
+				createCzBoxSmall();
+				var Point = getviewpoint(e, $('#canvas04')[0]);
 				var seg = 3;
-
-				var Circle = CreateCircle(Point, $( "#slider-range-min" ).val(), seg);
-				var rCircle = new Array();
+				var Circle = primitives.CreateCircle(Point, 12, seg);
+				var rCircle = [];
 				rCircle[0] = {
-					type : "polygon",
-					geometry : Circle
+					type: "polygon",
+					geometry: Circle
 				}
 				var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
-
-				past.push(rCircle);
-
-				drawing(rCircle, false, color, canvas);
-				$('#items').val(past.length);
+				drawing(rCircle, false, color, $('#canvas04')[0]);
 			}
-
-			var xyarray = new Array();
+			function smallst(e) {
+				createCzBoxSmall();
+				var Point = getviewpoint(e, $('#canvas05')[0]);
+				var seg = 22;
+				var Circle = primitives.CreateStar(Point, 12, seg);
+				var rCircle = [];
+				rCircle[0] = {
+					type: "polygon",
+					geometry: Circle
+				}
+				var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+				drawing(rCircle, false, color, $('#canvas05')[0]);
+			}
+			//drawing stuff
+			datastream = [];
 			function drawl(e) {
-				var Point = getviewpoint(e);
-
-				xyarray.push(Point.x);
-				xyarray.push(Point.y);
-
-				var pol = CreatePolygon(xyarray);
+				createCzBoxLarge();
+				var Point = getviewpoint(e, $('#canvas01')[0]);
+				datastream.push(Point.x);
+				datastream.push(Point.y);
+				var pol = primitives.CreatePolygon(datastream);
 				var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
-
-				var rpol = new Array();
-				rpol[0] = {
-					type : "line",
-					geometry : pol
+				var rpol = {
+					type: "line",
+					geometry: pol
 				}
-				drawing(rpol, false, color, canvas);
-				$('#items').val(past.length);
+				past.push(rpol);
+				drawing(rpol, false, color, $('#canvas01')[0]);
 			}
-
+			function drawc(e) {
+				createCzBoxLarge();
+				var Point = getviewpoint(e, $('#canvas01')[0]);
+				var seg = 125;
+				var Circle = primitives.CreateCircle(Point, 33, seg);
+				var rCircle = [];
+				rCircle = {
+					type: "polygon",
+					geometry: Circle
+				}
+				var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+				past.push(rCircle);
+				drawing(rCircle, false, color, $('#canvas01')[0]);
+			}
+			function draws(e) {
+				createCzBoxLarge();
+				var Point = getviewpoint(e, $('#canvas01')[0]);
+				var seg = 4;
+				var Circle = primitives.CreateCircle(Point, 33, seg);
+				var rCircle = {
+					type: "polygon",
+					geometry: Circle
+				}
+				var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+				past.push(rCircle);
+				drawing(rCircle, false, color, $('#canvas01')[0]);
+			}
+			function drawt(e) {
+				createCzBoxLarge();
+				var Point = getviewpoint(e, $('#canvas01')[0]);
+				var seg = 3;
+				var Circle = primitives.CreateCircle(Point, 33, seg);
+				var rCircle = [];
+				rCircle = {
+					type: "polygon",
+					geometry: Circle
+				}
+				var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+				past.push(rCircle);
+				drawing(rCircle, false, color, $('#canvas01')[0]);
+			}
 			function getviewpoint(e) {
 				var canvas = document.getElementById("canvas");
 				Ccanvas = canvas;
 				var Point = currentLocation(e, canvas);
 				Point.y = Math.abs(Point.y);
-
-				Point.x = Point.x-9;
-				Point.y = Point.y-9;
+				Point.x = Point.x - 9;
+				Point.y = Point.y - 9;
 				return Point;
 			}
-
-
-			function jqcomp() {
-				$( "#slider-range-min" ).slider({
-					value : 12,
-					min : 1,
-					max : 123,
-				});
-				$( "#slider-range-min" ).val(12);
-			}
-
-			function cirl(type) {
-
-				$('#canvas').unbind();
-
-				if(type.id == "circle"){
-				$('#canvas').mousedown(function(event) {drawc(event);});
-				}
-				if(type.id == "square"){
-				$('#canvas').mousedown(function(event) {draws(event);});
-				}
-				if(type.id == "triangle"){
-				$('#canvas').mousedown(function(event) {drawt(event);});
-				}
-				if(type.id == "lines"){
-				$('#canvas').mousedown(function(event) {drawl(event);});
-				} else {
-					var pol = CreatePolygon(xyarray);
-					var rpol = new Array();
-					rpol[0] = {
-						type : "line",
-						geometry : pol
-					}
-					past.push(rpol);
-					xyarray = new Array();
-					$('#items').val(past.length);
-				}
-
-			}
-
-			function exp() {
-				var a = exportdxf(past);
-				var b = a.join("\n");
-				var rstr = randomString(6);
-				$.ajax({
-					async : false,
-					url : "sfile.php",
-					type : "POST",
-					data : "datae=" + b + "&fname=" + rstr + ".dxf",
-					success : function() {alert('file created');
-					},
-					error : function() {alert('file failed');
-					}
-				});
-				$('#exp').html("<a href='dxf/" + rstr + ".dxf" + "'>download file (right click and save as)</a>");
-			}
-
-			function randomString(length) {
-				var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'.split('');
-
-				if(!length) {
-					length = Math.floor(Math.random() * chars.length);
-				}
-
-				var str = '';
-				for(var i = 0; i < length; i++) {
-					str += chars[Math.floor(Math.random() * chars.length)];
-				}
-				return str;
-			}
-
 			function showcentroid() {
-				var cen = new Array();
-				for(var i = 0; i < past.length; i++) {
-					if(past[i][0].type != "line") {
+				var cen = [];
+				for (var i = 0; i < past.length; i++) {
+					if (past[i].type != "line") {
 						cen.push({
-							type : "point",
-							geometry : GetCentroid(past[i][0].geometry)
+							type: "point",
+							geometry: GetCentroid(past[i])
 						});
 					} else {
-						for(var j = 0; j < past[i][0].length; j++) {
+						for (var j = 0; j < past[i].length; j++) {
 							cen.push({
-								type : "point",
-								geometry : past[i][0].geometry[j]
+								type: "point",
+								geometry: past[i].geometry[j]
 							});
 						}
 					}
 				}
-				var color = "FF0000"//Math.round(0xffffff * Math.random()).toString(16);
-
-				drawing(cen, false, color, canvas);
+				var color = "FF0000";//Math.round(0xffffff * Math.random()).toString(16);
+				drawing(cen, false, color, $('#canvas01')[0]);
+			}
+			function pick(e) {
+				createCzBoxLarge();
+				var Point = getviewpoint(e, $('#canvas01')[0]);
+				var color = Math.round(0xffffff * Math.random()).toString(16);
+				var rgeo = [];
+				for (var i = 0; i < past.length; i++) {
+					if (past[i].type != "point") {
+						if (PointInPolygon(past[i].geometry, Point.x, Point.y)) {
+							rgeo[0] = {
+								type: "polygon",
+								geometry: past[i].geometry
+							}
+							drawing(rgeo, true, color, $('#canvas01')[0]);
+						}
+					}
+				}
+			}
+			function get_area(e) {
+				createCzBoxLarge();
+				var Point = getviewpoint(e, $('#canvas01')[0]);
+				var rgeo = [];
+				for (var i = 0; i < past.length; i++) {
+					if (past[i].type != "point") {
+						if (PointInPolygon(past[i].geometry, Point.x, Point.y)) {
+							rgeo = {
+								type: "polygon",
+								geometry: past[i].geometry
+							}
+							alert(GetArea(rgeo));
+						}
+					}
+				}
+			}
+			function get_nodes() {
+				var nodes = getAllNodes(past);
+				var color = "FF0000";
+				drawing(nodes, false, color, $('#canvas01')[0]);
+			}
+			function cirl(type) {
+				if (type != 'undefined') {
+					$('#canvas01').unbind();
+					if (type.id == "lines") {
+						$('#canvas01').mousedown(function (event) {
+							drawl(event);
+						});
+					}
+					if (type.id == "circle") {
+						$('#canvas01').mousedown(function (event) {
+							drawc(event);
+						});
+					}
+					if (type.id == "square") {
+						$('#canvas01').mousedown(function (event) {
+							draws(event);
+						});
+					}
+					if (type.id == "triangle") {
+						$('#canvas01').mousedown(function (event) {
+							drawt(event);
+						});
+					}
+					if (type.id == "pick") {
+						$('#canvas01').mousedown(function (event) {
+							pick(event);
+						});
+					}
+					if (type.id == "getarea") {
+						$('#canvas01').mousedown(function (event) {
+							get_area(event);
+						});
+					}
+				}
+			}
+			function smallcirl() {
+				$('#canvas02').unbind();
+				$('#canvas03').unbind();
+				$('#canvas04').unbind();
+				$('#canvas05').unbind();
+				$('#canvas02').mousedown(function (event) {
+					smallc(event);
+				});
+				$('#canvas03').mousedown(function (event) {
+					smalls(event);
+				});
+				$('#canvas04').mousedown(function (event) {
+					smallt(event);
+				});
+				$('#canvas05').mousedown(function (event) {
+					smallst(event);
+				});
+			}
+			function getviewpoint(e, canvas) {
+				Ccanvas = canvas;
+				var Point = currentLocation(e, canvas);
+				Point.y = Math.abs(Point.y);
+				var a = canvas.width / canvas.clientWidth;
+				var b = canvas.height / canvas.clientHeight;
+				Point.x = Point.x * a;
+				Point.y = Point.y * b;
+				return Point;
 			}
 		</script>
 	</head>
 	<body>
-	    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="brand" href="#">Simple Cad App</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li class="active"><a href="http://www.codentonic.net">Blog</a></li>
-              <li><a href="http://codentonic.net/sample-page/">About</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
-    </div>
 
-    <div class="container">
-     <div class="hero-unit">
-        <h1>tougo topology library example in action</h1>
-        <p>This is an example on how this javascript library works. 1. Choose in the toolbar the type of shape you wish to draw 2. Select the size of the shape (in pixels) by moving the slider and 3. Click to draw. Have fun</p>
-        <p><a href="http://codentonic.net/2013/04/09/javascript-based-geometric-and-topological-operations/" class="btn btn-primary btn-large">learn more</a></p>
-      </div>
 
-		<div id="icq" style="width: 100%; float: left;">
-		            <div id="rw" class="row">
-		            <div class="span7">
-		<div class="btn-toolbar">
-  <div class="btn-group">
-    <a class="btn" href="#" onclick="clearcanvas(Ccanvas);past=new Array();"><i class="icon-minus-sign"></i> clear</a>
-    <a class="btn" href="#" id="circle" onclick="cirl(this)"><i class="icon-plus-sign"></i> circle</a>
-    <a class="btn" href="#" id="square" onclick="cirl(this)"><i class="icon-th-large"></i> square</a>
-    <a class="btn" href="#" id="triangle" onclick="cirl(this)"><i class="icon-eject"></i> triangle</a>
-    <a class="btn" href="#" id="lines" onclick="cirl(this)"><i class="icon-pencil"></i> line</a>
+	<div class="row">
+		<div class="large-12 columns">
+			<!-- Navigation -->
 
-    <a class="btn" href="#" id="centroid" onclick="showcentroid()"><i class="icon-plus"></i> show centroids</a>
-  </div>
-</div></div>
-<div class="span1">
-<div id="slider-range-min"></div>
-</div>
+			<nav class="top-bar" data-topbar>
+				<ul class="title-area">
+					<!-- Title Area -->
+
+					<li class="name">
+						<h1><a href="http://elasticrash.github.io/tougo/">Tougo Homepage</a></h1>
+					</li>
+
+					<li class="toggle-topbar menu-icon">
+						<a href="#"><span>menu</span></a>
+					</li>
+				</ul>
+
+				<section class="top-bar-section">
+					<ul class="left">
+						<li>
+							<a href="http://codentonic.net/">Code n Tonic</a>
+						</li>
+
+					</ul>
+
+				</section>
+			</nav>
+			<!-- End Navigation -->
 		</div>
-				 </div>
-		<div id="bot" style="width: 100%; float: left;">
-		<label>items drawned</label><input id="items" type="text"></input>
-		</div>
-		<div id="exp" style="width: 100%; float: left;"></div>
+	</div>
+	<div class="row">
+		<div class="large-12 columns">
+			<div class="btn-group">
+				<a class="button [radius round]" href="#" onclick="clearcanvas(Ccanvas);past=new Array();"><i
+						class="icon-minus-sign"></i> clear</a>
+				<a class="button [radius round]" href="#" id="circle" onclick="cirl(this)">circle</a>
+				<a class="button [radius round]" href="#" id="square" onclick="cirl(this)">square</a>
+				<a class="button [radius round]" href="#" id="triangle" onclick="cirl(this)">triangle</a>
+				<a class="button [radius round]" href="#" id="lines" onclick="cirl(this)">line</a>
 
-    </div> <!-- /container -->
+				<a class="button [radius round]" href="#" id="centroid" onclick="showcentroid()">centroids</a>
+				<a class="button [radius round]" href="#" id="pick" onclick="cirl(this)">fill</a>
+				<a class="button [radius round]" href="#" id="getarea" onclick="cirl(this)">area</a>
+				<a class="button [radius round]" href="#" id="nodes" onclick="get_nodes()">nodes</a>
+
+			</div>
+		</div>
+	</div>
+
+	<div id="rw" class="row">
+		<div class="large-12 columns">
+			<div id="icq"></div>
+		</div>
+		<h6>Pick Up the appropriate tool and create magic</h6>
+	</div>
+	<br>
+
+	<div class="row">
+		<div class="large-12 columns">
+			<div class="row">
+				<!-- Thumbnails -->
+				<div class="large-3 small-6 columns">
+					<canvas onclick="smallcirl(this)" id="canvas02"
+							style="z-index:99; float:left; border:1px solid; width: 100%; height: 100%;"></canvas>
+
+					<h6 class="panel">Draw A Circle</h6>
+				</div>
+
+				<div class="large-3 small-6 columns">
+					<canvas onclick="smallcirl(this)" id="canvas03"
+							style="z-index:99; float:left; border:1px solid; width: 100%; height: 100%;"></canvas>
+
+					<h6 class="panel">Draw A Square</h6>
+				</div>
+
+				<div class="large-3 small-6 columns">
+					<canvas onclick="smallcirl(this)" id="canvas04"
+							style="z-index:99; float:left; border:1px solid; width: 100%; height: 100%;"></canvas>
+
+					<h6 class="panel">Draw A Triangle</h6>
+				</div>
+
+				<div class="large-3 small-6 columns">
+					<canvas onclick="smallcirl(this)" id="canvas05"
+							style="z-index:99; float:left; border:1px solid; width: 100%; height: 100%;"></canvas>
+
+					<h6 class="panel">Draw A Star</h6>
+				</div>
+			</div>
+			<!-- End Thumbnails -->
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="large-12 columns">
+			<div class="row">
+				<!-- Content -->
+
+				<div class="large-8 columns">
+					<div class="panel radius">
+						<div class="row">
+							<div class="large-6 small-6 columns">
+								<h4>Msg From Outer Space</h4>
+								<hr>
+
+								<h5 class="subheader">Have Fun Enjoy Thy Self</h5>
+
+								<div class="show-for-small" style="text-align: center">
+									<a class="small radius button" href="#">Call To Action!</a><br>
+									<a class="small radius button" href="#">Call To Action!</a>
+								</div>
+							</div>
+
+							<div class="large-6 small-6 columns">
+								<p></p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="large-4 columns hide-for-small">
+					<h4>Get In Touch!</h4>
+					<hr>
+					<a href="#">
+						<div class="panel radius callout" style="text-align: center">
+							<strong>Call To Action!</strong>
+						</div>
+					</a> <a href="#">
+					<div class="panel radius callout" style="text-align: center">
+						<strong>Call To Action!</strong>
+					</div>
+				</a>
+				</div>
+				<!-- End Content -->
+			</div>
+		</div>
+	</div>
+	<!-- Footer -->
+
+	<footer class="row">
+		<div class="large-12 columns">
+			<hr>
+
+			<div class="row">
+				<div class="large-6 columns">
+					<p>? Copyright no one at all. Go to town.</p>
+				</div>
+
+				<div class="large-6 columns">
+					<ul class="inline-list right">
+						<li>
+							<a href="http://codentonic.net/">Blog</a>
+						</li>
+
+						<li>
+							<a href="https://github.com/elasticrash">Github</a>
+						</li>
+
+						<li>
+							<a href="#">Reserved Space</a>
+						</li>
+
+						<li>
+							<a href="#">Reserved Space</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<script src="javascripts/foundation.js"></script>
+	<script>
+		$(document).foundation();
+		var doc = document.documentElement;
+		doc.setAttribute('data-useragent', navigator.userAgent);
+	</script>
 	</body>
 </html>

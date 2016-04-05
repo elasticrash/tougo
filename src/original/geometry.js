@@ -104,7 +104,7 @@ function intersection(PointA, PointB, PointC, PointD) {
     var crossx = PointA.x + ua * xD1;
     var crossy = PointA.y + ua * yD1;
 
-    cross = CreatePoint(crossx, crossy);
+    cross = primitives.CreatePoint(crossx, crossy);
 
     return cross;
 }
@@ -245,8 +245,8 @@ function extendLineBothSides(PointA, PointB, dist) {
         c = parseFloat(PointA.x) - dist;
         d = slope * (c) + intercept;
     }
-    result[0] = CreatePoint(a, b);
-    result[1] = CreatePoint(c, d);
+    result[0] = primitives.CreatePoint(a, b);
+    result[1] = primitives.CreatePoint(c, d);
 
     return result;
 }
@@ -256,7 +256,7 @@ function getPolygonNodes(Polygon)
 {
  var nodes = [];
     Polygon.geometry.forEach(function (vertex) {
-        var point = CreatePoint(vertex.x, vertex.y);
+        var point = primitives.CreatePoint(vertex.x, vertex.y);
       nodes.push({type: "point", geometry: point});
   });
 
@@ -270,7 +270,7 @@ function getAllNodes(Geometries) {
     Geometries.forEach(function (geom) {
         if (geom.type !== "point") {
             geom.geometry.forEach(function (item) {
-                var point = CreatePoint(item.x, item.y);
+                var point = primitives.CreatePoint(item.x, item.y);
                 nodes[p] = {type: "point", geometry: point};
                 p+=1;
             });
@@ -294,7 +294,7 @@ function PointToLine(PointA, PointB, PointPt) {
     var len = Math.pow(x, 2) + Math.pow(y, 2);
     var dx = x * (PointPt.x - PointA.x) + y * (PointPt.y - PointA.y);
 
-    return CreatePoint(PointA.x + dx * x / len, PointA.y + dx * y / len);
+    return primitives.CreatePoint(PointA.x + dx * x / len, PointA.y + dx * y / len);
 }
 
 // three points on same line

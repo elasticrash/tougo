@@ -20,10 +20,10 @@ function breaklinear(Geometries, tolerance){
                     g = Geometries[k].geometry[l + 1].x;
                     h = Geometries[k].geometry[l + 1].y;
 
-                    var PointAt = CreatePoint(a, b);
-                    var PointBt = CreatePoint(c, d);
-                    var PointCt = CreatePoint(e, f);
-                    var PointDt = CreatePoint(g, h);
+                    var PointAt = primitives.CreatePoint(a, b);
+                    var PointBt = primitives.CreatePoint(c, d);
+                    var PointCt = primitives.CreatePoint(e, f);
+                    var PointDt = primitives.CreatePoint(g, h);
 
                     var LineA = extendLineBothSides(PointAt, PointBt, tolerance);
                     var PointA = LineA[0];
@@ -73,7 +73,7 @@ function deleteduplicatePoints(Geometries) {
                 j += 1;
             });
             if (geom.geometry.x !== 0) {
-                var point = CreatePoint(geom.geometry.x, geom.geometry.y);
+                var point = primitives.CreatePoint(geom.geometry.x, geom.geometry.y);
                 points[p] = {type: "point", geometry: point};
                 p += 1;
             }
@@ -90,8 +90,8 @@ function getlines(Geometries){
         if (geom.type != "point") {
             geom.geometry.forEachPair(function (vertices) {
                     var Polygon = [];
-                    Polygon[0] = CreatePoint(vertices[0].x, vertices[0].y);
-                    Polygon[1] = CreatePoint(vertices[1].x, vertices[1].y);
+                    Polygon[0] = primitives.CreatePoint(vertices[0].x, vertices[0].y);
+                    Polygon[1] = primitives.CreatePoint(vertices[1].x, vertices[1].y);
                     tlines = {
                         type: "line",
                         geometry: Polygon
@@ -127,7 +127,7 @@ function removeDangles(Lines, tolerance){
 				stream[6] = intersections[j].geometry.x - tolerance;
 				stream[7] = intersections[j].geometry.y - tolerance;
 				
-				if (PointInPolygon(CreatePolygon(stream), nodes[i].geometry.x, nodes[i].geometry.y)) {
+				if (PointInPolygon(primitives.CreatePolygon(stream), nodes[i].geometry.x, nodes[i].geometry.y)) {
 					danglePoint++;
 					break;
 				}
@@ -144,8 +144,8 @@ function removeDangles(Lines, tolerance){
 		for (i = 0; i < alone.length; i++) {
 			for (j = 0; j < Lines.length; j++) {
 			
-				var A = CreatePoint(Lines[j].geometry[0].x, Lines[j].geometry[0].y);
-				var B = CreatePoint(Lines[j].geometry[1].x, Lines[j].geometry[1].y);
+				var A = primitives.CreatePoint(Lines[j].geometry[0].x, Lines[j].geometry[0].y);
+				var B = primitives.CreatePoint(Lines[j].geometry[1].x, Lines[j].geometry[1].y);
 				
 				if (alone[i].geometry.x === A.x && alone[i].geometry.y === A.y) {
 					Lines.splice(j, 1);
@@ -169,7 +169,7 @@ function convertToPoints(Geometries) {
     for (var i = 0; i < Geometries.length; i++) {
         if (Geometries[i].type != "point") {
             for (var j = 0; j < Geometries[i].geometry.length - 1; j++) {
-                var p = CreatePoint(Geometries[i].geometry[j].x, Geometries[i].geometry[j].y);
+                var p = primitives.CreatePoint(Geometries[i].geometry[j].x, Geometries[i].geometry[j].y);
                 points.push({
                     type: "point",
                     geometry: p
@@ -195,7 +195,7 @@ function getAnchorPoints(Geometries) {
             }
         }
         if (anchorCount > 2) {
-            var p = CreatePoint(Geometries[i].geometry.x, Geometries[i].geometry.y);
+            var p = primitives.CreatePoint(Geometries[i].geometry.x, Geometries[i].geometry.y);
             anchor.push({
                 type: "point",
                 geometry: p
@@ -230,8 +230,8 @@ function connectEverything(nodes) {
         nodes.forEach(function (node_clone) {
             if (node_init.geometry.x !== node_clone.geometry.x && node_init.geometry.y !== node_clone.geometry.y) {
                 var feature=[];
-                feature[0] = CreatePoint(node_init.geometry.x, node_init.geometry.y);
-                feature[1] = CreatePoint(node_clone.geometry.x, node_clone.geometry.y);
+                feature[0] = primitives.CreatePoint(node_init.geometry.x, node_init.geometry.y);
+                feature[1] = primitives.CreatePoint(node_clone.geometry.x, node_clone.geometry.y);
                 var nlines = {
                     type: "line",
                     geometry: feature
