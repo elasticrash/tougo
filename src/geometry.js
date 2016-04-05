@@ -104,23 +104,33 @@ function intersection(PointA, PointB, PointC, PointD) {
     var crossx = PointA.x + ua * xD1;
     var crossy = PointA.y + ua * yD1;
 
-    cross = CreatePoint(crossx, crossy);
+    cross = primitives.CreatePoint(crossx, crossy);
 
     return cross;
 }
 
 // checks if the intersection point from the previous function is within certain line segments
-function IsIntersectionWithinLineLimits(PointA, PointB, PointC, PointD, cross){
-    if (cross.x >= PointC.x && cross.x <= PointD.x && cross.x >= PointA.x && cross.x <= PointB.x) {
-        if ((cross.y >= PointC.y && cross.y <= PointD.y) || (cross.y <= PointC.y && cross.y >= PointD.y)) {
-            return true;
+function IsIntersectionWithinLineLimits(PointA, PointB, PointC, PointD, cross, equals){
+    var Ax = [PointA.x, PointB.x];
+    var Ay = [PointA.y, PointA.y];
+
+    var Bx = [PointC.x, PointD.x];
+    var By = [PointC.y, PointD.y];
+
+    if(!equals){
+        if (cross.x > Bx.min() && cross.x < Bx.max() && cross.x > Ax.min() && cross.x < Ax.max()) {
+            if ((cross.y > By.min() && cross.y < By.max()) || (cross.y > Ay.min() && cross.y < Ay.max())) {
+                return true;
+            }
+        }
+    } else {
+        if (cross.x >= Bx.min() && cross.x <= Bx.max() && cross.x >= Ax.min() && cross.x <= Ax.max()) {
+            if ((cross.y >= By.min() && cross.y <= By.max()) || (cross.y >= Ay.min() && cross.y <= Ay.max())) {
+                return true;
+            }
         }
     }
-    if (cross.x <= PointC.x && cross.x >= PointD.x && cross.x <= PointA.x && cross.x >= PointB.x) {
-        if ((cross.y >= PointC.y && cross.y <= PointD.y) || (cross.y <= PointC.y && cross.y >= PointD.y)) {
-            return true;
-        }
-    }
+
     return false;
 }
 
@@ -141,10 +151,8 @@ function transform(oldGeometries, Boxobj, width, height) {
     width = width < height ? width : height;
 
     var Geometries;
-    var i;
     oldGeometries.forEach(function (oldgeom) {
         Geometries = [];
-        i = oldGeometries.indexOf(oldgeom);
         if (oldgeom.type === "point") {
             Geometries = {
                 x: parseFloat(((oldgeom.geometry.x - Boxobj.Xmin) / lw) * width),
@@ -162,10 +170,9 @@ function transform(oldGeometries, Boxobj, width, height) {
             });
         }
 
-        TransformedGeometries[i] = {
-            type: oldgeom.type,
-            geometry: Geometries
-        };
+        var transformed_geom = oldgeom;
+        transformed_geom.geometry = Geometries;
+        TransformedGeometries.push(transformed_geom);
     });
 
     return TransformedGeometries;
@@ -175,12 +182,10 @@ function transform(oldGeometries, Boxobj, width, height) {
 function getBoundingBox(Geometries) {
     var alllinesx = [];
     var alllinesy = [];
-    var p = 0;
     Geometries.forEach(function (geom) {
         geom.geometry.forEach(function (vertex) {
-            alllinesx[p] = parseFloat(vertex.x);
-            alllinesy[p] = parseFloat(vertex.y);
-            p+=1;
+            alllinesx.push(parseFloat(vertex.x));
+            alllinesy.push(parseFloat(vertex.y));
         });
     });
 
@@ -197,16 +202,11 @@ function getBoundingBox(Geometries) {
 function GetArea(Polygon) {
     var p1 = 0;
     var p2 = 0;
-    var area = 0;
-    var i;
-    Polygon.geometry.forEach(function (vertex) {
-        i = Polygon.geometry.indexOf(vertex);
-        if (i < Polygon.geometry.length - 1) {
-            p1 += (vertex.x * Polygon.geometry[i + 1].y);
-            p2 += (vertex.y * Polygon.geometry[i + 1].x);
-        }
+    Polygon.geometry.forEachPair(function (vertices) {
+            p1 += (vertices[0].x * vertices[1].y);
+            p2 += (vertices[0].y * vertices[1].x);
     });
-    area = p1 -p2;
+    var area = p1 -p2;
     return area * 0.5;
 }
 
@@ -215,13 +215,9 @@ function GetCentroid(Polygon) {
     var Centroid = [];
     var cx = 0;
     var cy = 0;
-    var i;
-    Polygon.geometry.forEach(function (vertex) {
-        i = Polygon.geometry.indexOf(vertex);
-        if (i < Polygon.geometry.length - 1) {
-            cx = cx + (vertex.x + Polygon.geometry[i + 1].x) * (vertex.x * Polygon.geometry[i + 1].y - Polygon.geometry[i + 1].x * vertex.y);
-            cy = cy + (vertex.y + Polygon.geometry[i + 1].y) * (vertex.x * Polygon.geometry[i + 1].y - Polygon.geometry[i + 1].x * vertex.y);
-        }
+    Polygon.geometry.forEachPair(function (vertices) {
+            cx = cx + (vertices[0].x + vertices[1].x) * (vertices[0].x * vertices[1].y - vertices[1].x * vertices[0].y);
+            cy = cy + (vertices[0].y + vertices[1].y) * (vertices[0].x * vertices[1].y - vertices[1].x * vertices[0].y);
     });
     cx = 1 / (6 * GetArea(Polygon)) * cx;
     cy = 1 / (6 * GetArea(Polygon)) * cy;
@@ -249,8 +245,8 @@ function extendLineBothSides(PointA, PointB, dist) {
         c = parseFloat(PointA.x) - dist;
         d = slope * (c) + intercept;
     }
-    result[0] = CreatePoint(a, b);
-    result[1] = CreatePoint(c, d);
+    result[0] = primitives.CreatePoint(a, b);
+    result[1] = primitives.CreatePoint(c, d);
 
     return result;
 }
@@ -259,11 +255,9 @@ function extendLineBothSides(PointA, PointB, dist) {
 function getPolygonNodes(Polygon)
 {
  var nodes = [];
-    var i;
     Polygon.geometry.forEach(function (vertex) {
-        i = Polygon.geometry.indexOf(vertex);
-        var point = CreatePoint(vertex.x, vertex.y);
-      nodes[i] = {type: "point", geometry: point};
+        var point = primitives.CreatePoint(vertex.x, vertex.y);
+      nodes.push({type: "point", geometry: point});
   });
 
  return nodes;
@@ -276,7 +270,7 @@ function getAllNodes(Geometries) {
     Geometries.forEach(function (geom) {
         if (geom.type !== "point") {
             geom.geometry.forEach(function (item) {
-                var point = CreatePoint(item.x, item.y);
+                var point = primitives.CreatePoint(item.x, item.y);
                 nodes[p] = {type: "point", geometry: point};
                 p+=1;
             });
@@ -300,7 +294,7 @@ function PointToLine(PointA, PointB, PointPt) {
     var len = Math.pow(x, 2) + Math.pow(y, 2);
     var dx = x * (PointPt.x - PointA.x) + y * (PointPt.y - PointA.y);
 
-    return CreatePoint(PointA.x + dx * x / len, PointA.y + dx * y / len);
+    return primitives.CreatePoint(PointA.x + dx * x / len, PointA.y + dx * y / len);
 }
 
 // three points on same line
