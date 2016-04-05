@@ -20,10 +20,10 @@ function breaklinear(Geometries, tolerance){
                     g = Geometries[k].geometry[l + 1].x;
                     h = Geometries[k].geometry[l + 1].y;
 
-                    var PointAt = CreatePoint(a, b);
-                    var PointBt = CreatePoint(c, d);
-                    var PointCt = CreatePoint(e, f);
-                    var PointDt = CreatePoint(g, h);
+                    var PointAt = primitives.CreatePoint(a, b);
+                    var PointBt = primitives.CreatePoint(c, d);
+                    var PointCt = primitives.CreatePoint(e, f);
+                    var PointDt = primitives.CreatePoint(g, h);
 
                     var LineA = extendLineBothSides(PointAt, PointBt, tolerance);
                     var PointA = LineA[0];
@@ -73,7 +73,7 @@ function deleteduplicatePoints(Geometries) {
                 j += 1;
             });
             if (geom.geometry.x !== 0) {
-                var point = CreatePoint(geom.geometry.x, geom.geometry.y);
+                var point = primitives.CreatePoint(geom.geometry.x, geom.geometry.y);
                 points[p] = {type: "point", geometry: point};
                 p += 1;
             }
@@ -84,26 +84,19 @@ function deleteduplicatePoints(Geometries) {
 }
 //get the lines from a collection
 function getlines(Geometries){
-	var p = 0;
 	var lines = [];
     var tlines = [];
-    var j;
     Geometries.forEach(function (geom) {
         if (geom.type != "point") {
-            j=0;
-            geom.geometry.forEach(function (vertex) {
-                if (j < geom.geometry.length - 1) {
+            geom.geometry.forEachPair(function (vertices) {
                     var Polygon = [];
-                    Polygon[0] = CreatePoint(vertex.x, vertex.y);
-                    Polygon[1] = CreatePoint(geom.geometry[j + 1].x, geom.geometry[j + 1].y);
+                    Polygon[0] = primitives.CreatePoint(vertices[0].x, vertices[0].y);
+                    Polygon[1] = primitives.CreatePoint(vertices[1].x, vertices[1].y);
                     tlines = {
-                        type: "lines",
+                        type: "line",
                         geometry: Polygon
                     };
                     lines.push(tlines);
-                    p+=1;
-                }
-                j+=1
             });
         }
 	});
@@ -119,10 +112,11 @@ function removeDangles(Lines, tolerance){
 		var intersections = deleteduplicatePoints(breaklinear(Lines, tolerance));
 		var alone = [];
 		var p = 0;
-
-		for (var i = 0; i < nodes.length; i++) {
+        var i;
+        var j;
+		for (i = 0; i < nodes.length; i++) {
 			var danglePoint = 0;
-			for (var j = 0; j < intersections.length; j++) {
+			for (j = 0; j < intersections.length; j++) {
 				var stream = [];
 				stream[0] = intersections[j].geometry.x - tolerance;
 				stream[1] = parseFloat(intersections[j].geometry.y) + tolerance;
@@ -133,7 +127,7 @@ function removeDangles(Lines, tolerance){
 				stream[6] = intersections[j].geometry.x - tolerance;
 				stream[7] = intersections[j].geometry.y - tolerance;
 				
-				if (PointInPolygon(CreatePolygon(stream), nodes[i].geometry.x, nodes[i].geometry.y)) {
+				if (PointInPolygon(primitives.CreatePolygon(stream), nodes[i].geometry.x, nodes[i].geometry.y)) {
 					danglePoint++;
 					break;
 				}
@@ -147,11 +141,11 @@ function removeDangles(Lines, tolerance){
 		if (alone.length === 0) {
 			dangles = 0;
 		}			
-		for (var i = 0; i < alone.length; i++) {
-			for (var j = 0; j < Lines.length; j++) {
+		for (i = 0; i < alone.length; i++) {
+			for (j = 0; j < Lines.length; j++) {
 			
-				var A = CreatePoint(Lines[j].geometry[0].x, Lines[j].geometry[0].y);
-				var B = CreatePoint(Lines[j].geometry[1].x, Lines[j].geometry[1].y);
+				var A = primitives.CreatePoint(Lines[j].geometry[0].x, Lines[j].geometry[0].y);
+				var B = primitives.CreatePoint(Lines[j].geometry[1].x, Lines[j].geometry[1].y);
 				
 				if (alone[i].geometry.x === A.x && alone[i].geometry.y === A.y) {
 					Lines.splice(j, 1);
@@ -169,45 +163,105 @@ function removeDangles(Lines, tolerance){
 }
 
 //Convert a geometry to points
-function convertToPoints(Geometries){
-	var points = [];
-	
-	for (var i = 0; i < Geometries.length; i++) {
-		if (Geometries[i].type != "point") {
-			for (var j = 0; j < Geometries[i].geometry.length - 1; j++) {
-				var p = CreatePoint(Geometries[i].geometry[j].x, Geometries[i].geometry[j].y);
-			points.push({
-                                type: "point",
-                                geometry: p
-                            });
-			}
-		}
-	}
-	return points;
+function convertToPoints(Geometries) {
+    var points = [];
+
+    for (var i = 0; i < Geometries.length; i++) {
+        if (Geometries[i].type != "point") {
+            for (var j = 0; j < Geometries[i].geometry.length - 1; j++) {
+                var p = primitives.CreatePoint(Geometries[i].geometry[j].x, Geometries[i].geometry[j].y);
+                points.push({
+                    type: "point",
+                    geometry: p
+                });
+            }
+        }
+    }
+    return points;
 }
 //get anchor points
-function getAnchorPoints(Geometries){
-	var anchor = [];
+function getAnchorPoints(Geometries) {
+    var anchor = [];
     var anchorCount;
-	for (var i = 0; i < Geometries.length; i++) {
-		if (Geometries[i].type === "point") {
+    for (var i = 0; i < Geometries.length; i++) {
+        if (Geometries[i].type === "point") {
             anchorCount = 0;
-			for (var j = 0; j < Geometries.length; j++) {
-				if (Geometries[i].geometry.x === Geometries[j].geometry.x && Geometries[i].geometry.y === Geometries[j].geometry.y) {
-					if (i != j && Geometries[i].geometry.x != 0 && Geometries[i].geometry.y != 0) {
-						anchorCount++;
-					}
-				}
-			}
-		}
-		if (anchorCount > 2) {
-			var p = CreatePoint(Geometries[i].geometry.x, Geometries[i].geometry.y);
-			anchor.push({
-				type: "point",
-				geometry: p
-			});
-		}
-	}
-	return anchor;
+            for (var j = 0; j < Geometries.length; j++) {
+                if (Geometries[i].geometry.x === Geometries[j].geometry.x && Geometries[i].geometry.y === Geometries[j].geometry.y) {
+                    if (i != j && Geometries[i].geometry.x != 0 && Geometries[i].geometry.y != 0) {
+                        anchorCount++;
+                    }
+                }
+            }
+        }
+        if (anchorCount > 2) {
+            var p = primitives.CreatePoint(Geometries[i].geometry.x, Geometries[i].geometry.y);
+            anchor.push({
+                type: "point",
+                geometry: p
+            });
+        }
+    }
+    return anchor;
 }
 
+function getConnectedLineNumbers(Lines, tolerance) {
+    var all_point = getAllNodes(Lines);
+    var points_no_duplicates = deleteduplicatePoints(getAllNodes(Lines));
+    var PC = [];
+    points_no_duplicates.forEach(function (pnt) {
+        var pntcount = 0;
+        all_point.forEach(function (pnt2) {
+            if (pnt.geometry.x === pnt2.geometry.x && pnt.geometry.y === pnt2.geometry.y) {
+                pntcount++;
+            }
+        });
+        pnt.pntCount = pntcount;
+        PC.push(pnt);
+    });
+
+    return PC;
+}
+
+function connectEverything(nodes) {
+
+    var lines = [];
+    nodes.forEach(function (node_init) {
+        nodes.forEach(function (node_clone) {
+            if (node_init.geometry.x !== node_clone.geometry.x && node_init.geometry.y !== node_clone.geometry.y) {
+                var feature=[];
+                feature[0] = primitives.CreatePoint(node_init.geometry.x, node_init.geometry.y);
+                feature[1] = primitives.CreatePoint(node_clone.geometry.x, node_clone.geometry.y);
+                var nlines = {
+                    type: "line",
+                    geometry: feature
+                };
+                lines.push(nlines);
+            }
+        });
+    });
+    return lines;
+}
+
+function cleanupIntersectingFeatures(lines, original_lines) {
+    var cleaned_lines = [];
+    lines.forEach(function (line) {
+        var allfalse = false;
+        var j;
+        for (j = 0; j < original_lines.length; j++) {
+            line_orig = original_lines[j];
+            var inter = intersection(line.geometry[0], line.geometry[1],line_orig.geometry[0], line_orig.geometry[1]);
+            var lwll = IsIntersectionWithinLineLimits(line.geometry[0], line.geometry[1],line_orig.geometry[0], line_orig.geometry[1],inter);
+           if(lwll === true)
+           {
+               allfalse = true;
+               break;
+           }
+        }
+        if(allfalse === false)
+        {
+            cleaned_lines.push(line);
+        }
+    });
+    return cleaned_lines;
+}
