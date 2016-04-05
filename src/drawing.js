@@ -12,15 +12,15 @@ function drawing(Geometries, fill, fillcolor, canvas) {
         lines.beginPath();
         Geometries.forEach(function (geom) {
             if (geom.type !== "point") {
-                var j;
+                var j = 0;
                 geom.geometry.forEach(function (item) {
-                    j = geom.geometry.indexOf(item);
                     if (j === 0) {
                         lines.moveTo(item.x, item.y);
                     }
                     else {
                         lines.lineTo(item.x, item.y);
                     }
+                    j+=1;
                 });
             }
             if (geom.type === "point") {
@@ -38,13 +38,21 @@ function drawing(Geometries, fill, fillcolor, canvas) {
         lines.closePath();
     }
 }
+function drawingtext(Geometries, attribute, canvas) {
+    if (canvas.getContext) {
+        Geometries.forEach(function (geom) {
+            var text = canvas.getContext("2d");
+            text.font = "18px serif";
+            text.fillText(geom[attribute], geom.geometry.x, geom.geometry.y);
+        });
+    }
+}
 
 function getpixelsize(width){
     var lw = CzBox.Xmax - CzBox.Xmin;
-    
-    var pixel = Math.round((lw / width) * 100) / 100;
-    
-    return pixel;
+
+    //pixel
+   return Math.round((lw / width) * 100) / 100;
 }
 
 function createZoomBox(A, B, bxy){
@@ -83,7 +91,7 @@ function zoomout(canvas){
 
 function zin() {
     clearcanvas();
-    var Zbox = createZoomBox(CreatePoint(CzBox.Xmin, CzBox.Ymax), CreatePoint(CzBox.Xmax, CzBox.Ymin), getZoomValue());
+    var Zbox = createZoomBox(primitives.CreatePoint(CzBox.Xmin, CzBox.Ymax), CreatePoint(CzBox.Xmax, CzBox.Ymin), getZoomValue());
     CzBox = Zbox;
     var gitem = transform(Cgeometry, CzBox, canvas.width, canvas.height);
     drawing(gitem, false, "00f", canvas);
@@ -91,7 +99,7 @@ function zin() {
 
 function zout() {
     clearcanvas();
-    var Zbox = createZoomBox(CreatePoint(CzBox.Xmin, CzBox.Ymax), CreatePoint(CzBox.Xmax, CzBox.Ymin), -getZoomValue());
+    var Zbox = createZoomBox(primitives.CreatePoint(CzBox.Xmin, CzBox.Ymax), CreatePoint(CzBox.Xmax, CzBox.Ymin), -getZoomValue());
     CzBox = Zbox;
     var gitem = transform(Cgeometry, CzBox, canvas.width, canvas.height);
     drawing(gitem, false, "00f", canvas);
@@ -158,8 +166,8 @@ function currentLocation(ev,canvas) {
     var x = Math.round(xt * 100) / 100;
     var y = Math.round(yt * 100) / 100;
 
-    var currentPoints = CreatePoint(x, y);
-    return currentPoints;
+    //currentPoints
+    return primitives.CreatePoint(x, y);
 }
 
 
@@ -171,7 +179,7 @@ function select(canvas) {
         loop: for (i = 0; i < Cgeometry.length; i+=1) {
             if (Cgeometry[i].type != "point") {
                 if (PointInPolygon(Cgeometry[i].geometry, cur.x, cur.y)) {
-                    var g = new Array();
+                    var g = [];
                     g[0] = Cgeometry[i];
                     var lg = transform(g, CzBox, canvas.width, canvas.height);
                     drawing(lg, true, "8D638B", this);
