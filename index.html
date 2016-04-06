@@ -44,10 +44,11 @@
         -display polygons
 
         <ol>
-            <li>Read Polygon Coordinates as a xy Array <pre><code>Geometries[i] ={ type : "polygon", geometry : CreatePolygon(xyArray)};</code></pre></li>
-            <li>Calculate the Bounding Box <pre><code>var BBox = getBoundingBox(Geometries);</code></pre></li>
-            <li>Transform Polygon Coordinate to the Local Canvas System <pre><code>var tr = transform(Geometries, BBox, Canvas_width, Canvas_height);</code></pre></li>
-            <li>Draw the Polygons on the Canvas Element <pre><code>drawing(tr (transformed geometries), fill (true/false), '243011'(hex color without #), canvas (the canvas object));</code></pre> <pre><code>drawing(tr, false, '243011', canvas);</code></pre></li>
+            <li>I converted the code so that functions would no longer be global. Instead everything is packed in 4 closure functions primitives geometrical rendering topology</li>
+            <li>Read Polygon Coordinates as a xy Array <pre><code>Geometries[i] ={ type : "polygon", geometry : primitives.CreatePolygon(xyArray)};</code></pre></li>
+            <li>Calculate the Bounding Box <pre><code>var BBox = geometrical.getBoundingBox(Geometries);</code></pre></li>
+            <li>Transform Polygon Coordinate to the Local Canvas System <pre><code>var tr = geometrical.transform(Geometries, BBox, Canvas_width, Canvas_height);</code></pre></li>
+            <li>Draw the Polygons on the Canvas Element <pre><code>rendering.drawing(tr (transformed geometries), fill (true/false), '243011'(hex color without #), canvas (the canvas object));</code></pre> <pre><code>rendering.drawing(tr, false, '243011', canvas);</code></pre></li>
         </ol>
         <h3>
             <a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Example Page</h3>
