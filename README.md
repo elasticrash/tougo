@@ -30,16 +30,18 @@ drawing.js has basic html5 canvas drawing functions in case you dont want to imp
 jquery.tougo is a semi-failed attempt for a standard interface not at all necessary but I might work on it some time in the future.
 
 
-usage example (display polygons)
+usage example (display polygons) --updated 6/4/2016
 
+0. I converted the code so as functions to no longer be global. Instead everything is packed in 4 functions
+```primitives``` ```geometrical``` ```rendering``` ```topology```
 1. Read Polygon Coordinates as a xy Array
-``` Geometries[i] ={ type : "polygon", geometry : CreatePolygon(xyArray)};```
+``` Geometries[i] ={ type : "polygon", geometry : primitives.CreatePolygon(xyArray)};```
 2. Calculate the Bounding Box
-```var BBox = getBoundingBox(Geometries);```
+```var BBox = geometrical.getBoundingBox(Geometries);```
 3. Transform Polygon Coordinate to the Local Canvas System
-```var tr = transform(Geometries, BBox, Canvas_width, Canvas_height);```
+```var tr = geometrical.transform(Geometries, BBox, Canvas_width, Canvas_height);```
 4. Draw the Polygons on the Canvas Element
-```drawing(tr (transformed geometries), fill (true/false), '243011'(hex color without #), canvas (the canvas object));```
-```drawing(tr, false, '243011', canvas);```
+```rendering.drawing(tr (transformed geometries), fill (true/false), '243011'(hex color without #), canvas (the canvas object));```
+```rendering.drawing(tr, false, '243011', canvas);```
 
 visit http://elasticrash.github.io/tougo/ for more info and examples
