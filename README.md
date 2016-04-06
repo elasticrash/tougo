@@ -32,7 +32,7 @@ jquery.tougo is a semi-failed attempt for a standard interface not at all necess
 
 usage example (display polygons) --updated 6/4/2016
 
-0. I converted the code so as functions to no longer be global. Instead everything is packed in 4 functions
+0. I converted the code so that functions would no longer be global. Instead everything is packed in 4 closure functions
 ```primitives``` ```geometrical``` ```rendering``` ```topology```
 1. Read Polygon Coordinates as a xy Array
 ``` Geometries[i] ={ type : "polygon", geometry : primitives.CreatePolygon(xyArray)};```
