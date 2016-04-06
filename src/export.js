@@ -59,21 +59,21 @@ function Point2WKT(point)
 	return "POINT ( " + point.x + " " + point.y  + " )";
 }
 //Polygon to WKT
-function Polygon2WKT(polygon)
+function Polygon2WKT(Polygon)
 {
 	var wktstring = "LINESTRING (";
-	
-	for (var i=0; i < Polygon.length; i++)
-	{
-		if (i > 0)
+    var i;
+    Polygon.geometry.forEach(function (vertex) {
+        i = Polygon.geometry.indexOf(vertex);
+        if (i > 0)
 		{
 			wktstring +=", ";
 		}
 		else
 		{
-			wktstring += Polygon[i].x +" " + Polygon[i].y;
+			wktstring += vertex.x +" " + vertex.y;
 		}
-	}
+	});
 	wktstring +=")";
 	
 	return wktstring;

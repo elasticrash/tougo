@@ -27,7 +27,7 @@ var wmsDisplay = function(canvasId) {
 
 
     //get The pixelSize of the Requested Level, closure pattern
-    var mapAttributes = function(zoomLevel) {
+    var mapAttributes = function() {
         //Initial Scale Level
         var currentScale = 6;
         //Predefined ZoomLevels
@@ -151,13 +151,19 @@ var wmsDisplay = function(canvasId) {
         var data;
         return{
             brightness: function(value){
-                for (var y = 0; y < ctx.canvas.height; ++y) {
-                    for (var x = 0; x < ctx.canvas.width; ++x) {
-                        var index = (y * ctx.canvas.width + x) * 4;
-                        data[index] = data[index] +value;
-                        data[index+1] = data[index+1] +value;
-                        data[index+2] = data[index+2] +value;
-                        data[index+3] = data[index+3] +value;
+                var y;
+                var x;
+                var z;
+                for (y = 0; y < ctx.canvas.height; y+=1) {
+                    for (x = 0; x < ctx.canvas.width; x+=1) {
+                        for (z = 0; z < 3; z+=1) {
+                            var index = ((y * ctx.canvas.width + x) * 4)+z;
+                            if(data.data[index] + value > 255) {
+                                data.data[index] = 255;
+                            } else {
+                                data.data[index] = data.data[index] + value;
+                            }
+                        }
                     }
                 }
                 ctx.putImageData(data,0,0);
@@ -167,6 +173,28 @@ var wmsDisplay = function(canvasId) {
             },
             getImagePixels: function(){
                 data = ctx.getImageData(0,0, ctx.canvas.width, ctx.canvas.height);
+            },
+            bitonal : function(){
+                var y;
+                var x;
+
+                for (y = 0; y < ctx.canvas.height; y+=1) {
+                    for (x = 0; x < ctx.canvas.width; x+=1) {
+                        var indexR = ((y * ctx.canvas.width + x) * 4);
+                        var indexG = indexR+1;
+                        var indexB = indexG+1;
+                        if(data.data[indexR]+ data.data[indexG]+ data.data[indexB] > 768/2){
+                            data.data[indexR] = 255;
+                            data.data[indexG] = 255;
+                            data.data[indexB] = 255;
+                        } else {
+                            data.data[indexR] = 0;
+                            data.data[indexG] = 0;
+                            data.data[indexB] = 0;
+                        }
+                    }
+                }
+                ctx.putImageData(data,0,0);
             }
         }
     }();
@@ -189,7 +217,7 @@ var wmsDisplay = function(canvasId) {
     var canvasLeft = canvas.offsetLeft;
     var canvasTop = canvas.offsetTop;
 
-    function writeMessage(canvas, message) {
+    function writeMessage(message) {
         ctx.fillStyle="#FFFFFF";
         ctx.fillRect(1,1,250,33);
         ctx.font = '16pt Calibri';
@@ -211,7 +239,7 @@ var wmsDisplay = function(canvasId) {
 
     canvas.addEventListener('mousemove', function(evt) {
         var local = CalculateCursonPosition(evt);
-        writeMessage(canvas, "x: " + local.x + " y: "+ local.y);
+        writeMessage("x: " + local.x + " y: "+ local.y);
         if(pan_tool) {
             var moveDifferencePoint = {
                 x: local.x - pan_point.x,
@@ -240,11 +268,13 @@ var wmsDisplay = function(canvasId) {
 
     //Draw the Tile on The Canvas
     function drawTiles(tileAttributes) {
+        var layerObject;
+        var image;
         if (tileAttributes.serviceUrl.indexOf("WMS::") !== -1) {
-            var layerObject = tileAttributes.serviceUrl.split("::");
+            layerObject = tileAttributes.serviceUrl.split("::");
             tileAttributes.serviceUrl = layerObject[2];
 
-            var image = new Image();
+            image = new Image();
             //for cors
             //image.crossOrigin = '';
             image.src = tileAttributes.serviceUrl;
@@ -254,10 +284,10 @@ var wmsDisplay = function(canvasId) {
             return;
         }
         if (tileAttributes.serviceUrl.indexOf("GEO::") !== -1) {
-            var layerObject = tileAttributes.serviceUrl.split("::");
+            layerObject = tileAttributes.serviceUrl.split("::");
             tileAttributes.serviceUrl = layerObject[2];
 
-            var image = new Image();
+            image = new Image();
             //for cors
             //image.crossOrigin = '';
             image.src = tileAttributes.serviceUrl;
@@ -265,7 +295,6 @@ var wmsDisplay = function(canvasId) {
                 ctx.drawImage(image, tileAttributes.sx, tileAttributes.sy, (image.width*tileAttributes.pixelSize)/mapAttributes.getCurrentPixelSize(),
                     (image.height*tileAttributes.pixelSize)/mapAttributes.getCurrentPixelSize());
             };
-            return;
         }
     }
 
@@ -420,18 +449,6 @@ var wmsDisplay = function(canvasId) {
 
     //Toolbar Events
     function Toolbar_Events(){
-        // $('#tool_pan').on("click", function () {
-        //     canvas.addEventListener("mousedown", function (evt) {
-        //         pan_point = CalculateCursonPosition(evt);
-        //         pan_tool = true;
-        //     }, false);
-        //     canvas.addEventListener("mouseup", function (evt) {
-        //         pan_tool = false;
-        //         $('#tool_pan').removeEventListener('click');
-        //         canvas.removeEventListener('mousedown');
-        //
-        //     }, false);
-        // });
         $('#tool_pan_left').on("click", function () {
             var midpoint = GetMapMidPoint();
             midpoint.x += 10*mapAttributes.getCurrentPixelSize();
@@ -473,6 +490,14 @@ var wmsDisplay = function(canvasId) {
         $('#tool_add_brightness').on("click", function(){
             imageOperations.getImagePixels();
             imageOperations.brightness(15);
+        });
+        $('#tool_remove_brightness').on("click", function(){
+            imageOperations.getImagePixels();
+            imageOperations.brightness(-15);
+        });
+        $('#tool_bitonal').on("click", function(){
+            imageOperations.getImagePixels();
+            imageOperations.bitonal();
         });
     }
 
