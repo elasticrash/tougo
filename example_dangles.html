@@ -11,10 +11,10 @@
     <script language='JavaScript' type="text/javascript">
         function readdata()
         {
-            query = "roadnet.txt";
+            var query = "roadnet.txt";
 
             $.ajax({
-                type: 'GET',
+                type: 'POST',
                 url: query,
                 beforeSend:function(){
                     $('#info').html('');
@@ -30,22 +30,22 @@
             readdata();
         }
         function splitdata(data){
-            var polygons = new Array();
-            var mid = new Array();
-            var finalresult = new Array();
+            var polygons = [];
+            var mid = [];
+            var finalresult = [];
             polygons = data.split("LINE:");
 
             for (var j = 1; j < polygons.length; j++) {
                 mid = polygons[j].split(",");
                 var t = 0;
-                var result = new Array();
+                var result = [];
 
                 var Polygon = {
                     type: "polygon",
                     geometry: primitives.CreatePolygon(mid)
-                }
+                };
 
-                result = Simplify(Polygon, 50);
+                result = geometrical.Simplify(Polygon, 50);
 
                 finalresult[j-1] = {
                     type: "polygon",
@@ -60,23 +60,23 @@
             var canvas = document.getElementById("canvas");
             var canvasres = document.getElementById("canvasres");
 
-            var Boxobj = getBoundingBox(geometry);
+            var Boxobj = geometrical.getBoundingBox(geometry);
 
-            var lines = getlines(geometry);
-            var gm = transform(geometry, Boxobj, canvas.width, canvas.height);
-            drawing(gm, false, "00f", canvas);
+            var lines = topology.getlines(geometry);
+            var gm = geometrical.transform(geometry, Boxobj, canvas.width, canvas.height);
+            rendering.drawing(gm, false, "00f", canvas);
 
-            var nodes = getAllNodes(gm);
+            var nodes = geometrical.getAllNodes(gm);
             var color = "FF0000";
-            drawing(nodes, false, color, canvas);
+            rendering.drawing(nodes, false, color, canvas);
 
-            var dangles = removeDangles(lines, 1);
+            var dangles = topology.removeDangles(lines, 1);
 
 
-            var tdangles = transform(dangles, Boxobj, canvas.width, canvas.height);
-            var nodesx = getAllNodes(tdangles);
-            drawing(nodesx, false, color, canvasres);
-            drawing(tdangles, false, "00f", canvasres)
+            var tdangles = geometrical.transform(dangles, Boxobj, canvas.width, canvas.height);
+            var nodesx = geometrical.getAllNodes(tdangles);
+            rendering.drawing(nodesx, false, color, canvasres);
+            rendering.drawing(tdangles, false, "00f", canvasres)
         }
     </script>
 
