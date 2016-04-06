@@ -27,7 +27,7 @@ var wmsDisplay = function(canvasId) {
 
 
     //get The pixelSize of the Requested Level, closure pattern
-    var mapAttributes = function(zoomLevel) {
+    var mapAttributes = function() {
         //Initial Scale Level
         var currentScale = 6;
         //Predefined ZoomLevels
@@ -177,8 +177,7 @@ var wmsDisplay = function(canvasId) {
             bitonal : function(){
                 var y;
                 var x;
-                var z;
-                
+
                 for (y = 0; y < ctx.canvas.height; y+=1) {
                     for (x = 0; x < ctx.canvas.width; x+=1) {
                         var indexR = ((y * ctx.canvas.width + x) * 4);
@@ -218,7 +217,7 @@ var wmsDisplay = function(canvasId) {
     var canvasLeft = canvas.offsetLeft;
     var canvasTop = canvas.offsetTop;
 
-    function writeMessage(canvas, message) {
+    function writeMessage(message) {
         ctx.fillStyle="#FFFFFF";
         ctx.fillRect(1,1,250,33);
         ctx.font = '16pt Calibri';
@@ -240,7 +239,7 @@ var wmsDisplay = function(canvasId) {
 
     canvas.addEventListener('mousemove', function(evt) {
         var local = CalculateCursonPosition(evt);
-        writeMessage(canvas, "x: " + local.x + " y: "+ local.y);
+        writeMessage("x: " + local.x + " y: "+ local.y);
         if(pan_tool) {
             var moveDifferencePoint = {
                 x: local.x - pan_point.x,
@@ -269,11 +268,13 @@ var wmsDisplay = function(canvasId) {
 
     //Draw the Tile on The Canvas
     function drawTiles(tileAttributes) {
+        var layerObject;
+        var image;
         if (tileAttributes.serviceUrl.indexOf("WMS::") !== -1) {
-            var layerObject = tileAttributes.serviceUrl.split("::");
+            layerObject = tileAttributes.serviceUrl.split("::");
             tileAttributes.serviceUrl = layerObject[2];
 
-            var image = new Image();
+            image = new Image();
             //for cors
             //image.crossOrigin = '';
             image.src = tileAttributes.serviceUrl;
@@ -283,10 +284,10 @@ var wmsDisplay = function(canvasId) {
             return;
         }
         if (tileAttributes.serviceUrl.indexOf("GEO::") !== -1) {
-            var layerObject = tileAttributes.serviceUrl.split("::");
+            layerObject = tileAttributes.serviceUrl.split("::");
             tileAttributes.serviceUrl = layerObject[2];
 
-            var image = new Image();
+            image = new Image();
             //for cors
             //image.crossOrigin = '';
             image.src = tileAttributes.serviceUrl;
@@ -448,18 +449,6 @@ var wmsDisplay = function(canvasId) {
 
     //Toolbar Events
     function Toolbar_Events(){
-        // $('#tool_pan').on("click", function () {
-        //     canvas.addEventListener("mousedown", function (evt) {
-        //         pan_point = CalculateCursonPosition(evt);
-        //         pan_tool = true;
-        //     }, false);
-        //     canvas.addEventListener("mouseup", function (evt) {
-        //         pan_tool = false;
-        //         $('#tool_pan').removeEventListener('click');
-        //         canvas.removeEventListener('mousedown');
-        //
-        //     }, false);
-        // });
         $('#tool_pan_left').on("click", function () {
             var midpoint = GetMapMidPoint();
             midpoint.x += 10*mapAttributes.getCurrentPixelSize();

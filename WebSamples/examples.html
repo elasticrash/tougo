@@ -98,7 +98,7 @@
                 type: "polygon",
                 geometry: Circle
             };
-            var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+            var color = "000000";//Math.round(0xffffff * Math.random()).toString(16);
 
             rendering.drawing(rCircle, false, color, $('#canvas02')[0]);
         }
@@ -114,7 +114,7 @@
                 type: "polygon",
                 geometry: Circle
             };
-            var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+            var color = "000000";//Math.round(0xffffff * Math.random()).toString(16);
 
             rendering.drawing(rCircle, false, color, $('#canvas03')[0]);
         }
@@ -130,7 +130,7 @@
                 type: "polygon",
                 geometry: Circle
             };
-            var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+            var color = "000000";//Math.round(0xffffff * Math.random()).toString(16);
 
             rendering.drawing(rCircle, false, color, $('#canvas04')[0]);
         }
@@ -146,7 +146,7 @@
                 type: "polygon",
                 geometry: Circle
             };
-            var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+            var color = "000000";//Math.round(0xffffff * Math.random()).toString(16);
 
             rendering.drawing(rCircle, false, color, $('#canvas05')[0]);
         }
@@ -199,7 +199,6 @@
         }
 
         function getviewpoint(e, canvas) {
-            Ccanvas = canvas;
             var Point = rendering.currentLocation(e, canvas);
             Point.y = Math.abs(Point.y);
 

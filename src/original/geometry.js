@@ -180,13 +180,12 @@ var geometrical = function () {
                 });
             });
 
-            var BBox = {
+            return {
                 Xmin: Math.min.apply(null, alllinesx),
                 Xmax: Math.max.apply(null, alllinesx),
                 Ymin: Math.min.apply(null, alllinesy),
                 Ymax: Math.max.apply(null, alllinesy)
             };
-            return BBox;
         },
         //get the area of a polygon
         GetArea: function (Polygon) {
@@ -201,7 +200,6 @@ var geometrical = function () {
         },
         //gets the centroid of a polygon
         GetCentroid: function (Polygon) {
-            var Centroid = [];
             var cx = 0;
             var cy = 0;
             Polygon.geometry.forEachPair(function (vertices) {
@@ -210,8 +208,7 @@ var geometrical = function () {
             });
             cx = 1 / (6 * this.GetArea(Polygon)) * cx;
             cy = 1 / (6 * this.GetArea(Polygon)) * cy;
-            Centroid = {x: cx, y: cy};
-            return Centroid;
+           return {x: cx, y: cy};
         },
         //extends a line segments equally from both sides
         extendLineBothSides: function (PointA, PointB, dist) {

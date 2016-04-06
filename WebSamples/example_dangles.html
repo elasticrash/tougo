@@ -10,7 +10,7 @@
     <script language='JavaScript' type="text/javascript">
         function readdata()
         {
-            query = "roadnet.txt";
+            var query = "roadnet.txt";
 
             $.ajax({
                 type: 'POST',
@@ -61,7 +61,7 @@
 
             var Boxobj = geometrical.getBoundingBox(geometry);
 
-            var lines = getlines(geometry);
+            var lines = topology.getlines(geometry);
             var gm = geometrical.transform(geometry, Boxobj, canvas.width, canvas.height);
             rendering.drawing(gm, false, "00f", canvas);
 
@@ -69,7 +69,7 @@
             var color = "FF0000";
             rendering.drawing(nodes, false, color, canvas);
 
-            var dangles = removeDangles(lines, 1);
+            var dangles = topology.removeDangles(lines, 1);
 
 
             var tdangles = geometrical.transform(dangles, Boxobj, canvas.width, canvas.height);

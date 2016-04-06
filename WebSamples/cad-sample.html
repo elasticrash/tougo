@@ -21,7 +21,7 @@
 					height: $(window).height() - 200
 				};
 				var obja = $('#icq');
-				obja.append('<canvas id="canvas01" style="z-index:99; float:left; border:1px solid;" width="' + defaults.width + '" height="' + defaults.height + '"></canvas>')
+				obja.append('<canvas id="canvas01" style="z-index:99; float:left; border:1px solid;" width="' + defaults.width + '" height="' + defaults.height + '"></canvas>');
 				var canvas01 = document.getElementById("canvas01");
 				createCzBoxSmall();
 			});
@@ -34,6 +34,7 @@
 				rendering.setBBox(Box);
 			}
 			function createCzBoxLarge() {
+				var Box;
 				Box = [];
 				Box.Xmax = $('#canvas01').width();
 				Box.Xmin = 0;
@@ -60,7 +61,7 @@
 				rCircle[0] = {
 					type: "polygon",
 					geometry: Circle
-				}
+				};
 				var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 				rendering.drawing(rCircle, false, color, $('#canvas02')[0]);
 			}
@@ -73,7 +74,7 @@
 				rCircle[0] = {
 					type: "polygon",
 					geometry: Circle
-				}
+				};
 				var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 				rendering.drawing(rCircle, false, color, $('#canvas03')[0]);
 			}
@@ -86,7 +87,7 @@
 				rCircle[0] = {
 					type: "polygon",
 					geometry: Circle
-				}
+				};
 				var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 				rendering.drawing(rCircle, false, color, $('#canvas04')[0]);
 			}
@@ -99,7 +100,7 @@
 				rCircle[0] = {
 					type: "polygon",
 					geometry: Circle
-				}
+				};
 				var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 				rendering.drawing(rCircle, false, color, $('#canvas05')[0]);
 			}
@@ -129,7 +130,7 @@
 					type: "polygon",
 					geometry: Circle
 				};
-				var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
+				var color = "000000";//Math.round(0xffffff * Math.random()).toString(16);
 				past.push(rCircle);
 				rendering.drawing(rCircle, false, color, $('#canvas01')[0]);
 			}
@@ -155,14 +156,13 @@
 				rCircle = {
 					type: "polygon",
 					geometry: Circle
-				}
+				};
 				var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 				past.push(rCircle);
 				rendering.drawing(rCircle, false, color, $('#canvas01')[0]);
 			}
 			function getviewpoint(e) {
 				var canvas = document.getElementById("canvas");
-				Ccanvas = canvas;
 				var Point = currentLocation(e, canvas);
 				Point.y = Math.abs(Point.y);
 				Point.x = Point.x - 9;
@@ -200,7 +200,7 @@
 							rgeo[0] = {
 								type: "polygon",
 								geometry: past[i].geometry
-							}
+							};
 							rendering.drawing(rgeo, true, color, $('#canvas01')[0]);
 						}
 					}
@@ -216,7 +216,7 @@
 							rgeo = {
 								type: "polygon",
 								geometry: past[i].geometry
-							}
+							};
 							alert(geometrical.GetArea(rgeo));
 						}
 					}
@@ -281,7 +281,6 @@
 				});
 			}
 			function getviewpoint(e, canvas) {
-				Ccanvas = canvas;
 				var Point = rendering.currentLocation(e, canvas);
 				Point.y = Math.abs(Point.y);
 				var a = canvas.width / canvas.clientWidth;

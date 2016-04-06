@@ -10,7 +10,7 @@
     <script language='JavaScript' type="text/javascript">
         function readdata()
         {
-            query = "roadnet.txt";
+            var query = "roadnet.txt";
 
             $.ajax({
                 type: 'GET',
@@ -29,27 +29,27 @@
             readdata();
         }
         function splitdata(data){
-            var polygons = new Array();
-            var mid = new Array();
-            var finalresult = new Array();
+            var polygons = [];
+            var mid = [];
+            var finalresult = [];
             polygons = data.split("LINE:");
 
             for (var j = 1; j < polygons.length; j++) {
                 mid = polygons[j].split(",");
                 var t = 0;
-                var result = new Array();
+                var result = [];
 
                 var Polygon = {
                     type: "line",
                     geometry: primitives.CreatePolygon(mid)
-                }
+                };
 
                 result = geometrical.Simplify(Polygon, 50);
 
                 finalresult[j-1] = {
                     type: "polygon",
                     geometry: result
-                }
+                };
             }
 
             return finalresult;
@@ -61,7 +61,7 @@
 
             var Boxobj = geometrical.getBoundingBox(geometry);
 
-            var lines = getlines(geometry);
+            var lines = topology.getlines(geometry);
             //var gm = transform(lines, Boxobj, canvas.width, canvas.height);
             //drawing(gm, false, "00f", canvas);
 
@@ -70,17 +70,17 @@
             //drawing(nodes, false, color, canvas);
 
 
-            var dangles = removeDangles(lines, 1);
+            var dangles = topology.removeDangles(lines, 1);
 
 
             var tdangles = geometrical.transform(dangles, Boxobj, canvas.width, canvas.height);
-            var ConnectedLineNumbers = getConnectedLineNumbers(tdangles, 1);
+            var ConnectedLineNumbers = topology.getConnectedLineNumbers(tdangles, 1);
             rendering.drawing(tdangles, false, "ffe000", canvas);
 
             var nodesx = geometrical.getAllNodes(tdangles);
             rendering.drawing(nodesx, false, color, canvas);
             rendering.drawingtext(ConnectedLineNumbers,"pntCount", canvas);
-            var connected_lines = connectEverything(nodesx);
+            var connected_lines = topology.connectEverything(nodesx);
             //drawing(connected_lines, false, "fff00f", canvas);
             //var cleaned_lines = cleanupIntersectingFeatures(connected_lines,tdangles);
             //drawing(cleaned_lines, false, "00f", canvas);

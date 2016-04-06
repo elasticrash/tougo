@@ -1,11 +1,8 @@
 //needs primitives.js
 /*global CreatePoint:false */
-var rendering = new function () {
-    //var Ccanvas = canvas;
-    //var Cgeometry = geometry;
+var rendering = function () {
     var Box = [];
-    var mousedownC = [];
-
+    
     return {
         setBBox: function (box) {
             Box = box;
@@ -59,83 +56,6 @@ var rendering = new function () {
             //pixel
             return Math.round((lw / width) * 100) / 100;
         },
-        createZoomBox: function (A, B, bxy) {
-            return {
-                Xmin: A.x + bxy,
-                Xmax: B.x - bxy,
-                Ymin: B.y + bxy,
-                Ymax: A.y - bxy
-            };
-        },
-        createPanBox: function (Static_Box) {
-
-            var lx = mousedownC.x - center.x;
-            var ly = mousedownC.y - center.y;
-
-            return {
-                Xmin: Static_Box.Xmin + lx,
-                Xmax: Static_Box.Xmax + lx,
-                Ymin: Static_Box.Ymin + ly,
-                Ymax: Static_Box.Ymax + ly
-            };
-        },
-        zoomin: function (canvas) {
-            canvas.unbind('click', zout);
-            canvas.bind('click', zin);
-        },
-
-        zoomout: function (canvas) {
-            canvas.unbind('click', zin);
-            canvas.bind('click', zout);
-        },
-        zin: function () {
-            clearcanvas();
-            var Zbox = createZoomBox(primitives.CreatePoint(Box.Xmin, Box.Ymax), CreatePoint(Box.Xmax, Box.Ymin), getZoomValue());
-            Box = Zbox;
-            var gitem = transform(Cgeometry, Box, canvas.width, canvas.height);
-            drawing(gitem, false, "00f", canvas);
-        },
-        zout: function () {
-            clearcanvas();
-            var Zbox = createZoomBox(primitives.CreatePoint(Box.Xmin, Box.Ymax), CreatePoint(Box.Xmax, Box.Ymin), -getZoomValue());
-            Box = Zbox;
-            var gitem = transform(Cgeometry, Box, canvas.width, canvas.height);
-            drawing(gitem, false, "00f", canvas);
-        },
-        getZoomValue: function () {
-            var zx = (Box.Xmax - Box.Xmin) / 8;
-            var zy = (Box.Ymax - Box.Ymin) / 8;
-
-            if (zx > zy) {
-                return zy;
-            }
-            else {
-                return zx;
-            }
-        },
-        pan: function (canvas) {
-            canvas.unbind('click', zin);
-            canvas.unbind('click', zout);
-            canvas.unbind('mousedown', select);
-
-            canvas.mousedown(function () {
-                mousedownC = center;
-                var Static_Box = Box;
-                canvas.mousemove(function (event) {
-                    clearcanvas();
-
-                    var Zbox = createPanBox(Static_Box);
-                    var gitem = transform(Cgeometry, Zbox, canvas.width, canvas.height);
-                    drawing(gitem, false, "00f", canvas);
-
-                    canvas.mouseup(function (event) {
-                        canvas.unbind('mousedown');
-                        canvas.unbind('mousemove');
-                        Box = Zbox;
-                    });
-                });
-            });
-        },
         currentLocation: function (ev, canvas) {
             var pixel = this.getpixelsize(canvas.clientWidth);
 
@@ -174,14 +94,14 @@ var rendering = new function () {
                     if (geometrical.PointInPolygon(geom[i].geometry, cur.x, cur.y)) {
                         var g = [];
                         g[0] = geom[i];
-                        //var lg = geometrical.transform(g, Box, canvas.width, canvas.height);
                         this.drawing(g, true, "8D638B", canvas);
                     }
                 }
             }
         },
-        clearcanvas: function () {
-            Ccanvas.width = Ccanvas.width;
+        clearcanvas: function (canvas) {
+            var context = canvas.getContext("2d");
+            context.clearRect(0, 0, canvas.width, canvas.height);
         }
     }
 }();
