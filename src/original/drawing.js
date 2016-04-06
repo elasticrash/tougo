@@ -1,194 +1,187 @@
 //needs primitives.js
 /*global CreatePoint:false */
-var Ccanvas;
-var Cgeometry;
-var CzBox;
-function drawing(Geometries, fill, fillcolor, canvas) {
+var rendering = new function () {
+    //var Ccanvas = canvas;
+    //var Cgeometry = geometry;
+    var Box = [];
+    var mousedownC = [];
 
-    Geometries = Geometry2Collection(Geometries);
+    return {
+        setBBox: function (box) {
+            Box = box;
+        },
+        drawing: function (Geometries, fill, fillcolor, canvas) {
+            Geometries = Geometry2Collection(Geometries);
 
-    if (canvas.getContext) {
-        var lines = canvas.getContext("2d");
-        lines.beginPath();
-        Geometries.forEach(function (geom) {
-            if (geom.type !== "point") {
-                var j = 0;
-                geom.geometry.forEach(function (item) {
-                    if (j === 0) {
-                        lines.moveTo(item.x, item.y);
+            if (canvas.getContext) {
+                var lines = canvas.getContext("2d");
+                lines.beginPath();
+                Geometries.forEach(function (geom) {
+                    if (geom.type !== "point") {
+                        var j = 0;
+                        geom.geometry.forEach(function (item) {
+                            if (j === 0) {
+                                lines.moveTo(item.x, item.y);
+                            }
+                            else {
+                                lines.lineTo(item.x, item.y);
+                            }
+                            j += 1;
+                        });
                     }
-                    else {
-                        lines.lineTo(item.x, item.y);
+                    if (geom.type === "point") {
+                        lines.moveTo(geom.geometry.x, geom.geometry.y);
+                        lines.arc(geom.geometry.x, geom.geometry.y, 4, Math.PI * 2, 0, true);
                     }
-                    j+=1;
+                });
+
+                if (fill === true) {
+                    lines.fillStyle = '#' + fillcolor;
+                    lines.fill();
+                }
+                lines.strokeStyle = '#' + fillcolor;
+                lines.stroke();
+                lines.closePath();
+            }
+        },
+        drawingtext: function (Geometries, attribute, canvas) {
+            if (canvas.getContext) {
+                Geometries.forEach(function (geom) {
+                    var text = canvas.getContext("2d");
+                    text.font = "18px serif";
+                    text.fillText(geom[attribute], geom.geometry.x, geom.geometry.y);
                 });
             }
-            if (geom.type === "point") {
-                lines.moveTo(geom.geometry.x, geom.geometry.y);
-                lines.arc(geom.geometry.x, geom.geometry.y, 4, Math.PI * 2, 0, true);
-            }
-        });
+        },
+        getpixelsize: function (width) {
+            var lw = Box.Xmax - Box.Xmin;
 
-        if (fill === true) {
-            lines.fillStyle = '#' + fillcolor;
-            lines.fill();
-        }
-        lines.strokeStyle = '#' + fillcolor;
-        lines.stroke();
-        lines.closePath();
-    }
-}
-function drawingtext(Geometries, attribute, canvas) {
-    if (canvas.getContext) {
-        Geometries.forEach(function (geom) {
-            var text = canvas.getContext("2d");
-            text.font = "18px serif";
-            text.fillText(geom[attribute], geom.geometry.x, geom.geometry.y);
-        });
-    }
-}
+            //pixel
+            return Math.round((lw / width) * 100) / 100;
+        },
+        createZoomBox: function (A, B, bxy) {
+            return {
+                Xmin: A.x + bxy,
+                Xmax: B.x - bxy,
+                Ymin: B.y + bxy,
+                Ymax: A.y - bxy
+            };
+        },
+        createPanBox: function (Static_Box) {
 
-function getpixelsize(width){
-    var lw = CzBox.Xmax - CzBox.Xmin;
+            var lx = mousedownC.x - center.x;
+            var ly = mousedownC.y - center.y;
 
-    //pixel
-   return Math.round((lw / width) * 100) / 100;
-}
+            return {
+                Xmin: Static_Box.Xmin + lx,
+                Xmax: Static_Box.Xmax + lx,
+                Ymin: Static_Box.Ymin + ly,
+                Ymax: Static_Box.Ymax + ly
+            };
+        },
+        zoomin: function (canvas) {
+            canvas.unbind('click', zout);
+            canvas.bind('click', zin);
+        },
 
-function createZoomBox(A, B, bxy){
-    var ZBox = {
-        Xmin: A.x + bxy,
-        Xmax: B.x - bxy,
-        Ymin: B.y + bxy,
-        Ymax: A.y - bxy
-    };
-    return ZBox;
-}
-
-function createPanBox(Static_CzBox){
-
-    var lx = mousedownC.x - center.x;
-    var ly = mousedownC.y - center.y;
-    
-    var ZBox = {
-        Xmin: Static_CzBox.Xmin + lx,
-        Xmax: Static_CzBox.Xmax + lx,
-        Ymin: Static_CzBox.Ymin + ly,
-        Ymax: Static_CzBox.Ymax + ly
-    };
-    return ZBox;
-}
-
-function zoomin(canvas){
-    canvas.unbind('click', zout);
-    canvas.bind('click', zin);
-}
-
-function zoomout(canvas){
-    canvas.unbind('click', zin);
-    canvas.bind('click', zout);
-}
-
-function zin() {
-    clearcanvas();
-    var Zbox = createZoomBox(primitives.CreatePoint(CzBox.Xmin, CzBox.Ymax), CreatePoint(CzBox.Xmax, CzBox.Ymin), getZoomValue());
-    CzBox = Zbox;
-    var gitem = transform(Cgeometry, CzBox, canvas.width, canvas.height);
-    drawing(gitem, false, "00f", canvas);
-}
-
-function zout() {
-    clearcanvas();
-    var Zbox = createZoomBox(primitives.CreatePoint(CzBox.Xmin, CzBox.Ymax), CreatePoint(CzBox.Xmax, CzBox.Ymin), -getZoomValue());
-    CzBox = Zbox;
-    var gitem = transform(Cgeometry, CzBox, canvas.width, canvas.height);
-    drawing(gitem, false, "00f", canvas);
-}
-
-function getZoomValue() {
-    var zx = (CzBox.Xmax - CzBox.Xmin) / 8;
-    var zy = (CzBox.Ymax - CzBox.Ymin) / 8;
-
-    if (zx > zy) {
-        return zy;
-    }
-    else {
-        return zx;
-    }
-}
-
-var mousedownC = [];
-
-function pan(canvas) {
-    canvas.unbind('click', zin);
-    canvas.unbind('click', zout);
-    canvas.unbind('mousedown', select);
-
-    canvas.mousedown(function () {
-        mousedownC = center;
-        Static_CzBox = CzBox;
-        canvas.mousemove(function (event) {
+        zoomout: function (canvas) {
+            canvas.unbind('click', zin);
+            canvas.bind('click', zout);
+        },
+        zin: function () {
             clearcanvas();
-
-            var Zbox = createPanBox(Static_CzBox);
-            var gitem = transform(Cgeometry, Zbox, canvas.width, canvas.height);
+            var Zbox = createZoomBox(primitives.CreatePoint(Box.Xmin, Box.Ymax), CreatePoint(Box.Xmax, Box.Ymin), getZoomValue());
+            Box = Zbox;
+            var gitem = transform(Cgeometry, Box, canvas.width, canvas.height);
             drawing(gitem, false, "00f", canvas);
+        },
+        zout: function () {
+            clearcanvas();
+            var Zbox = createZoomBox(primitives.CreatePoint(Box.Xmin, Box.Ymax), CreatePoint(Box.Xmax, Box.Ymin), -getZoomValue());
+            Box = Zbox;
+            var gitem = transform(Cgeometry, Box, canvas.width, canvas.height);
+            drawing(gitem, false, "00f", canvas);
+        },
+        getZoomValue: function () {
+            var zx = (Box.Xmax - Box.Xmin) / 8;
+            var zy = (Box.Ymax - Box.Ymin) / 8;
 
-            canvas.mouseup(function (event) {
-                canvas.unbind('mousedown');
-                canvas.unbind('mousemove');
-                CzBox = Zbox;
+            if (zx > zy) {
+                return zy;
+            }
+            else {
+                return zx;
+            }
+        },
+        pan: function (canvas) {
+            canvas.unbind('click', zin);
+            canvas.unbind('click', zout);
+            canvas.unbind('mousedown', select);
+
+            canvas.mousedown(function () {
+                mousedownC = center;
+                var Static_Box = Box;
+                canvas.mousemove(function (event) {
+                    clearcanvas();
+
+                    var Zbox = createPanBox(Static_Box);
+                    var gitem = transform(Cgeometry, Zbox, canvas.width, canvas.height);
+                    drawing(gitem, false, "00f", canvas);
+
+                    canvas.mouseup(function (event) {
+                        canvas.unbind('mousedown');
+                        canvas.unbind('mousemove');
+                        Box = Zbox;
+                    });
+                });
             });
-        });
-    });
-}
+        },
+        currentLocation: function (ev, canvas) {
+            var pixel = this.getpixelsize(canvas.clientWidth);
+
+            var xt, yt;
 
 
-//unfortunately for mozilla it requires jquery
-function currentLocation(ev,canvas) {
-    var pixel = getpixelsize(canvas.clientWidth);
+            if (typeof ev.offsetX === 'undefined') {
+                var eoffsetX = ev.clientX - $(ev.target).offset().left + window.pageXOffset;
+                var eoffsetY = ev.clientY - $(ev.target).offset().top + window.pageYOffset;
 
-    var xt, yt;
+                xt = Box.Xmin + (eoffsetX) * pixel;
+                yt = eoffsetY * pixel;
+            }
+            else {
+                xt = Box.Xmin + (ev.offsetX) * pixel;
+                yt = Box.Ymin + (canvas.clientHeight - ev.offsetY) * pixel;
+            }
 
+            var x = Math.round(xt * 100) / 100;
+            var y = Math.round(yt * 100) / 100;
 
-    if (typeof ev.offsetX === 'undefined') {
-        var eoffsetX = ev.clientX - $(ev.target).offset().left + window.pageXOffset;
-        var eoffsetY = ev.clientY - $(ev.target).offset().top + window.pageYOffset;
+            //currentPoints
+            return primitives.CreatePoint(x, y);
+        },
+        select: function (canvas, ev, geom) {
+            var cur = this.currentLocation(ev, canvas);
+            cur.y = Math.abs(cur.y);
 
-        xt = CzBox.Xmin + (eoffsetX) * pixel;
-        yt = eoffsetY * pixel;
-    }
-    else {
-        xt = CzBox.Xmin + (ev.offsetX) * pixel;
-        yt = CzBox.Ymin + (canvas.clientHeight - ev.offsetY) * pixel;
-    }
-
-    var x = Math.round(xt * 100) / 100;
-    var y = Math.round(yt * 100) / 100;
-
-    //currentPoints
-    return primitives.CreatePoint(x, y);
-}
-
-
-function select(canvas) {
-
-    canvas.mousedown(function (ev) {
-        var cur = currentLocation(ev, this);
-        var i;
-        loop: for (i = 0; i < Cgeometry.length; i+=1) {
-            if (Cgeometry[i].type != "point") {
-                if (PointInPolygon(Cgeometry[i].geometry, cur.x, cur.y)) {
-                    var g = [];
-                    g[0] = Cgeometry[i];
-                    var lg = transform(g, CzBox, canvas.width, canvas.height);
-                    drawing(lg, true, "8D638B", this);
-                    break loop;
+            var a = canvas.width / canvas.clientWidth;
+            var b = canvas.height / canvas.clientHeight;
+            cur.x = cur.x * a;
+            cur.y = cur.y * b;
+            var i;
+            for (i = 0; i < geom.length; i += 1) {
+                if (geom[i].type != "point") {
+                    if (geometrical.PointInPolygon(geom[i].geometry, cur.x, cur.y)) {
+                        var g = [];
+                        g[0] = geom[i];
+                        //var lg = geometrical.transform(g, Box, canvas.width, canvas.height);
+                        this.drawing(g, true, "8D638B", canvas);
+                    }
                 }
             }
+        },
+        clearcanvas: function () {
+            Ccanvas.width = Ccanvas.width;
         }
-    });
-}
-function clearcanvas(){
-    Ccanvas.width = Ccanvas.width;
-}
+    }
+}();

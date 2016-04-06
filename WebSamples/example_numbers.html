@@ -13,7 +13,7 @@
             query = "roadnet.txt";
 
             $.ajax({
-                type: 'POST',
+                type: 'GET',
                 url: query,
                 beforeSend:function(){
                     $('#info').html('');
@@ -44,7 +44,7 @@
                     geometry: primitives.CreatePolygon(mid)
                 }
 
-                result = Simplify(Polygon, 50);
+                result = geometrical.Simplify(Polygon, 50);
 
                 finalresult[j-1] = {
                     type: "polygon",
@@ -59,7 +59,7 @@
             var canvas = document.getElementById("canvas");
             var canvasres = document.getElementById("canvasres");
 
-            var Boxobj = getBoundingBox(geometry);
+            var Boxobj = geometrical.getBoundingBox(geometry);
 
             var lines = getlines(geometry);
             //var gm = transform(lines, Boxobj, canvas.width, canvas.height);
@@ -73,13 +73,13 @@
             var dangles = removeDangles(lines, 1);
 
 
-            var tdangles = transform(dangles, Boxobj, canvas.width, canvas.height);
+            var tdangles = geometrical.transform(dangles, Boxobj, canvas.width, canvas.height);
             var ConnectedLineNumbers = getConnectedLineNumbers(tdangles, 1);
-            drawing(tdangles, false, "ffe000", canvas);
+            rendering.drawing(tdangles, false, "ffe000", canvas);
 
-            var nodesx = getAllNodes(tdangles);
-            drawing(nodesx, false, color, canvas);
-            drawingtext(ConnectedLineNumbers,"pntCount", canvas);
+            var nodesx = geometrical.getAllNodes(tdangles);
+            rendering.drawing(nodesx, false, color, canvas);
+            rendering.drawingtext(ConnectedLineNumbers,"pntCount", canvas);
             var connected_lines = connectEverything(nodesx);
             //drawing(connected_lines, false, "fff00f", canvas);
             //var cleaned_lines = cleanupIntersectingFeatures(connected_lines,tdangles);

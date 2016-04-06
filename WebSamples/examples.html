@@ -48,9 +48,9 @@
                 url: 'geom.txt',
                 success: function (data) {
                     read(data);
-                    var BBox = getBoundingBox(datastream);
-                    tr = transform(datastream, BBox, $('#canvas01').width(), $('#canvas01').height());
-                    drawing(tr, false, '243011', canvas01);
+                    var BBox = geometrical.getBoundingBox(datastream);
+                    tr = geometrical.transform(datastream, BBox, $('#canvas01').width(), $('#canvas01').height());
+                    rendering.drawing(tr, false, '243011', canvas01);
                 },
                 error: function () {
                 }
@@ -58,19 +58,21 @@
 
         });
         function createCzBoxSmall() {
-            CzBox = [];
-            CzBox.Xmax = $('#canvas02').width();
-            CzBox.Xmin = 0;
-            CzBox.Ymax = 0;
-            CzBox.Ymin = -$('#canvas02').height();
+            var Box = [];
+            Box.Xmax = $('#canvas02').width();
+            Box.Xmin = 0;
+            Box.Ymax = 0;
+            Box.Ymin = -$('#canvas02').height();
+            rendering.setBBox(Box);
         }
 
         function createCzBoxLarge() {
-            CzBox = [];
-            CzBox.Xmax = $('#canvas01').width();
-            CzBox.Xmin = 0;
-            CzBox.Ymax = 0;
-            CzBox.Ymin = -$('#canvas01').height();
+            var Box = [];
+            Box.Xmax = $('#canvas01').width();
+            Box.Xmin = 0;
+            Box.Ymax = 0;
+            Box.Ymin = -$('#canvas01').height();
+            rendering.setBBox(Box);
         }
 
         function read(data) {
@@ -95,10 +97,10 @@
             rCircle[0] = {
                 type: "polygon",
                 geometry: Circle
-            }
+            };
             var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 
-            drawing(rCircle, false, color, $('#canvas02')[0]);
+            rendering.drawing(rCircle, false, color, $('#canvas02')[0]);
         }
 
         function draws(e) {
@@ -111,10 +113,10 @@
             rCircle[0] = {
                 type: "polygon",
                 geometry: Circle
-            }
+            };
             var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 
-            drawing(rCircle, false, color, $('#canvas03')[0]);
+            rendering.drawing(rCircle, false, color, $('#canvas03')[0]);
         }
 
         function drawt(e) {
@@ -127,10 +129,10 @@
             rCircle[0] = {
                 type: "polygon",
                 geometry: Circle
-            }
+            };
             var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 
-            drawing(rCircle, false, color, $('#canvas04')[0]);
+            rendering.drawing(rCircle, false, color, $('#canvas04')[0]);
         }
 
         function drawst(e) {
@@ -143,13 +145,14 @@
             rCircle[0] = {
                 type: "polygon",
                 geometry: Circle
-            }
+            };
             var color = "000000"//Math.round(0xffffff * Math.random()).toString(16);
 
-            drawing(rCircle, false, color, $('#canvas05')[0]);
+            rendering.drawing(rCircle, false, color, $('#canvas05')[0]);
         }
 
         function pick(e) {
+
             createCzBoxLarge();
 
             var Point = getviewpoint(e, $('#canvas01')[0]);
@@ -158,12 +161,12 @@
 
             for (var i = 0; i < tr.length; i++) {
                 if (tr[i].type != "point") {
-                    if (PointInPolygon(tr[i].geometry, Point.x, Point.y)) {
+                    if (geometrical.PointInPolygon(tr[i].geometry, Point.x, Point.y)) {
                         rgeo[0] = {
                             type: "polygon",
                             geometry: tr[i].geometry
-                        }
-                        drawing(rgeo, true, color, $('#canvas01')[0]);
+                        };
+                        rendering.drawing(rgeo, true, color, $('#canvas01')[0]);
                     }
                 }
             }
@@ -177,7 +180,9 @@
             $('#canvas05').unbind();
 
             $('#canvas01').mousedown(function (event) {
-                pick(event);
+                createCzBoxLarge();
+                rendering.select($('#canvas01')[0], event, tr);
+                //pick(event);
             });
             $('#canvas02').mousedown(function (event) {
                 drawc(event);
@@ -195,7 +200,7 @@
 
         function getviewpoint(e, canvas) {
             Ccanvas = canvas;
-            var Point = currentLocation(e, canvas);
+            var Point = rendering.currentLocation(e, canvas);
             Point.y = Math.abs(Point.y);
 
             var a = canvas.width / canvas.clientWidth;

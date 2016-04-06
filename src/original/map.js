@@ -294,7 +294,6 @@ var wmsDisplay = function(canvasId) {
                 ctx.drawImage(image, tileAttributes.sx, tileAttributes.sy, (image.width*tileAttributes.pixelSize)/mapAttributes.getCurrentPixelSize(),
                     (image.height*tileAttributes.pixelSize)/mapAttributes.getCurrentPixelSize());
             };
-            return;
         }
     }
 

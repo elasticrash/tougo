@@ -25,10 +25,10 @@ function breaklinear(Geometries, tolerance){
                     var PointCt = primitives.CreatePoint(e, f);
                     var PointDt = primitives.CreatePoint(g, h);
 
-                    var LineA = extendLineBothSides(PointAt, PointBt, tolerance);
+                    var LineA = geometrical.extendLineBothSides(PointAt, PointBt, tolerance);
                     var PointA = LineA[0];
                     var PointB = LineA[1];
-                    var LineB = extendLineBothSides(PointCt, PointDt, tolerance);
+                    var LineB = geometrical.extendLineBothSides(PointCt, PointDt, tolerance);
                     var PointC = LineB[0];
                     var PointD = LineB[1];
 
@@ -36,8 +36,8 @@ function breaklinear(Geometries, tolerance){
                         break loop;
                     }
                     else {
-                        var PointIN = intersection(PointA, PointB, PointC, PointD);
-                        if (IsIntersectionWithinLineLimits(PointA, PointB, PointC, PointD, PointIN) === true) {
+                        var PointIN = geometrical.intersection(PointA, PointB, PointC, PointD);
+                        if (geometrical.IsIntersectionWithinLineLimits(PointA, PointB, PointC, PointD, PointIN) === true) {
                             points[p] = {
                                 type: "point",
                                 geometry: PointIN
@@ -108,7 +108,7 @@ function removeDangles(Lines, tolerance){
 	var dangles = 1;
 
 	while (dangles > 0) {
-		var nodes = deleteduplicatePoints(getAllNodes(Lines));
+		var nodes = deleteduplicatePoints(geometrical.getAllNodes(Lines));
 		var intersections = deleteduplicatePoints(breaklinear(Lines, tolerance));
 		var alone = [];
 		var p = 0;
@@ -127,7 +127,7 @@ function removeDangles(Lines, tolerance){
 				stream[6] = intersections[j].geometry.x - tolerance;
 				stream[7] = intersections[j].geometry.y - tolerance;
 				
-				if (PointInPolygon(primitives.CreatePolygon(stream), nodes[i].geometry.x, nodes[i].geometry.y)) {
+				if (geometrical.PointInPolygon(primitives.CreatePolygon(stream), nodes[i].geometry.x, nodes[i].geometry.y)) {
 					danglePoint++;
 					break;
 				}
@@ -153,7 +153,6 @@ function removeDangles(Lines, tolerance){
 				}
 				if (alone[i].geometry.x === B.x && alone[i].geometry.y === B.y) {
 					Lines.splice(j, 1);
-					continue;
 				}
 			}
 		}
@@ -206,8 +205,8 @@ function getAnchorPoints(Geometries) {
 }
 
 function getConnectedLineNumbers(Lines, tolerance) {
-    var all_point = getAllNodes(Lines);
-    var points_no_duplicates = deleteduplicatePoints(getAllNodes(Lines));
+    var all_point = geometrical.getAllNodes(Lines);
+    var points_no_duplicates = deleteduplicatePoints(geometrical.getAllNodes(Lines));
     var PC = [];
     points_no_duplicates.forEach(function (pnt) {
         var pntcount = 0;
