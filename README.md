@@ -27,7 +27,6 @@ I decided to port the library to be used out of the box with OpenLayers 2.x beca
 additionally
 =====
 drawing.js has basic html5 canvas drawing functions in case you dont want to implement yours
-jquery.tougo is a semi-failed attempt for a standard interface not at all necessary but I might work on it some time in the future.
 
 
 usage example (display polygons) --updated 6/4/2016
